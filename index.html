@@ -519,7 +519,20 @@
   .iv-dot:hover .iv-dot-tip { display: block; }
 
   /* ── USER TABLE EXPANDED WIDTH ── */
-  table.user-table { min-width: 1400px; }
+  table.user-table { min-width: 1600px; }
+
+  /* ── LINKEDIN LINK ── */
+  .li-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--purple); text-decoration: none; padding: 2px 6px; border-radius: 4px; background: var(--purple-light); }
+  .li-link:hover { background: var(--purple-mid); color: white; }
+
+  /* ── INTERVIEW CONTEXT BANNER ── */
+  .interview-user-banner {
+    display: none; background: var(--teal-light); border-radius: var(--radius-sm);
+    padding: 10px 16px; margin-bottom: 14px; font-size: 13px; color: var(--teal);
+    align-items: center; justify-content: space-between;
+  }
+  .interview-user-banner.on { display: flex; }
+  .interview-user-banner strong { font-weight: 700; color: var(--teal); }
 
   /* ── REFERRAL TABLE ── */
   table.ref-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
@@ -673,12 +686,14 @@
               <th>Co. size</th>
               <th>How found</th>
               <th>Contact</th>
+              <th>LinkedIn</th>
               <th>Archetype</th>
               <th>Onboard path</th>
               <th>Interview status</th>
               <th>Design partner</th>
               <th>Priority</th>
               <th>Notes</th>
+              <th style="width:44px;" title="Open interview guide for this user">Guide</th>
               <th style="width:28px;"></th>
             </tr>
           </thead>
@@ -734,6 +749,7 @@
         <strong>Before booking formal interviews:</strong> Send an informal text to all 10 today: "Hey, I'd love 30 minutes to hear more about how you're using Anyx. When works this week?" No pitch. No program mention. Just book the calls.
       </div>
 
+      <div id="interview-user-banner" class="interview-user-banner"></div>
       <div id="interview-controls"></div>
       <div class="card" id="interview-guide-content"></div>
     </div>
@@ -1090,6 +1106,62 @@ Are you in?</div>
   </main>
 </div>
 
+<!-- DATALISTS for user table dropdowns -->
+<datalist id="dl-industry">
+  <option value="SaaS / Software">
+  <option value="E-commerce / Retail">
+  <option value="Real estate">
+  <option value="Finance / Accounting">
+  <option value="Marketing / Advertising">
+  <option value="Consulting">
+  <option value="Healthcare">
+  <option value="Legal">
+  <option value="Education">
+  <option value="Media / Content">
+  <option value="Manufacturing">
+  <option value="Logistics / Supply chain">
+  <option value="HR / Recruitment">
+  <option value="Architecture / Design">
+  <option value="Construction">
+  <option value="Non-profit">
+</datalist>
+<datalist id="dl-companysize">
+  <option value="Solo / Freelancer">
+  <option value="2–10">
+  <option value="11–50">
+  <option value="51–200">
+  <option value="201–500">
+  <option value="500+">
+</datalist>
+<datalist id="dl-howfound">
+  <option value="Founder referral">
+  <option value="Word of mouth">
+  <option value="LinkedIn">
+  <option value="Twitter / X">
+  <option value="WhatsApp group">
+  <option value="Event / Conference">
+  <option value="Product Hunt">
+  <option value="Cold outreach">
+  <option value="Organic search">
+  <option value="Friend / colleague">
+</datalist>
+<datalist id="dl-role">
+  <option value="Founder / CEO">
+  <option value="Co-founder">
+  <option value="Head of Sales">
+  <option value="Head of Marketing">
+  <option value="Head of Operations">
+  <option value="Product Manager">
+  <option value="Business Development">
+  <option value="Account Executive">
+  <option value="Consultant">
+  <option value="Freelancer / Solopreneur">
+  <option value="Operations Manager">
+  <option value="Executive Assistant">
+  <option value="CMO">
+  <option value="COO">
+</datalist>
+
 <!-- IV MODE BOTTOM BANNER -->
 <div class="iv-banner" id="iv-banner" onclick="toggleInterviewMode()">● Interview mode — tap to exit</div>
 
@@ -1220,7 +1292,7 @@ let patterns = lsLoad('anyx_patterns', [
 
 function defaultUser() {
   return {
-    name:'', role:'', industry:'', companySize:'', howFound:'', contact:'',
+    name:'', role:'', industry:'', companySize:'', howFound:'', contact:'', linkedin:'',
     archetype:'unknown', onboardPath:'unknown',
     interviewStatus:'not-booked', designPartnerInvite:'not-yet', priorityTier:'tbd',
     notes:'', frictionPoint:'', wowTrigger:'', q11Quote:'', q18Quote:'',
@@ -1240,6 +1312,7 @@ users = users.map(u => {
   if (u.q18Quote === undefined) u.q18Quote = '';
   if (!u.referredAnyone) u.referredAnyone = 'unknown';
   if (u.interviewNotes === undefined) u.interviewNotes = '';
+  if (u.linkedin === undefined) u.linkedin = '';
   return u;
 });
 
@@ -1589,6 +1662,7 @@ function renderUserList() {
   tbody.innerHTML = '';
   users.forEach((u, i) => {
     const isOpen = expandedRows.has(i);
+    const liCell = `<td><div style="display:flex;align-items:center;gap:3px;"><input type="text" value="${esc(u.linkedin)}" placeholder="linkedin.com/in/…" style="flex:1;min-width:0;" oninput="updateUser(${i},'linkedin',this.value);var a=this.nextElementSibling;a.href=this.value;a.style.display=this.value?'inline-flex':'none';"><a href="${esc(u.linkedin)}" target="_blank" rel="noopener" class="li-link" style="flex-shrink:0;display:${u.linkedin?'inline-flex':'none'};">↗</a></div></td>`;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="user-row-num" style="cursor:pointer;text-align:center;" onclick="toggleDetailRow(${i})">
@@ -1596,23 +1670,25 @@ function renderUserList() {
         <div>${i+1}</div>
       </td>
       <td><input type="text" value="${esc(u.name)}" placeholder="Name" oninput="updateUser(${i},'name',this.value)"></td>
-      <td><input type="text" value="${esc(u.role)}" placeholder="Role" oninput="updateUser(${i},'role',this.value)"></td>
-      <td><input type="text" value="${esc(u.industry)}" placeholder="Industry" oninput="updateUser(${i},'industry',this.value)"></td>
-      <td><input type="text" value="${esc(u.companySize)}" placeholder="1–10…" oninput="updateUser(${i},'companySize',this.value)"></td>
-      <td><input type="text" value="${esc(u.howFound)}" placeholder="Referral / web…" oninput="updateUser(${i},'howFound',this.value)"></td>
+      <td><input type="text" value="${esc(u.role)}" placeholder="Role" list="dl-role" oninput="updateUser(${i},'role',this.value)"></td>
+      <td><input type="text" value="${esc(u.industry)}" placeholder="Industry" list="dl-industry" oninput="updateUser(${i},'industry',this.value)"></td>
+      <td><input type="text" value="${esc(u.companySize)}" placeholder="Size…" list="dl-companysize" oninput="updateUser(${i},'companySize',this.value)"></td>
+      <td><input type="text" value="${esc(u.howFound)}" placeholder="How found…" list="dl-howfound" oninput="updateUser(${i},'howFound',this.value)"></td>
       <td><input type="text" value="${esc(u.contact)}" placeholder="+972…" oninput="updateUser(${i},'contact',this.value)"></td>
+      ${liCell}
       <td><select onchange="updateUser(${i},'archetype',this.value)">${archSelectOptions(u.archetype)}</select></td>
       <td><select onchange="updateUser(${i},'onboardPath',this.value)">${onboardSelectOptions(u.onboardPath)}</select></td>
       <td><select onchange="updateUser(${i},'interviewStatus',this.value)">${interviewStatusOptions(u.interviewStatus||'not-booked')}</select></td>
       <td><select onchange="updateUserDesignPartner(${i},this.value)">${designPartnerOptions(u.designPartnerInvite||'not-yet')}</select></td>
       <td><select onchange="updateUser(${i},'priorityTier',this.value)">${priorityTierOptions(u.priorityTier||'tbd')}</select></td>
       <td><input type="text" value="${esc(u.notes)}" placeholder="Notes…" oninput="updateUser(${i},'notes',this.value)"></td>
+      <td style="text-align:center;"><button class="tally-btn" title="Open interview guide for ${esc(u.name||'this user')}" onclick="startInterview(${i})" style="font-size:13px;">▶</button></td>
       <td style="text-align:center;"><button class="tally-btn" style="color:var(--coral);font-size:12px;" onclick="deleteUserRow(${i})" title="Delete row">✕</button></td>
     `;
     tbody.appendChild(tr);
     const dtr = document.createElement('tr');
     dtr.className = 'detail-row' + (isOpen ? ' open' : '');
-    dtr.innerHTML = `<td colspan="14" style="padding:0;"><div class="detail-panel"><div class="detail-grid">
+    dtr.innerHTML = `<td colspan="16" style="padding:0;"><div class="detail-panel"><div class="detail-grid">
       <div class="detail-field"><label>Friction point</label><textarea placeholder="What almost made them stop…" oninput="updateUser(${i},'frictionPoint',this.value)">${esc(u.frictionPoint||'')}</textarea></div>
       <div class="detail-field"><label>Wow trigger</label><textarea placeholder="The moment it clicked…" oninput="updateUser(${i},'wowTrigger',this.value)">${esc(u.wowTrigger||'')}</textarea></div>
       <div class="detail-field"><label>Q11 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q11Quote',this.value)">${esc(u.q11Quote||'')}</textarea></div>
@@ -1670,9 +1746,9 @@ function deleteUserRow(idx) {
 }
 
 function exportUserCSV() {
-  const headers = ['#','Name','Role','Industry','Company size','How found','Contact','Archetype','Onboard path','Interview status','Design partner','Priority','Notes','Friction point','Wow trigger','Q11 verbatim','Q18 verbatim','Referred anyone','Interview notes'];
+  const headers = ['#','Name','Role','Industry','Company size','How found','Contact','LinkedIn','Archetype','Onboard path','Interview status','Design partner','Priority','Notes','Friction point','Wow trigger','Q11 verbatim','Q18 verbatim','Referred anyone','Interview notes'];
   const rows = users.map((u, i) => [
-    i+1, u.name, u.role, u.industry, u.companySize, u.howFound, u.contact,
+    i+1, u.name, u.role, u.industry, u.companySize, u.howFound, u.contact, u.linkedin||'',
     archetypes.find(a=>a.id===u.archetype)?.label||u.archetype,
     u.onboardPath, u.interviewStatus, u.designPartnerInvite, u.priorityTier,
     u.notes, u.frictionPoint, u.wowTrigger, u.q11Quote, u.q18Quote, u.referredAnyone, u.interviewNotes
@@ -1680,6 +1756,28 @@ function exportUserCSV() {
   const csv = [headers.map(h=>`"${h}"`).join(','), ...rows.map(r=>r.join(','))].join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download = 'anyx-users.csv'; a.click();
+}
+
+// ── INTERVIEW CONTEXT ──
+let activeIntervieweeIdx = null;
+
+function startInterview(idx) {
+  activeIntervieweeIdx = idx;
+  const u = users[idx];
+  const arch = archetypes.find(a => a.id === u.archetype);
+  const name = u.name.trim() || `User ${idx + 1}`;
+  const archLabel = arch ? ` · ${arch.emoji} ${arch.label}` : '';
+  const banner = document.getElementById('interview-user-banner');
+  banner.innerHTML = `<span>Now interviewing: <strong>${esc(name)}${esc(archLabel)}</strong></span><button class="btn" style="font-size:11px;padding:4px 10px;" onclick="clearInterviewContext()">Clear</button>`;
+  banner.classList.add('on');
+  showPage('interview');
+}
+
+function clearInterviewContext() {
+  activeIntervieweeIdx = null;
+  const banner = document.getElementById('interview-user-banner');
+  banner.classList.remove('on');
+  banner.innerHTML = '';
 }
 
 // ── SETTINGS ──
