@@ -518,8 +518,51 @@
   }
   .iv-dot:hover .iv-dot-tip { display: block; }
 
-  /* ── USER TABLE EXPANDED WIDTH ── */
+  /* ── USER TABLE ── */
   table.user-table { min-width: 1600px; }
+  table.user-table th {
+    background: #1e1e1e; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.07em; color: rgba(255,255,255,0.65);
+    padding: 11px 10px; border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  table.user-table th:last-child { border-right: none; }
+  table.user-table td { padding: 6px 8px; }
+  .user-row-alt td { background: #f9f9fc; }
+  .user-row-alt:hover td { background: #f4f4fa !important; }
+
+  /* ── STATUS-COLORED SELECTS ── */
+  .user-table select {
+    border-radius: 5px; padding: 3px 6px; font-size: 11px; font-weight: 500;
+    border: 1.5px solid transparent; transition: background 0.15s;
+  }
+  select.istat-not-booked { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
+  select.istat-booked     { background: var(--amber-light); color: var(--amber); border-color: #f0d090; }
+  select.istat-done       { background: var(--teal-light); color: var(--teal); border-color: #9ed8c8; font-weight: 700; }
+  select.dpi-not-yet      { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
+  select.dpi-invited      { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
+  select.dpi-confirmed    { background: var(--teal-light); color: var(--teal); border-color: #9ed8c8; font-weight: 700; }
+  select.ptier-tbd        { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
+  select.ptier-tier1      { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); font-weight: 700; }
+  select.ptier-tier2      { background: var(--amber-light); color: var(--amber); border-color: #f0d090; }
+  select.ptier-hold       { background: var(--coral-light); color: var(--coral); border-color: #f0b090; }
+  select.arch-op          { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
+  select.arch-or          { background: var(--teal-light);   color: var(--teal);   border-color: #9ed8c8; }
+  select.arch-dm          { background: var(--coral-light);  color: var(--coral);  border-color: #f0b090; }
+  select.arch-in          { background: var(--amber-light);  color: var(--amber);  border-color: #f0d090; }
+  select.arch-unknown     { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
+  select.op-unknown       { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
+  select.op-guided        { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
+  select.op-self-driven   { background: var(--teal-light); color: var(--teal); border-color: #9ed8c8; }
+
+  /* ── EXPAND BTN ── */
+  .user-row-num { width: 40px; }
+  .detail-expand-btn {
+    width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 2px; font-size: 11px;
+    background: var(--gray-100); color: var(--gray-500); border: 1px solid var(--gray-200);
+    transition: all 0.15s;
+  }
+  .detail-expand-btn:hover, tr:hover .detail-expand-btn { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
 
   /* ── LINKEDIN LINK ── */
   .li-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--purple); text-decoration: none; padding: 2px 6px; border-radius: 4px; background: var(--purple-light); }
@@ -1339,18 +1382,23 @@ function renderArchetypeCards() {
   const bgMap = {purple:'var(--purple-light)',teal:'var(--teal-light)',coral:'var(--coral-light)',amber:'var(--amber-light)'};
 
   document.getElementById('archetype-cards').innerHTML = archetypes.map(a => `
-    <div class="arch-card">
+    <div class="arch-card" style="border-top:3px solid ${colorMap[a.colorVar]};">
       <div class="arch-head">
         <div class="arch-avatar" style="background:${bgMap[a.colorVar]};color:${colorMap[a.colorVar]};">${a.emoji}</div>
         <div>
-          <div style="font-size:14px;font-weight:600;">${esc(a.label)}</div>
+          <div style="font-size:15px;font-weight:700;color:var(--gray-900);">${esc(a.label)}</div>
           <div style="font-size:12px;color:var(--gray-500);">${esc(a.subLabel)}</div>
         </div>
       </div>
       ${a.attrs.map(attr => `
-        <div class="attr"><span class="attr-label">${attr.label}</span><span class="attr-val">${attr.val}</span></div>
+        <div class="attr">
+          <span class="attr-label" style="color:${colorMap[a.colorVar]};opacity:0.75;font-size:11px;font-weight:600;">${attr.label}</span>
+          <span class="attr-val">${attr.val}</span>
+        </div>
       `).join('')}
-      <div style="margin-top:10px;"><span class="tag ${a.tagCls}">${esc(a.wowTag)}</span></div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--gray-200);">
+        <span class="tag ${a.tagCls}" style="font-size:11px;padding:4px 10px;">${esc(a.wowTag)}</span>
+      </div>
     </div>
   `).join('');
 
@@ -1664,10 +1712,11 @@ function renderUserList() {
     const isOpen = expandedRows.has(i);
     const liCell = `<td><div style="display:flex;align-items:center;gap:3px;"><input type="text" value="${esc(u.linkedin)}" placeholder="linkedin.com/in/…" style="flex:1;min-width:0;" oninput="updateUser(${i},'linkedin',this.value);var a=this.nextElementSibling;a.href=this.value;a.style.display=this.value?'inline-flex':'none';"><a href="${esc(u.linkedin)}" target="_blank" rel="noopener" class="li-link" style="flex-shrink:0;display:${u.linkedin?'inline-flex':'none'};">↗</a></div></td>`;
     const tr = document.createElement('tr');
+    if (i % 2 === 1) tr.classList.add('user-row-alt');
     tr.innerHTML = `
       <td class="user-row-num" style="cursor:pointer;text-align:center;" onclick="toggleDetailRow(${i})">
         <div class="detail-expand-btn">${isOpen ? '▾' : '▸'}</div>
-        <div>${i+1}</div>
+        <div style="font-size:11px;color:var(--gray-500);font-weight:600;">${i+1}</div>
       </td>
       <td><input type="text" value="${esc(u.name)}" placeholder="Name" oninput="updateUser(${i},'name',this.value)"></td>
       <td><input type="text" value="${esc(u.role)}" placeholder="Role" list="dl-role" oninput="updateUser(${i},'role',this.value)"></td>
@@ -1676,11 +1725,11 @@ function renderUserList() {
       <td><input type="text" value="${esc(u.howFound)}" placeholder="How found…" list="dl-howfound" oninput="updateUser(${i},'howFound',this.value)"></td>
       <td><input type="text" value="${esc(u.contact)}" placeholder="+972…" oninput="updateUser(${i},'contact',this.value)"></td>
       ${liCell}
-      <td><select onchange="updateUser(${i},'archetype',this.value)">${archSelectOptions(u.archetype)}</select></td>
-      <td><select onchange="updateUser(${i},'onboardPath',this.value)">${onboardSelectOptions(u.onboardPath)}</select></td>
-      <td><select onchange="updateUser(${i},'interviewStatus',this.value)">${interviewStatusOptions(u.interviewStatus||'not-booked')}</select></td>
-      <td><select onchange="updateUserDesignPartner(${i},this.value)">${designPartnerOptions(u.designPartnerInvite||'not-yet')}</select></td>
-      <td><select onchange="updateUser(${i},'priorityTier',this.value)">${priorityTierOptions(u.priorityTier||'tbd')}</select></td>
+      <td><select class="arch-${u.archetype||'unknown'}" onchange="this.className='arch-'+this.value;updateUser(${i},'archetype',this.value)">${archSelectOptions(u.archetype)}</select></td>
+      <td><select class="op-${u.onboardPath||'unknown'}" onchange="this.className='op-'+this.value;updateUser(${i},'onboardPath',this.value)">${onboardSelectOptions(u.onboardPath)}</select></td>
+      <td><select class="istat-${u.interviewStatus||'not-booked'}" onchange="this.className='istat-'+this.value;updateUser(${i},'interviewStatus',this.value)">${interviewStatusOptions(u.interviewStatus||'not-booked')}</select></td>
+      <td><select class="dpi-${u.designPartnerInvite||'not-yet'}" onchange="this.className='dpi-'+this.value;updateUserDesignPartner(${i},this.value)">${designPartnerOptions(u.designPartnerInvite||'not-yet')}</select></td>
+      <td><select class="ptier-${u.priorityTier||'tbd'}" onchange="this.className='ptier-'+this.value;updateUser(${i},'priorityTier',this.value)">${priorityTierOptions(u.priorityTier||'tbd')}</select></td>
       <td><input type="text" value="${esc(u.notes)}" placeholder="Notes…" oninput="updateUser(${i},'notes',this.value)"></td>
       <td style="text-align:center;"><button class="tally-btn" title="Open interview guide for ${esc(u.name||'this user')}" onclick="startInterview(${i})" style="font-size:13px;">▶</button></td>
       <td style="text-align:center;"><button class="tally-btn" style="color:var(--coral);font-size:12px;" onclick="deleteUserRow(${i})" title="Delete row">✕</button></td>
