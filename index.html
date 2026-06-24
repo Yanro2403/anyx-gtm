@@ -487,11 +487,18 @@
   .detail-row { display: none; }
   .detail-row.open { display: table-row; }
   .detail-panel { padding: 14px 20px 16px; background: var(--purple-light); border-top: 1px solid var(--purple-mid); }
-  .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .detail-field label { font-size: 10px; font-weight: 600; color: #3C3489; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+  .detail-inner { display: flex; flex-direction: column; gap: 12px; }
+  .detail-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .detail-3col { display: grid; grid-template-columns: 1fr 1fr 150px; gap: 12px; }
+  .detail-field label { font-size: 10px; font-weight: 600; color: #3C3489; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px; }
   .detail-field textarea { width: 100%; border: 1px solid #C5BFF0; border-radius: var(--radius-sm); padding: 6px 8px; font-size: 12px; font-family: var(--font); color: var(--gray-900); resize: vertical; min-height: 56px; background: white; outline: none; line-height: 1.5; }
   .detail-field textarea:focus { border-color: var(--purple); }
   .detail-field select { width: 100%; border: 1px solid #C5BFF0; border-radius: var(--radius-sm); padding: 6px 8px; font-size: 12px; font-family: var(--font); background: white; outline: none; }
+  .check-list { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px; }
+  .check-item { display: flex; align-items: flex-start; gap: 7px; font-size: 12px; color: var(--gray-700); cursor: pointer; line-height: 1.4; padding: 3px 0; }
+  .check-item input[type="checkbox"] { accent-color: var(--purple); cursor: pointer; flex-shrink: 0; margin-top: 2px; width: 14px; height: 14px; }
+  .check-item.is-checked { color: var(--purple); font-weight: 600; }
+  .check-item:hover span { color: var(--gray-900); }
   .detail-expand-btn { font-size: 10px; color: var(--gray-500); cursor: pointer; padding: 2px 0; user-select: none; transition: color 0.15s; }
   .detail-expand-btn:hover { color: var(--purple); }
 
@@ -1351,7 +1358,8 @@ function defaultUser() {
     archetype:'unknown', onboardPath:'unknown',
     interviewStatus:'not-booked', designPartnerInvite:'not-yet', priorityTier:'tbd',
     notes:'', frictionPoint:'', wowTrigger:'', q11Quote:'', q18Quote:'',
-    referredAnyone:'unknown', interviewNotes:'', nextAction:'', nextActionDate:''
+    referredAnyone:'unknown', interviewNotes:'', nextAction:'', nextActionDate:'',
+    frictionLabels:[], triggerLabels:[]
   };
 }
 
@@ -1370,6 +1378,8 @@ users = users.map(u => {
   if (u.linkedin === undefined) u.linkedin = '';
   if (u.nextAction === undefined) u.nextAction = '';
   if (u.nextActionDate === undefined) u.nextActionDate = '';
+  if (!u.frictionLabels) u.frictionLabels = [];
+  if (!u.triggerLabels) u.triggerLabels = [];
   return u;
 });
 
@@ -1520,6 +1530,17 @@ function toggleInterviewMode() {
   document.getElementById('interview-guide-content').classList.toggle('interview-live', interviewModeActive);
   document.getElementById('iv-banner').classList.toggle('active', interviewModeActive);
   renderInterviewControls();
+  if (!interviewModeActive && activeIntervieweeIdx !== null) {
+    const idx = activeIntervieweeIdx;
+    clearInterviewContext();
+    expandedRows.add(idx);
+    showPage('userlist');
+    renderUserList();
+    setTimeout(() => {
+      const detailRows = document.getElementById('user-tbody').querySelectorAll('.detail-row.open');
+      if (detailRows.length > 0) detailRows[0].previousElementSibling.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 120);
+  }
 }
 
 // ── SYNTHESIS TRACKER ──
@@ -1560,16 +1581,32 @@ function toggleInterview(idx) {
 }
 
 function renderTallies(items, containerId, color) {
-  const max = Math.max(...items.map(i => i.n), 1);
-  document.getElementById(containerId).innerHTML = items.map((item, idx) => `
+  const isF = containerId === 'friction-tallies';
+  const counts = items.map((item, idx) => ({
+    label: item.label,
+    n: users.filter(u => (isF ? (u.frictionLabels||[]) : (u.triggerLabels||[])).includes(idx)).length
+  }));
+  const total = users.filter(u => u.interviewStatus === 'done').length || users.length;
+  const max = Math.max(...counts.map(c => c.n), 1);
+  document.getElementById(containerId).innerHTML = counts.map(item => `
     <div class="tally-row">
       <span class="tally-label">${item.label}</span>
       <div class="tally-bar-wrap"><div class="tally-bar" style="width:${Math.round(item.n/max*100)}%;background:${color};"></div></div>
-      <span class="tally-n">${item.n}/10</span>
-      <button class="tally-btn" onclick="tally('${containerId}',${idx},1)">+</button>
-      <button class="tally-btn" onclick="tally('${containerId}',${idx},-1)">−</button>
+      <span class="tally-n">${item.n}/${total}</span>
     </div>
   `).join('');
+}
+
+function toggleUserLabel(userIdx, field, labelIdx, checked) {
+  const u = users[userIdx];
+  if (!u[field]) u[field] = [];
+  if (checked) { if (!u[field].includes(labelIdx)) u[field].push(labelIdx); }
+  else { u[field] = u[field].filter(x => x !== labelIdx); }
+  lsSave('anyx_users', users);
+  if (document.getElementById('page-synthesis').classList.contains('active')) {
+    renderTallies(frictions, 'friction-tallies', '#534AB7');
+    renderTallies(triggers, 'trigger-tallies', '#0F6E56');
+  }
 }
 
 function tally(group, idx, delta) {
@@ -1586,6 +1623,13 @@ function tally(group, idx, delta) {
 
 function renderQuotes() {
   document.getElementById('quote-slots').innerHTML = archetypes.map(a => {
+    const archUsers = users.filter(u => u.archetype === a.id && (u.q11Quote || u.q18Quote));
+    const verbatims = archUsers.flatMap(u => {
+      const items = [];
+      if (u.q11Quote) items.push({who: u.name||'?', label:'Q11', text: u.q11Quote});
+      if (u.q18Quote) items.push({who: u.name||'?', label:'Q18', text: u.q18Quote});
+      return items;
+    });
     const text = quotes[a.id] || '';
     return `
       <div class="quote-slot">
@@ -1593,9 +1637,14 @@ function renderQuotes() {
           <span class="tag ${a.tagCls}">${esc(a.label)}</span>
           <span style="font-size:11px;color:var(--gray-500);">Q11 / Q18 verbatim</span>
         </div>
+        ${verbatims.length > 0
+          ? verbatims.map(q => `<div style="font-size:12px;color:var(--gray-700);line-height:1.6;margin-bottom:7px;font-style:italic;padding:6px 10px;background:white;border-radius:4px;border-left:3px solid ${COLOR_HEX[a.colorVar]};">"${esc(q.text)}"<div style="font-size:10px;font-style:normal;color:var(--gray-500);margin-top:2px;">${esc(q.who)} · ${q.label}</div></div>`).join('')
+          : `<div style="font-size:12px;color:var(--gray-400);font-style:italic;padding:4px 0 8px;">No quotes yet — fill Q11/Q18 in the user detail panel after interviews.</div>`
+        }
+        <div style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Key quote for GTM (your pick)</div>
         <div class="quote-text${!text ? ' empty' : ''}" contenteditable="true"
-          data-arch-id="${a.id}" data-ph="Paste their exact words here..."
-          onfocus="clearPlaceholder(this)" onblur="saveQuote(this)">${text || 'Paste their exact words here...'}</div>
+          data-arch-id="${a.id}" data-ph="Your pick for GTM copy…"
+          onfocus="clearPlaceholder(this)" onblur="saveQuote(this)">${text || 'Your pick for GTM copy…'}</div>
       </div>
     `;
   }).join('');
@@ -1771,17 +1820,43 @@ function renderUserList() {
     tbody.appendChild(tr);
     const dtr = document.createElement('tr');
     dtr.className = 'detail-row' + (isOpen ? ' open' : '');
-    dtr.innerHTML = `<td colspan="18" style="padding:0;"><div class="detail-panel"><div class="detail-grid">
-      <div class="detail-field"><label>Friction point</label><textarea placeholder="What almost made them stop…" oninput="updateUser(${i},'frictionPoint',this.value)">${esc(u.frictionPoint||'')}</textarea></div>
-      <div class="detail-field"><label>Wow trigger</label><textarea placeholder="The moment it clicked…" oninput="updateUser(${i},'wowTrigger',this.value)">${esc(u.wowTrigger||'')}</textarea></div>
-      <div class="detail-field"><label>Q11 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q11Quote',this.value)">${esc(u.q11Quote||'')}</textarea></div>
-      <div class="detail-field"><label>Q18 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q18Quote',this.value)">${esc(u.q18Quote||'')}</textarea></div>
-      <div class="detail-field"><label>Referred anyone?</label><select onchange="updateUser(${i},'referredAnyone',this.value)">
-        <option value="unknown"${(u.referredAnyone||'unknown')==='unknown'?' selected':''}>Unknown</option>
-        <option value="yes"${(u.referredAnyone||'unknown')==='yes'?' selected':''}>Yes</option>
-        <option value="no"${(u.referredAnyone||'unknown')==='no'?' selected':''}>No</option>
-      </select></div>
-      <div class="detail-field"><label>Interview notes</label><textarea placeholder="Key takeaways, observations…" oninput="updateUser(${i},'interviewNotes',this.value)">${esc(u.interviewNotes||'')}</textarea></div>
+    dtr.innerHTML = `<td colspan="18" style="padding:0;"><div class="detail-panel"><div class="detail-inner">
+      <div class="detail-2col">
+        <div class="detail-field">
+          <label>Friction points — check all they mentioned</label>
+          <div class="check-list">
+            ${frictions.map((f, fi) => {
+              const chk = (u.frictionLabels||[]).includes(fi);
+              return `<label class="check-item${chk?' is-checked':''}">
+                <input type="checkbox" ${chk?'checked':''} onchange="toggleUserLabel(${i},'frictionLabels',${fi},this.checked)">
+                <span>${esc(f.label)}</span>
+              </label>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="detail-field">
+          <label>Wow trigger — what made it click</label>
+          <div class="check-list">
+            ${triggers.map((t, ti) => {
+              const chk = (u.triggerLabels||[]).includes(ti);
+              return `<label class="check-item${chk?' is-checked':''}">
+                <input type="checkbox" ${chk?'checked':''} onchange="toggleUserLabel(${i},'triggerLabels',${ti},this.checked)">
+                <span>${esc(t.label)}</span>
+              </label>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="detail-3col">
+        <div class="detail-field"><label>Q11 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q11Quote',this.value)">${esc(u.q11Quote||'')}</textarea></div>
+        <div class="detail-field"><label>Q18 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q18Quote',this.value)">${esc(u.q18Quote||'')}</textarea></div>
+        <div class="detail-field"><label>Referred anyone?</label><select onchange="updateUser(${i},'referredAnyone',this.value)">
+          <option value="unknown"${(u.referredAnyone||'unknown')==='unknown'?' selected':''}>Unknown</option>
+          <option value="yes"${(u.referredAnyone||'unknown')==='yes'?' selected':''}>Yes</option>
+          <option value="no"${(u.referredAnyone||'unknown')==='no'?' selected':''}>No</option>
+        </select></div>
+      </div>
+      <div class="detail-field"><label>Interview notes</label><textarea placeholder="Key takeaways, observations…" style="min-height:44px;" oninput="updateUser(${i},'interviewNotes',this.value)">${esc(u.interviewNotes||'')}</textarea></div>
     </div></div></td>`;
     tbody.appendChild(dtr);
   });
@@ -1854,6 +1929,7 @@ function startInterview(idx) {
   const banner = document.getElementById('interview-user-banner');
   banner.innerHTML = `<span>Now interviewing: <strong>${esc(name)}${esc(archLabel)}</strong></span><button class="btn" style="font-size:11px;padding:4px 10px;" onclick="clearInterviewContext()">Clear</button>`;
   banner.classList.add('on');
+  if (arch) setArchFilter(arch.id);
   showPage('interview');
 }
 
