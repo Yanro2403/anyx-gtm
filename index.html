@@ -483,6 +483,57 @@
   .interview-live .q-deeper { display: none !important; }
   .interview-live .q-tags { display: none !important; }
 
+  /* ── DETAIL EXPAND ROW ── */
+  .detail-row { display: none; }
+  .detail-row.open { display: table-row; }
+  .detail-panel { padding: 14px 20px 16px; background: var(--purple-light); border-top: 1px solid var(--purple-mid); }
+  .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .detail-field label { font-size: 10px; font-weight: 600; color: #3C3489; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+  .detail-field textarea { width: 100%; border: 1px solid #C5BFF0; border-radius: var(--radius-sm); padding: 6px 8px; font-size: 12px; font-family: var(--font); color: var(--gray-900); resize: vertical; min-height: 56px; background: white; outline: none; line-height: 1.5; }
+  .detail-field textarea:focus { border-color: var(--purple); }
+  .detail-field select { width: 100%; border: 1px solid #C5BFF0; border-radius: var(--radius-sm); padding: 6px 8px; font-size: 12px; font-family: var(--font); background: white; outline: none; }
+  .detail-expand-btn { font-size: 10px; color: var(--gray-500); cursor: pointer; padding: 2px 0; user-select: none; transition: color 0.15s; }
+  .detail-expand-btn:hover { color: var(--purple); }
+
+  /* ── IV MODE BOTTOM BANNER ── */
+  .iv-banner {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--gray-900); color: white;
+    padding: 14px 20px; font-size: 14px; font-weight: 600;
+    text-align: center; z-index: 100; cursor: pointer;
+    letter-spacing: 0.02em; transition: opacity 0.2s;
+  }
+  .iv-banner.active { display: block; }
+  .iv-banner:hover { opacity: 0.85; }
+
+  /* ── DOT TOOLTIP ── */
+  .iv-dot { position: relative; }
+  .iv-dot-tip {
+    display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%); z-index: 200;
+    background: var(--gray-900); color: white;
+    font-size: 11px; padding: 5px 9px; border-radius: 4px;
+    white-space: nowrap; pointer-events: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+  .iv-dot:hover .iv-dot-tip { display: block; }
+
+  /* ── USER TABLE EXPANDED WIDTH ── */
+  table.user-table { min-width: 1400px; }
+
+  /* ── REFERRAL TABLE ── */
+  table.ref-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
+  table.ref-table th { background: var(--gray-900); color: white; padding: 10px 10px; text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap; }
+  table.ref-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
+  table.ref-table tr:last-child td { border-bottom: none; }
+  table.ref-table tr.ref-summary td { background: var(--gray-100); font-weight: 600; border-top: 2px solid var(--gray-200); font-size: 12px; }
+  .ref-table input[type="text"] { border: none; background: transparent; font-size: 12px; color: var(--gray-900); font-family: var(--font); padding: 4px 2px; outline: none; width: 100%; }
+  .ref-table input[type="text"]:focus { background: var(--purple-light); border-radius: 3px; padding: 4px 6px; }
+  .ref-table select { border: none; background: transparent; font-size: 12px; color: var(--gray-900); font-family: var(--font); padding: 4px 2px; outline: none; cursor: pointer; width: 100%; }
+  .ref-table select:focus { background: var(--purple-light); border-radius: 3px; }
+  .ref-table input[type="number"] { border: none; background: transparent; font-size: 12px; color: var(--gray-900); font-family: var(--font); padding: 4px 2px; outline: none; width: 60px; }
+  .ref-table input[type="number"]:focus { background: var(--purple-light); border-radius: 3px; padding: 4px 6px; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .sidebar { width: 180px; }
@@ -537,6 +588,9 @@
       </button>
       <button class="nav-item" onclick="showPage('outreach')">
         <span class="dot" style="background:#888"></span> Outreach messages
+      </button>
+      <button class="nav-item" onclick="showPage('referralcodes')">
+        <span class="dot" style="background:#888"></span> Referral codes
       </button>
     </div>
 
@@ -602,23 +656,30 @@
     <div id="page-userlist" class="page">
       <div class="page-header">
         <h1>User list</h1>
-        <p>Your 10 early users. Checking "Interview done" syncs automatically with the Synthesis tracker.</p>
+        <p>Click ▸ on any row to expand interview details. Changes sync automatically with the Synthesis tracker.</p>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-primary" onclick="addUserRow()">+ Add row</button>
+        <button class="btn" onclick="exportUserCSV()">↓ Export CSV</button>
       </div>
       <div class="table-wrap">
         <table class="user-table">
           <thead>
             <tr>
-              <th>#</th>
+              <th style="width:36px;">#</th>
               <th>Name</th>
               <th>Role</th>
               <th>Industry</th>
-              <th>Company size</th>
-              <th>How they found Anyx</th>
-              <th>Contact (WhatsApp)</th>
+              <th>Co. size</th>
+              <th>How found</th>
+              <th>Contact</th>
               <th>Archetype</th>
               <th>Onboard path</th>
-              <th style="text-align:center;">Interview done</th>
+              <th>Interview status</th>
+              <th>Design partner</th>
+              <th>Priority</th>
               <th>Notes</th>
+              <th style="width:28px;"></th>
             </tr>
           </thead>
           <tbody id="user-tbody"></tbody>
@@ -911,6 +972,33 @@ Are you in?</div>
       </div>
     </div>
 
+    <!-- REFERRAL CODES -->
+    <div id="page-referralcodes" class="page">
+      <div class="page-header">
+        <h1>Referral codes</h1>
+        <p>Auto-populated when a user's Design partner invite is set to Confirmed. One row per partner.</p>
+      </div>
+      <div class="page-actions">
+        <button class="btn" onclick="exportReferralCSV()">↓ Export CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>Partner name</th>
+              <th>Personal code</th>
+              <th>Code status</th>
+              <th>Referrals sent</th>
+              <th>Conversions</th>
+              <th>Free months earned</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="ref-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- NEXT STEPS -->
     <div id="page-nextsteps" class="page">
       <div class="page-header">
@@ -1001,6 +1089,9 @@ Are you in?</div>
 
   </main>
 </div>
+
+<!-- IV MODE BOTTOM BANNER -->
+<div class="iv-banner" id="iv-banner" onclick="toggleInterviewMode()">● Interview mode — tap to exit</div>
 
 <script>
 // ── STORAGE HELPERS ──
@@ -1127,10 +1218,33 @@ let patterns = lsLoad('anyx_patterns', [
   {title:"Best verbatim quote for GTM", content:''},
 ]);
 
-let users = lsLoad('anyx_users', Array.from({length:10}, () => ({
-  name:'', role:'', industry:'', companySize:'', howFound:'', contact:'',
-  archetype:'unknown', onboardPath:'unknown', interviewDone:false, notes:''
-})));
+function defaultUser() {
+  return {
+    name:'', role:'', industry:'', companySize:'', howFound:'', contact:'',
+    archetype:'unknown', onboardPath:'unknown',
+    interviewStatus:'not-booked', designPartnerInvite:'not-yet', priorityTier:'tbd',
+    notes:'', frictionPoint:'', wowTrigger:'', q11Quote:'', q18Quote:'',
+    referredAnyone:'unknown', interviewNotes:''
+  };
+}
+
+let users = lsLoad('anyx_users', Array.from({length:10}, defaultUser));
+// Migrate old schema
+users = users.map(u => {
+  if (!u.interviewStatus) u.interviewStatus = u.interviewDone ? 'done' : 'not-booked';
+  if (!u.designPartnerInvite) u.designPartnerInvite = 'not-yet';
+  if (!u.priorityTier) u.priorityTier = 'tbd';
+  if (u.frictionPoint === undefined) u.frictionPoint = '';
+  if (u.wowTrigger === undefined) u.wowTrigger = '';
+  if (u.q11Quote === undefined) u.q11Quote = '';
+  if (u.q18Quote === undefined) u.q18Quote = '';
+  if (!u.referredAnyone) u.referredAnyone = 'unknown';
+  if (u.interviewNotes === undefined) u.interviewNotes = '';
+  return u;
+});
+
+let referralCodes = lsLoad('anyx_referral_codes', []);
+const expandedRows = new Set();
 
 // ── NAVIGATION ──
 function showPage(id) {
@@ -1142,6 +1256,8 @@ function showPage(id) {
       n.classList.add('active');
     }
   });
+  if (id === 'referralcodes') renderReferralCodes();
+  if (id === 'synthesis') renderDots();
 }
 
 // ── ARCHETYPE CARDS PAGE ──
@@ -1267,35 +1383,44 @@ function applyFilter() {
 function toggleInterviewMode() {
   interviewModeActive = !interviewModeActive;
   document.getElementById('interview-guide-content').classList.toggle('interview-live', interviewModeActive);
+  document.getElementById('iv-banner').classList.toggle('active', interviewModeActive);
   renderInterviewControls();
 }
 
 // ── SYNTHESIS TRACKER ──
 function updateStats() {
-  const doneCount = interviews.filter(i => i.done).length;
+  const doneCount = users.filter(u => u.interviewStatus === 'done').length;
   document.getElementById('done-count').textContent = doneCount;
-  const guidedDone = users.filter((u, i) => interviews[i] && interviews[i].done && u.onboardPath === 'guided').length;
-  const selfDone = users.filter((u, i) => interviews[i] && interviews[i].done && u.onboardPath === 'self-driven').length;
-  document.getElementById('guided-count').textContent = guidedDone;
-  document.getElementById('self-count').textContent = selfDone;
-  document.getElementById('ref-count').textContent = 0;
+  document.getElementById('guided-count').textContent = users.filter(u => u.interviewStatus === 'done' && u.onboardPath === 'guided').length;
+  document.getElementById('self-count').textContent = users.filter(u => u.interviewStatus === 'done' && u.onboardPath === 'self-driven').length;
+  document.getElementById('ref-count').textContent = users.filter(u => u.referredAnyone === 'yes').length;
+}
+
+function userInitials(u) {
+  if (!u.name.trim()) return '?';
+  return u.name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
 }
 
 function renderDots() {
-  document.getElementById('interview-dots').innerHTML = interviews.map(iv =>
-    `<div class="iv-dot${iv.done ? ' done' : ''}" onclick="toggleInterview(${iv.id})" title="Interview ${iv.id}">${iv.id}</div>`
-  ).join('');
+  document.getElementById('interview-dots').innerHTML = users.map((u, i) => {
+    const done = u.interviewStatus === 'done';
+    const name = u.name.trim() || `User ${i+1}`;
+    const arch = archetypes.find(a => a.id === u.archetype);
+    const archLabel = arch ? arch.label : '';
+    const tooltip = archLabel ? `${name} · ${archLabel}` : name;
+    return `<div class="iv-dot${done ? ' done' : ''}" onclick="toggleInterview(${i})">${userInitials(u)}<span class="iv-dot-tip">${esc(tooltip)}</span></div>`;
+  }).join('');
   updateStats();
 }
 
-function toggleInterview(id) {
-  const iv = interviews.find(i => i.id === id);
-  iv.done = !iv.done;
-  if (users[id - 1] !== undefined) users[id - 1].interviewDone = iv.done;
-  lsSave('anyx_interviews', interviews);
+function toggleInterview(idx) {
+  const u = users[idx];
+  u.interviewStatus = u.interviewStatus === 'done' ? 'not-booked' : 'done';
+  // Keep interviews array in sync for legacy export
+  if (interviews[idx]) interviews[idx].done = (u.interviewStatus === 'done');
   lsSave('anyx_users', users);
+  lsSave('anyx_interviews', interviews);
   renderDots();
-  // Re-render user list if it's currently visible
   if (document.getElementById('page-userlist').classList.contains('active')) renderUserList();
 }
 
@@ -1439,38 +1564,122 @@ function onboardSelectOptions(selected) {
     .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
 }
 
+function interviewStatusOptions(selected) {
+  return [['not-booked','Not booked'],['booked','Booked'],['done','Done']]
+    .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
+}
+
+function designPartnerOptions(selected) {
+  return [['not-yet','Not yet'],['invited','Invited'],['confirmed','Confirmed']]
+    .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
+}
+
+function priorityTierOptions(selected) {
+  return [['tbd','TBD'],['tier1','Tier 1'],['tier2','Tier 2'],['hold','Hold']]
+    .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
+}
+
+function toggleDetailRow(i) {
+  if (expandedRows.has(i)) expandedRows.delete(i); else expandedRows.add(i);
+  renderUserList();
+}
+
 function renderUserList() {
-  document.getElementById('user-tbody').innerHTML = users.map((u, i) => `
-    <tr>
-      <td class="user-row-num">${i+1}</td>
+  const tbody = document.getElementById('user-tbody');
+  tbody.innerHTML = '';
+  users.forEach((u, i) => {
+    const isOpen = expandedRows.has(i);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="user-row-num" style="cursor:pointer;text-align:center;" onclick="toggleDetailRow(${i})">
+        <div class="detail-expand-btn">${isOpen ? '▾' : '▸'}</div>
+        <div>${i+1}</div>
+      </td>
       <td><input type="text" value="${esc(u.name)}" placeholder="Name" oninput="updateUser(${i},'name',this.value)"></td>
       <td><input type="text" value="${esc(u.role)}" placeholder="Role" oninput="updateUser(${i},'role',this.value)"></td>
       <td><input type="text" value="${esc(u.industry)}" placeholder="Industry" oninput="updateUser(${i},'industry',this.value)"></td>
-      <td><input type="text" value="${esc(u.companySize)}" placeholder="1-10, 11-50..." oninput="updateUser(${i},'companySize',this.value)"></td>
-      <td><input type="text" value="${esc(u.howFound)}" placeholder="Referral / web / event..." oninput="updateUser(${i},'howFound',this.value)"></td>
-      <td><input type="text" value="${esc(u.contact)}" placeholder="+972..." oninput="updateUser(${i},'contact',this.value)"></td>
+      <td><input type="text" value="${esc(u.companySize)}" placeholder="1–10…" oninput="updateUser(${i},'companySize',this.value)"></td>
+      <td><input type="text" value="${esc(u.howFound)}" placeholder="Referral / web…" oninput="updateUser(${i},'howFound',this.value)"></td>
+      <td><input type="text" value="${esc(u.contact)}" placeholder="+972…" oninput="updateUser(${i},'contact',this.value)"></td>
       <td><select onchange="updateUser(${i},'archetype',this.value)">${archSelectOptions(u.archetype)}</select></td>
       <td><select onchange="updateUser(${i},'onboardPath',this.value)">${onboardSelectOptions(u.onboardPath)}</select></td>
-      <td style="text-align:center;">
-        <input type="checkbox" ${u.interviewDone ? 'checked' : ''} onchange="updateUserInterview(${i}, this.checked)">
-      </td>
-      <td><input type="text" value="${esc(u.notes)}" placeholder="Notes..." oninput="updateUser(${i},'notes',this.value)"></td>
-    </tr>
-  `).join('');
+      <td><select onchange="updateUser(${i},'interviewStatus',this.value)">${interviewStatusOptions(u.interviewStatus||'not-booked')}</select></td>
+      <td><select onchange="updateUserDesignPartner(${i},this.value)">${designPartnerOptions(u.designPartnerInvite||'not-yet')}</select></td>
+      <td><select onchange="updateUser(${i},'priorityTier',this.value)">${priorityTierOptions(u.priorityTier||'tbd')}</select></td>
+      <td><input type="text" value="${esc(u.notes)}" placeholder="Notes…" oninput="updateUser(${i},'notes',this.value)"></td>
+      <td style="text-align:center;"><button class="tally-btn" style="color:var(--coral);font-size:12px;" onclick="deleteUserRow(${i})" title="Delete row">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+    const dtr = document.createElement('tr');
+    dtr.className = 'detail-row' + (isOpen ? ' open' : '');
+    dtr.innerHTML = `<td colspan="14" style="padding:0;"><div class="detail-panel"><div class="detail-grid">
+      <div class="detail-field"><label>Friction point</label><textarea placeholder="What almost made them stop…" oninput="updateUser(${i},'frictionPoint',this.value)">${esc(u.frictionPoint||'')}</textarea></div>
+      <div class="detail-field"><label>Wow trigger</label><textarea placeholder="The moment it clicked…" oninput="updateUser(${i},'wowTrigger',this.value)">${esc(u.wowTrigger||'')}</textarea></div>
+      <div class="detail-field"><label>Q11 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q11Quote',this.value)">${esc(u.q11Quote||'')}</textarea></div>
+      <div class="detail-field"><label>Q18 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q18Quote',this.value)">${esc(u.q18Quote||'')}</textarea></div>
+      <div class="detail-field"><label>Referred anyone?</label><select onchange="updateUser(${i},'referredAnyone',this.value)">
+        <option value="unknown"${(u.referredAnyone||'unknown')==='unknown'?' selected':''}>Unknown</option>
+        <option value="yes"${(u.referredAnyone||'unknown')==='yes'?' selected':''}>Yes</option>
+        <option value="no"${(u.referredAnyone||'unknown')==='no'?' selected':''}>No</option>
+      </select></div>
+      <div class="detail-field"><label>Interview notes</label><textarea placeholder="Key takeaways, observations…" oninput="updateUser(${i},'interviewNotes',this.value)">${esc(u.interviewNotes||'')}</textarea></div>
+    </div></div></td>`;
+    tbody.appendChild(dtr);
+  });
 }
 
 function updateUser(idx, field, value) {
   users[idx][field] = value;
   lsSave('anyx_users', users);
-  if (field === 'onboardPath') updateStats();
+  if (field === 'onboardPath' || field === 'interviewStatus' || field === 'referredAnyone') {
+    updateStats();
+    if (field === 'interviewStatus') {
+      if (interviews[idx]) interviews[idx].done = (value === 'done');
+      lsSave('anyx_interviews', interviews);
+      renderDots();
+    }
+  }
 }
 
-function updateUserInterview(idx, done) {
-  users[idx].interviewDone = done;
-  interviews[idx].done = done;
+function updateUserDesignPartner(idx, value) {
+  users[idx].designPartnerInvite = value;
+  lsSave('anyx_users', users);
+  syncReferralCodes();
+  if (document.getElementById('page-referralcodes').classList.contains('active')) renderReferralCodes();
+}
+
+function addUserRow() {
+  users.push(defaultUser());
+  lsSave('anyx_users', users);
+  renderUserList();
+  renderDots();
+}
+
+function deleteUserRow(idx) {
+  if (users.length <= 1) return;
+  if (!confirm('Delete this row?')) return;
+  users.splice(idx, 1);
+  interviews.splice(idx, 1);
+  expandedRows.clear();
   lsSave('anyx_users', users);
   lsSave('anyx_interviews', interviews);
+  syncReferralCodes();
+  renderUserList();
   renderDots();
+  if (document.getElementById('page-referralcodes').classList.contains('active')) renderReferralCodes();
+}
+
+function exportUserCSV() {
+  const headers = ['#','Name','Role','Industry','Company size','How found','Contact','Archetype','Onboard path','Interview status','Design partner','Priority','Notes','Friction point','Wow trigger','Q11 verbatim','Q18 verbatim','Referred anyone','Interview notes'];
+  const rows = users.map((u, i) => [
+    i+1, u.name, u.role, u.industry, u.companySize, u.howFound, u.contact,
+    archetypes.find(a=>a.id===u.archetype)?.label||u.archetype,
+    u.onboardPath, u.interviewStatus, u.designPartnerInvite, u.priorityTier,
+    u.notes, u.frictionPoint, u.wowTrigger, u.q11Quote, u.q18Quote, u.referredAnyone, u.interviewNotes
+  ].map(v => `"${String(v||'').replace(/"/g,'""')}"`));
+  const csv = [headers.map(h=>`"${h}"`).join(','), ...rows.map(r=>r.join(','))].join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'anyx-users.csv'; a.click();
 }
 
 // ── SETTINGS ──
@@ -1544,6 +1753,72 @@ function copyMessage(idx) {
   navigator.clipboard.writeText(msgs[idx].textContent.trim()).then(() => alert('Copied to clipboard'));
 }
 
+// ── REFERRAL CODES ──
+function syncReferralCodes() {
+  const confirmed = users.map((u, i) => ({u, i})).filter(({u}) => u.designPartnerInvite === 'confirmed');
+  // Add missing entries
+  confirmed.forEach(({u, i}) => {
+    const exists = referralCodes.find(r => r.userIdx === i);
+    if (!exists) {
+      const namePart = u.name.trim().split(/\s+/)[0].toUpperCase() || `USER${i+1}`;
+      referralCodes.push({ userIdx: i, partnerName: u.name, code: `ANYX-${namePart}`, codeStatus: 'not-created', referralsSent: 0, conversions: 0, notes: '' });
+    } else {
+      // Keep name in sync
+      exists.partnerName = u.name;
+    }
+  });
+  // Remove entries for users no longer confirmed
+  const confirmedIdxs = confirmed.map(({i}) => i);
+  referralCodes = referralCodes.filter(r => confirmedIdxs.includes(r.userIdx));
+  lsSave('anyx_referral_codes', referralCodes);
+}
+
+function codeStatusOptions(selected) {
+  return [['not-created','Not created'],['created','Created'],['active','Active']]
+    .map(([v,l]) => `<option value="${v}"${selected===v?' selected':''}>${l}</option>`).join('');
+}
+
+function renderReferralCodes() {
+  syncReferralCodes();
+  const tbody = document.getElementById('ref-tbody');
+  if (!tbody) return;
+  if (referralCodes.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:24px;font-size:13px;">No confirmed design partners yet. Set a user's Design partner status to Confirmed in the User list.</td></tr>`;
+    return;
+  }
+  const totalSent = referralCodes.reduce((s,r) => s + (r.referralsSent||0), 0);
+  const totalConv = referralCodes.reduce((s,r) => s + (r.conversions||0), 0);
+  const rows = referralCodes.map((r, ri) => `
+    <tr>
+      <td>${esc(r.partnerName||'—')}</td>
+      <td><input type="text" class="ref-table" value="${esc(r.code)}" oninput="updateRC(${ri},'code',this.value)"></td>
+      <td><select class="ref-table" onchange="updateRC(${ri},'codeStatus',this.value)">${codeStatusOptions(r.codeStatus||'not-created')}</select></td>
+      <td><input type="number" class="ref-table" min="0" value="${r.referralsSent||0}" oninput="updateRC(${ri},'referralsSent',+this.value)"></td>
+      <td><input type="number" class="ref-table" min="0" value="${r.conversions||0}" oninput="updateRC(${ri},'conversions',+this.value)"></td>
+      <td style="font-weight:600;color:var(--teal);">${r.conversions||0}</td>
+      <td><input type="text" class="ref-table" value="${esc(r.notes||'')}" placeholder="Notes…" oninput="updateRC(${ri},'notes',this.value)"></td>
+    </tr>
+  `).join('');
+  const summary = `<tr class="ref-summary"><td>Total (${referralCodes.length} partners)</td><td></td><td></td><td>${totalSent}</td><td>${totalConv}</td><td style="color:var(--teal);">${totalConv}</td><td></td></tr>`;
+  tbody.innerHTML = rows + summary;
+}
+
+function updateRC(ri, field, value) {
+  referralCodes[ri][field] = value;
+  lsSave('anyx_referral_codes', referralCodes);
+  // Re-render to update free months
+  if (field === 'conversions') renderReferralCodes();
+}
+
+function exportReferralCSV() {
+  const headers = ['Partner name','Personal code','Code status','Referrals sent','Conversions','Free months earned','Notes'];
+  const rows = referralCodes.map(r => [r.partnerName, r.code, r.codeStatus, r.referralsSent||0, r.conversions||0, r.conversions||0, r.notes||'']
+    .map(v => `"${String(v).replace(/"/g,'""')}"`));
+  const csv = [headers.map(h=>`"${h}"`).join(','), ...rows.map(r=>r.join(','))].join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'anyx-referral-codes.csv'; a.click();
+}
+
 // ── INIT ──
 function renderAll() {
   renderArchetypeCards();
@@ -1556,6 +1831,7 @@ function renderAll() {
   renderPatterns();
   renderUserList();
   renderSettings();
+  renderReferralCodes();
 }
 
 renderAll();
