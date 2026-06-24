@@ -432,6 +432,57 @@
     border-top: 1px solid rgba(255,255,255,0.08);
   }
 
+  /* ── INTERVIEW FILTER ── */
+  .interview-top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+  }
+  .arch-filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .afw-btn {
+    padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1.5px solid var(--gray-200); background: var(--white); cursor: pointer;
+    font-family: var(--font); transition: all 0.15s; color: var(--gray-700);
+  }
+  .afw-btn:hover { border-color: #bbb; background: var(--gray-100); }
+  .afw-btn.afw-active { color: white; border-color: transparent; }
+
+  /* ── INTERVIEW MODE TOGGLE ── */
+  .iv-mode-btn {
+    padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600;
+    border: 1.5px solid var(--gray-200); background: var(--white); cursor: pointer;
+    font-family: var(--font); transition: all 0.15s; color: var(--gray-500);
+  }
+  .iv-mode-btn:hover { border-color: var(--gray-900); color: var(--gray-900); }
+  .iv-mode-btn.active { background: var(--gray-900); color: white; border-color: var(--gray-900); }
+
+  /* ── QUESTION FILTER STATES ── */
+  .q-item { transition: opacity 0.18s; }
+  .q-item.q-dimmed { opacity: 0.28; }
+  .q-item.q-emphasized { }
+
+  /* ── GO DEEPER CHIP ── */
+  .q-deeper { position: relative; display: inline-block; vertical-align: middle; margin-left: 6px; }
+  .q-deeper-chip {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+    background: var(--gray-100); color: var(--gray-500); cursor: help;
+    border: 1px solid var(--gray-200); transition: all 0.15s; white-space: nowrap;
+  }
+  .q-deeper-chip:hover { background: var(--gray-200); color: var(--gray-900); }
+  .q-deeper-tip {
+    display: none; position: absolute; left: 0; top: calc(100% + 7px);
+    z-index: 200; background: var(--gray-900); color: white;
+    font-size: 12px; line-height: 1.6; padding: 10px 14px;
+    border-radius: var(--radius-sm); width: 280px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.22); pointer-events: none;
+  }
+  .q-deeper:hover .q-deeper-tip { display: block; }
+
+  /* ── INTERVIEW LIVE MODE ── */
+  .interview-live .q-why { display: none !important; }
+  .interview-live .q-deeper { display: none !important; }
+  .interview-live .q-tags { display: none !important; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .sidebar { width: 180px; }
@@ -622,6 +673,7 @@
         <strong>Before booking formal interviews:</strong> Send an informal text to all 10 today: "Hey, I'd love 30 minutes to hear more about how you're using Anyx. When works this week?" No pitch. No program mention. Just book the calls.
       </div>
 
+      <div id="interview-controls"></div>
       <div class="card" id="interview-guide-content"></div>
     </div>
 
@@ -1008,20 +1060,20 @@ const INTERVIEW_PHASES = [
   { title: 'Phase 1 — Warm up & context', dotColor: '#888', timing: '5 min · 3 questions', questions: [
     { num:'01', text:'Walk me through a typical day at work before Anyx — what did your morning look like?', why:'Sets the before-state baseline. Get them feeling the pain before discussing the solution.', archs:['all'] },
     { num:'02', text:'What were you using before Anyx to manage your work — tools, habits, workarounds?', why:'Surfaces competitive landscape and reveals how sophisticated they are.', archs:['all'] },
-    { num:'03', text:'What was the specific frustration that made you willing to try something new?', why:'The "job to be done" question. This becomes your GTM pain point language.', archs:['op','dm','in'] },
+    { num:'03', text:'What was the specific frustration that made you willing to try something new?', why:'The "job to be done" question. This becomes your GTM pain point language.', archs:['op','dm','in'], deeperNote: "This is your GTM pain point language. Write down their exact phrasing." },
   ]},
   { title: 'Phase 2 — The friction zone', dotColor: 'var(--coral)', timing: '8 min · 4 questions', questions: [
     { num:'04', text:'When you first started using Anyx, what confused you or felt unclear?', why:'Opens the door to honest friction without making it feel like a complaint.', archs:['all'] },
-    { num:'05', text:'Was there a moment where you almost gave up or lost confidence it would work for you?', why:'The dropout risk question. This is where you find the exact moment your onboarding needs to intervene.', archs:['op','in'] },
+    { num:'05', text:'Was there a moment where you almost gave up or lost confidence it would work for you?', why:'The dropout risk question. This is where you find the exact moment your onboarding needs to intervene.', archs:['op','in'], deeperNote: "Slow down here. This is where onboarding needs to catch people. Ask: what almost made you stop?" },
     { num:'06', text:'How long did it take before you felt like you actually understood what Anyx could do?', why:"Quantifies the time-to-competence gap. If it's days or weeks, that's your onboarding problem statement.", archs:['all'] },
-    { num:'07', text:'Did someone help you figure it out, or did you work through it alone?', why:'Directly maps to guided vs self-driven paths. If guided — who, what did they do, what unlocked it?', archs:['or','dm'] },
+    { num:'07', text:'Did someone help you figure it out, or did you work through it alone?', why:'Directly maps to guided vs self-driven paths. If guided — who, what did they do, what unlocked it?', archs:['or','dm'], deeperNote: "If they say someone helped — ask who, what did they do, what specifically unlocked it." },
   ]},
   { title: 'Phase 3 — The wow moment', dotColor: 'var(--purple)', timing: '10 min · 5 questions', questions: [
     { num:'08', text:'Tell me about the moment it clicked. What were you doing, what happened, and how did it feel?', why:"The core question. Let them tell it as a story. Don't interrupt. Write down their exact words.", archs:['all'] },
     { num:'09', text:'What specific feature or action triggered that feeling?', why:'Forces specificity. Was it inbox triage? A Groopy summary? First automated action? This becomes the activation target.', archs:['all'] },
-    { num:'10', text:'What did you do right after that moment — did you tell anyone, try something else, or just keep going?', why:"The organic virality signal. If they told someone immediately, that's your referral trigger.", archs:['op','or'] },
+    { num:'10', text:'What did you do right after that moment — did you tell anyone, try something else, or just keep going?', why:"The organic virality signal. If they told someone immediately, that's your referral trigger.", archs:['op','or'], deeperNote: "If they told someone — ask who, what words they used, whether that person signed up. This is your referral trigger." },
     { num:'11', text:'If you had to describe that moment to a skeptic in one sentence, what would you say?', why:"⭐ This is your marketing copy. Write it verbatim. The best product descriptions come from users, not founders.", archs:['all'], highlight: true, highlightColor: 'var(--purple)' },
-    { num:'12', text:'Looking back, was there anything that could have gotten you to that moment faster?', why:"Retrospective onboarding design input. They'll often name exactly the thing you need to build.", archs:['dm','in'] },
+    { num:'12', text:'Looking back, was there anything that could have gotten you to that moment faster?', why:"Retrospective onboarding design input. They'll often name exactly the thing you need to build.", archs:['dm','in'], deeperNote: "They'll often name exactly what you need to build. Listen for: a demo, a use case template, a guided first step." },
   ]},
   { title: 'Phase 4 — Current usage & value', dotColor: 'var(--teal)', timing: '8 min · 3 questions', questions: [
     { num:'13', text:'Walk me through how you use Anyx in a typical day now. What does it actually do for you?', why:"Maps current usage patterns by archetype. Tells you where the product is sticky.", archs:['all'] },
@@ -1030,7 +1082,7 @@ const INTERVIEW_PHASES = [
   ]},
   { title: 'Phase 5 — Advocacy & referral', dotColor: 'var(--amber)', timing: '7 min · 3 questions', questions: [
     { num:'16', text:'Have you told anyone about Anyx? What did you say, and what was their reaction?', why:"Maps organic referral behavior. Who did they tell? What words did they use? Did the other person sign up?", archs:['all'] },
-    { num:'17', text:'Who in your network would get the most value from this — and what would make you comfortable introducing them?', why:"The warm intro unlock question. You're not asking them to refer — you're asking what would make it easy.", archs:['op','dm'] },
+    { num:'17', text:'Who in your network would get the most value from this — and what would make you comfortable introducing them?', why:"The warm intro unlock question. You're not asking them to refer — you're asking what would make it easy.", archs:['op','dm'], deeperNote: "These are your most networked archetypes. Don't move on quickly — ask: what would make you comfortable making that intro?" },
     { num:'18', text:'If I gave you a card that said "Anyx changed how I work" — what would you write on the other side to convince a peer to try it?', why:"⭐ Your testimonial, champion quote, and referral message all in one. Write it verbatim.", archs:['all'], highlight: true, highlightColor: 'var(--amber)' },
   ]},
 ];
@@ -1135,16 +1187,87 @@ function renderInterviewGuide() {
         <span class="timing">${phase.timing}</span>
       </div>
       ${phase.questions.map(q => `
-        <div class="q-item">
+        <div class="q-item" data-archs="${q.archs.join(' ')}">
           <div class="q-row"><span class="q-num">${q.num}</span><div>
             <div class="q-text"${q.highlight ? ` style="font-weight:600;color:${q.highlightColor};"` : ''}>${q.text}</div>
             <div class="q-why">${q.why}</div>
-            <div class="q-tags">${q.archs.map(id => getArchTag(id)).join('')}</div>
+            <div class="q-tags">
+              ${q.archs.map(id => getArchTag(id)).join('')}${q.deeperNote ? `<span class="q-deeper"><span class="q-deeper-chip">↓ Go deeper</span><span class="q-deeper-tip">${q.deeperNote}</span></span>` : ''}
+            </div>
           </div></div>
         </div>
       `).join('')}
     </div>
   `).join('');
+  renderInterviewControls();
+  applyFilter();
+}
+
+// ── INTERVIEW FILTER & MODE ──
+let activeArchFilter = 'all';
+let interviewModeActive = false;
+
+function renderInterviewControls() {
+  const el = document.getElementById('interview-controls');
+  if (!el) return;
+  const allActive = activeArchFilter === 'all';
+  const archBtns = archetypes.map(a => {
+    const isActive = activeArchFilter === a.id;
+    return `<button class="afw-btn${isActive ? ' afw-active' : ''}"
+      style="${isActive ? `background:${COLOR_HEX[a.colorVar]};border-color:${COLOR_HEX[a.colorVar]};` : ''}"
+      onclick="setArchFilter('${a.id}')">${esc(a.label)}</button>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="interview-top-bar">
+      <div class="arch-filter-row">
+        <button class="afw-btn${allActive ? ' afw-active' : ''}"
+          style="${allActive ? 'background:var(--gray-900);border-color:var(--gray-900);' : ''}"
+          onclick="setArchFilter('all')">All</button>
+        ${archBtns}
+      </div>
+      <button class="iv-mode-btn${interviewModeActive ? ' active' : ''}" onclick="toggleInterviewMode()">
+        ${interviewModeActive ? '● Live mode on' : 'Interview mode'}
+      </button>
+    </div>
+  `;
+}
+
+function setArchFilter(archId) {
+  activeArchFilter = archId;
+  renderInterviewControls();
+  applyFilter();
+}
+
+function applyFilter() {
+  document.querySelectorAll('#interview-guide-content .q-item').forEach(item => {
+    const itemArchs = (item.dataset.archs || '').split(' ').filter(Boolean);
+    item.classList.remove('q-dimmed', 'q-emphasized');
+    item.style.removeProperty('box-shadow');
+    item.style.removeProperty('padding-left');
+    if (activeArchFilter === 'all') {
+      if (!itemArchs.includes('all')) {
+        const firstArch = archetypes.find(a => itemArchs.includes(a.id));
+        if (firstArch) {
+          item.style.boxShadow = `inset 3px 0 0 ${COLOR_HEX[firstArch.colorVar]}55`;
+          item.style.paddingLeft = '10px';
+        }
+      }
+    } else {
+      if (itemArchs.includes(activeArchFilter) || itemArchs.includes('all')) {
+        const a = archetypes.find(x => x.id === activeArchFilter);
+        item.classList.add('q-emphasized');
+        if (a) { item.style.boxShadow = `inset 4px 0 0 ${COLOR_HEX[a.colorVar]}`; item.style.paddingLeft = '12px'; }
+      } else {
+        item.classList.add('q-dimmed');
+      }
+    }
+  });
+}
+
+function toggleInterviewMode() {
+  interviewModeActive = !interviewModeActive;
+  document.getElementById('interview-guide-content').classList.toggle('interview-live', interviewModeActive);
+  renderInterviewControls();
 }
 
 // ── SYNTHESIS TRACKER ──
