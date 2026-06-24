@@ -554,6 +554,16 @@
   select.op-guided        { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
   select.op-self-driven   { background: var(--teal-light); color: var(--teal); border-color: #9ed8c8; }
 
+  /* ── NEXT ACTION DATE STATES ── */
+  .date-overdue { background: var(--coral-light) !important; color: var(--coral) !important; border-radius: 3px; font-weight: 600; }
+  .date-today   { background: var(--amber-light) !important; color: var(--amber) !important; border-radius: 3px; font-weight: 600; }
+  .next-action-cell { min-width: 130px; }
+  .user-table input[type="date"] {
+    border: none; background: transparent; font-size: 11px; color: var(--gray-700);
+    font-family: var(--font); padding: 2px 2px; outline: none; width: 100%;
+  }
+  .user-table input[type="date"]:focus { background: var(--purple-light); border-radius: 3px; }
+
   /* ── EXPAND BTN ── */
   .user-row-num { width: 40px; }
   .detail-expand-btn {
@@ -733,6 +743,8 @@
               <th>Archetype</th>
               <th>Onboard path</th>
               <th>Interview status</th>
+              <th>Next action</th>
+              <th>By when</th>
               <th>Design partner</th>
               <th>Priority</th>
               <th>Notes</th>
@@ -1339,7 +1351,7 @@ function defaultUser() {
     archetype:'unknown', onboardPath:'unknown',
     interviewStatus:'not-booked', designPartnerInvite:'not-yet', priorityTier:'tbd',
     notes:'', frictionPoint:'', wowTrigger:'', q11Quote:'', q18Quote:'',
-    referredAnyone:'unknown', interviewNotes:''
+    referredAnyone:'unknown', interviewNotes:'', nextAction:'', nextActionDate:''
   };
 }
 
@@ -1356,6 +1368,8 @@ users = users.map(u => {
   if (!u.referredAnyone) u.referredAnyone = 'unknown';
   if (u.interviewNotes === undefined) u.interviewNotes = '';
   if (u.linkedin === undefined) u.linkedin = '';
+  if (u.nextAction === undefined) u.nextAction = '';
+  if (u.nextActionDate === undefined) u.nextActionDate = '';
   return u;
 });
 
@@ -1685,6 +1699,24 @@ function onboardSelectOptions(selected) {
     .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
 }
 
+function renderDateCell(i, dateVal) {
+  const today = new Date().toISOString().slice(0, 10);
+  let cls = '';
+  if (dateVal) {
+    if (dateVal < today) cls = 'date-overdue';
+    else if (dateVal === today) cls = 'date-today';
+  }
+  return `<input type="date" class="${cls}" value="${esc(dateVal)}" onchange="updateUser(${i},'nextActionDate',this.value);this.className=getDateClass(this.value);">`;
+}
+
+function getDateClass(val) {
+  if (!val) return '';
+  const today = new Date().toISOString().slice(0, 10);
+  if (val < today) return 'date-overdue';
+  if (val === today) return 'date-today';
+  return '';
+}
+
 function interviewStatusOptions(selected) {
   return [['not-booked','Not booked'],['booked','Booked'],['done','Done']]
     .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
@@ -1728,6 +1760,8 @@ function renderUserList() {
       <td><select class="arch-${u.archetype||'unknown'}" onchange="this.className='arch-'+this.value;updateUser(${i},'archetype',this.value)">${archSelectOptions(u.archetype)}</select></td>
       <td><select class="op-${u.onboardPath||'unknown'}" onchange="this.className='op-'+this.value;updateUser(${i},'onboardPath',this.value)">${onboardSelectOptions(u.onboardPath)}</select></td>
       <td><select class="istat-${u.interviewStatus||'not-booked'}" onchange="this.className='istat-'+this.value;updateUser(${i},'interviewStatus',this.value)">${interviewStatusOptions(u.interviewStatus||'not-booked')}</select></td>
+      <td class="next-action-cell"><input type="text" value="${esc(u.nextAction)}" placeholder="e.g. Send outreach…" oninput="updateUser(${i},'nextAction',this.value)"></td>
+      <td>${renderDateCell(i, u.nextActionDate)}</td>
       <td><select class="dpi-${u.designPartnerInvite||'not-yet'}" onchange="this.className='dpi-'+this.value;updateUserDesignPartner(${i},this.value)">${designPartnerOptions(u.designPartnerInvite||'not-yet')}</select></td>
       <td><select class="ptier-${u.priorityTier||'tbd'}" onchange="this.className='ptier-'+this.value;updateUser(${i},'priorityTier',this.value)">${priorityTierOptions(u.priorityTier||'tbd')}</select></td>
       <td><input type="text" value="${esc(u.notes)}" placeholder="Notes…" oninput="updateUser(${i},'notes',this.value)"></td>
@@ -1737,7 +1771,7 @@ function renderUserList() {
     tbody.appendChild(tr);
     const dtr = document.createElement('tr');
     dtr.className = 'detail-row' + (isOpen ? ' open' : '');
-    dtr.innerHTML = `<td colspan="16" style="padding:0;"><div class="detail-panel"><div class="detail-grid">
+    dtr.innerHTML = `<td colspan="18" style="padding:0;"><div class="detail-panel"><div class="detail-grid">
       <div class="detail-field"><label>Friction point</label><textarea placeholder="What almost made them stop…" oninput="updateUser(${i},'frictionPoint',this.value)">${esc(u.frictionPoint||'')}</textarea></div>
       <div class="detail-field"><label>Wow trigger</label><textarea placeholder="The moment it clicked…" oninput="updateUser(${i},'wowTrigger',this.value)">${esc(u.wowTrigger||'')}</textarea></div>
       <div class="detail-field"><label>Q11 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q11Quote',this.value)">${esc(u.q11Quote||'')}</textarea></div>
@@ -1795,11 +1829,12 @@ function deleteUserRow(idx) {
 }
 
 function exportUserCSV() {
-  const headers = ['#','Name','Role','Industry','Company size','How found','Contact','LinkedIn','Archetype','Onboard path','Interview status','Design partner','Priority','Notes','Friction point','Wow trigger','Q11 verbatim','Q18 verbatim','Referred anyone','Interview notes'];
+  const headers = ['#','Name','Role','Industry','Company size','How found','Contact','LinkedIn','Archetype','Onboard path','Interview status','Next action','By when','Design partner','Priority','Notes','Friction point','Wow trigger','Q11 verbatim','Q18 verbatim','Referred anyone','Interview notes'];
   const rows = users.map((u, i) => [
     i+1, u.name, u.role, u.industry, u.companySize, u.howFound, u.contact, u.linkedin||'',
     archetypes.find(a=>a.id===u.archetype)?.label||u.archetype,
-    u.onboardPath, u.interviewStatus, u.designPartnerInvite, u.priorityTier,
+    u.onboardPath, u.interviewStatus, u.nextAction||'', u.nextActionDate||'',
+    u.designPartnerInvite, u.priorityTier,
     u.notes, u.frictionPoint, u.wowTrigger, u.q11Quote, u.q18Quote, u.referredAnyone, u.interviewNotes
   ].map(v => `"${String(v||'').replace(/"/g,'""')}"`));
   const csv = [headers.map(h=>`"${h}"`).join(','), ...rows.map(r=>r.join(','))].join('\n');
