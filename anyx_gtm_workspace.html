@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anyx — GTM Workspace</title>
+<style>
+  /* ── TOKENS ── */
+  :root {
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-mid: #AFA9EC;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --coral: #993C1D;
+    --coral-light: #FAECE7;
+    --amber: #854F0B;
+    --amber-light: #FAEEDA;
+    --gray-900: #1a1a1a;
+    --gray-700: #444;
+    --gray-500: #888;
+    --gray-200: #e8e8e8;
+    --gray-100: #f5f5f5;
+    --white: #ffffff;
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: #f7f7f9;
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+
+  /* ── LAYOUT ── */
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--gray-900);
+    padding: 24px 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-logo span {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .sidebar-logo small {
+    display: block;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .nav-section {
+    padding: 0 12px;
+    margin-bottom: 8px;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+  .nav-item.active { background: var(--purple); color: white; }
+
+  .nav-item .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .main {
+    margin-left: 220px;
+    flex: 1;
+    padding: 32px 40px;
+    max-width: calc(100vw - 220px);
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── COMPONENTS ── */
+  .page-header { margin-bottom: 28px; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.4px; }
+  .page-header p { font-size: 14px; color: var(--gray-500); margin-top: 4px; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+
+  .card-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-teal { background: var(--teal-light); color: var(--teal); }
+  .tag-coral { background: var(--coral-light); color: var(--coral); }
+  .tag-amber { background: var(--amber-light); color: var(--amber); }
+  .tag-gray { background: var(--gray-100); color: var(--gray-500); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-700);
+    cursor: pointer;
+    font-family: var(--font);
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--gray-100); border-color: #ccc; }
+  .btn-primary { background: var(--purple); color: white; border-color: var(--purple); }
+  .btn-primary:hover { background: #4640a3; border-color: #4640a3; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .divider { border: none; border-top: 1px solid var(--gray-200); margin: 24px 0; }
+
+  .info-box {
+    background: var(--purple-light);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #3C3489;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .warn-box {
+    background: var(--amber-light);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--amber);
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  /* ── PHASE NAV (overview) ── */
+  .phase-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+
+  .phase-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .phase-card:hover { border-color: var(--purple-mid); }
+  .phase-card.active { border: 2px solid var(--purple); }
+  .phase-card .num { font-size: 11px; color: var(--gray-500); margin-bottom: 6px; }
+  .phase-card .title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .phase-card .sub { font-size: 12px; color: var(--gray-500); line-height: 1.4; }
+  .phase-card .status { margin-top: 10px; }
+
+  /* ── ARCHETYPE CARDS ── */
+  .arch-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 18px; }
+  .arch-card .arch-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .arch-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .arch-card .attr { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-top: 1px solid var(--gray-200); gap: 8px; }
+  .arch-card .attr-label { color: var(--gray-500); flex-shrink: 0; }
+  .arch-card .attr-val { color: var(--gray-700); text-align: right; line-height: 1.4; }
+
+  /* ── INTERVIEW GUIDE ── */
+  .phase-block { margin-bottom: 24px; }
+  .phase-header {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 14px;
+  }
+  .phase-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .phase-header .title { font-size: 14px; font-weight: 600; }
+  .phase-header .timing { font-size: 12px; color: var(--gray-500); margin-left: auto; }
+
+  .q-item { padding: 12px 0; border-bottom: 1px solid var(--gray-200); }
+  .q-item:last-child { border-bottom: none; }
+  .q-row { display: flex; gap: 12px; }
+  .q-num { font-size: 11px; color: var(--gray-500); min-width: 22px; padding-top: 2px; }
+  .q-text { font-size: 13px; color: var(--gray-900); line-height: 1.5; margin-bottom: 4px; }
+  .q-why { font-size: 12px; color: var(--gray-500); line-height: 1.4; font-style: italic; margin-bottom: 6px; }
+  .q-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+
+  /* ── SYNTHESIS TEMPLATE ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--gray-100); border-radius: var(--radius-sm); padding: 12px 14px; }
+  .stat-card .s-label { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; }
+  .stat-card .s-val { font-size: 26px; font-weight: 700; color: var(--gray-900); }
+  .stat-card .s-sub { font-size: 11px; color: var(--gray-500); }
+
+  .interview-dots { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+  .iv-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--gray-100); border: 1px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--gray-500); cursor: pointer;
+    transition: all 0.15s; user-select: none;
+  }
+  .iv-dot.done { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); font-weight: 600; }
+
+  .tally-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid var(--gray-200);
+  }
+  .tally-row:last-child { border-bottom: none; }
+  .tally-label { font-size: 13px; flex: 1; }
+  .tally-bar-wrap { width: 100px; height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
+  .tally-bar { height: 6px; background: var(--purple); border-radius: 3px; transition: width 0.2s; }
+  .tally-n { font-size: 12px; color: var(--gray-500); min-width: 30px; text-align: right; }
+  .tally-btn {
+    font-size: 14px; width: 26px; height: 26px; border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200); background: var(--white);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--gray-700); transition: all 0.1s;
+  }
+  .tally-btn:hover { background: var(--gray-100); }
+
+  .quote-slot {
+    background: var(--gray-100); border-radius: var(--radius-sm);
+    padding: 12px 14px; margin-bottom: 8px;
+  }
+  .quote-meta { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .quote-text[contenteditable] {
+    font-size: 13px; color: var(--gray-900);
+    line-height: 1.5; outline: none; min-height: 20px;
+    font-style: italic;
+  }
+  .quote-text.empty { color: var(--gray-500); font-style: normal; }
+
+  .pattern-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .pattern-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 14px; }
+  .pattern-title { font-size: 12px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px; }
+  .pattern-content[contenteditable] {
+    font-size: 13px; color: var(--gray-900); outline: none; min-height: 36px;
+    line-height: 1.5;
+  }
+  .pattern-content.empty { color: var(--gray-500); }
+
+  /* ── DESIGN PARTNER ── */
+  .pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .pillar-card { border-radius: var(--radius); padding: 18px; }
+  .pillar-icon { font-size: 22px; margin-bottom: 8px; }
+  .pillar-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .pillar-desc { font-size: 12px; line-height: 1.5; opacity: 0.8; }
+
+  .ref-box {
+    border: 2px solid #B5D4F4;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    background: #E6F1FB;
+  }
+  .ref-flow { display: grid; grid-template-columns: 1fr 20px 1fr 20px 1fr; gap: 6px; align-items: center; margin: 14px 0; }
+  .ref-step { background: white; border-radius: var(--radius-sm); padding: 10px 12px; }
+  .ref-step-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+  .ref-step-desc { font-size: 11px; color: var(--gray-500); line-height: 1.4; }
+  .ref-arrow { text-align: center; color: var(--gray-500); font-size: 16px; }
+  .ref-both { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ref-side { border-radius: var(--radius-sm); padding: 12px 14px; }
+  .ref-side-label { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+  .ref-side-val { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .ref-side-sub { font-size: 11px; line-height: 1.4; }
+
+  .code-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: white; border-radius: var(--radius-sm);
+    padding: 6px 12px; margin-top: 10px;
+    border: 1px solid var(--gray-200);
+    font-size: 13px;
+  }
+  .code-chip code { font-size: 14px; font-weight: 700; color: var(--purple); font-family: monospace; }
+
+  .cadence-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .cadence-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 14px; }
+  .cadence-freq { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; }
+  .cadence-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .cadence-desc { font-size: 12px; color: var(--gray-500); line-height: 1.4; margin-bottom: 6px; }
+  .cadence-who { font-size: 11px; color: var(--gray-500); }
+
+  /* ── OUTREACH ── */
+  .message-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px;
+  }
+  .message-label { font-size: 12px; font-weight: 600; margin-bottom: 12px; color: var(--gray-700); }
+  .message-body {
+    font-size: 13px; color: var(--gray-900); line-height: 1.8;
+    white-space: pre-wrap; border-radius: var(--radius-sm);
+    background: var(--gray-100); padding: 16px; margin-bottom: 12px;
+  }
+  .message-actions { display: flex; gap: 8px; }
+
+  /* ── NEXT STEPS ── */
+  .step-row {
+    display: grid; grid-template-columns: 32px 110px 1fr 120px;
+    gap: 12px; align-items: start;
+    padding: 14px 16px; border-radius: var(--radius-sm);
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .step-row:last-child { border-bottom: none; }
+  .step-row.step-zero { background: var(--coral-light); }
+  .step-row.step-active { background: var(--teal-light); }
+  .step-num { font-size: 13px; font-weight: 700; }
+  .step-when { font-size: 12px; font-weight: 600; }
+  .step-action { font-size: 13px; line-height: 1.5; }
+  .step-owner { font-size: 12px; color: var(--gray-500); }
+
+  .step-checkbox {
+    display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer; font-size: 12px; color: var(--gray-500);
+  }
+  .step-checkbox input { accent-color: var(--purple); }
+
+  /* ── ARCHETYPE TABLE ── */
+  table.arch-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.arch-table th {
+    background: var(--gray-900); color: white;
+    padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600;
+  }
+  table.arch-table td {
+    padding: 10px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: top;
+    line-height: 1.4;
+  }
+  table.arch-table tr:last-child td { border-bottom: none; }
+  table.arch-table tr:nth-child(even) td { background: var(--gray-100); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .sidebar { width: 180px; }
+    .main { margin-left: 180px; padding: 20px; }
+    .phase-cards { grid-template-columns: 1fr 1fr; }
+    .card-grid.cols-4 { grid-template-columns: 1fr 1fr; }
+    .pillar-grid { grid-template-columns: 1fr; }
+    .cadence-grid { grid-template-columns: 1fr 1fr; }
+    .ref-flow { grid-template-columns: 1fr; }
+    .ref-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <span>Anyx</span>
+      <small>GTM Workspace</small>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <button class="nav-item active" onclick="showPage('overview')">
+        <span class="dot" style="background:#534AB7"></span> Plan overview
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Phase 01</div>
+      <button class="nav-item" onclick="showPage('archetypes')">
+        <span class="dot" style="background:#888"></span> User archetypes
+      </button>
+      <button class="nav-item" onclick="showPage('interview')">
+        <span class="dot" style="background:#888"></span> Interview guide
+      </button>
+      <button class="nav-item" onclick="showPage('synthesis')">
+        <span class="dot" style="background:#888"></span> Synthesis tracker
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Phase 02</div>
+      <button class="nav-item" onclick="showPage('program')">
+        <span class="dot" style="background:#888"></span> Partner program
+      </button>
+      <button class="nav-item" onclick="showPage('outreach')">
+        <span class="dot" style="background:#888"></span> Outreach messages
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Action</div>
+      <button class="nav-item" onclick="showPage('nextsteps')">
+        <span class="dot" style="background:#0F6E56"></span> Next steps
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <div id="page-overview" class="page active">
+      <div class="page-header">
+        <h1>Anyx — Product & GTM Plan</h1>
+        <p>Early adopter program · v2 council-adjusted · Confidential</p>
+      </div>
+
+      <div class="info-box">
+        <strong>Council adjustment:</strong> This plan was pressure-tested through a 5-advisor council. Three things changed: sequencing (interviews before outreach), framing (status not title), and infrastructure (partner group runs on Groopy, not plain WhatsApp).
+      </div>
+
+      <div class="section-label">The four phases</div>
+      <div class="phase-cards">
+        <div class="phase-card" onclick="showPage('archetypes')">
+          <div class="num">Phase 01</div>
+          <div class="title">Extract the wow</div>
+          <div class="sub">Map the aha moment through structured interviews</div>
+          <div class="status"><span class="tag tag-teal">In progress</span></div>
+        </div>
+        <div class="phase-card" onclick="showPage('program')">
+          <div class="num">Phase 02</div>
+          <div class="title">Design partners</div>
+          <div class="sub">Staged outreach after 5 interviews. Run on Groopy.</div>
+          <div class="status"><span class="tag tag-purple">Defined</span></div>
+        </div>
+        <div class="phase-card">
+          <div class="num">Phase 03</div>
+          <div class="title">Champions & referral</div>
+          <div class="sub">Turn love into systematic growth</div>
+          <div class="status"><span class="tag tag-gray">Up next</span></div>
+        </div>
+        <div class="phase-card">
+          <div class="num">Phase 04</div>
+          <div class="title">Scale-ready onboarding</div>
+          <div class="sub">Systematize the integrator role</div>
+          <div class="status"><span class="tag tag-gray">Planned</span></div>
+        </div>
+      </div>
+
+      <div class="section-label">Core insight</div>
+      <div class="card">
+        <p style="font-size:14px;line-height:1.7;color:var(--gray-700);">10 high-profile early users all independently say Anyx changed how they work. The wow moment takes time to reach — it requires either a curious self-starter or the founders manually guiding the user. <strong style="color:var(--gray-900)">Currently, the founders are the onboarding layer. This doesn't scale.</strong> Everything in this plan flows from solving that one problem.</p>
+      </div>
+    </div>
+
+    <!-- ARCHETYPES -->
+    <div id="page-archetypes" class="page">
+      <div class="page-header">
+        <h1>User archetypes</h1>
+        <p>All 10 users share one trait: personal productivity first. Role varies — mindset doesn't.</p>
+      </div>
+
+      <div class="info-box">Unifying trait across all 10: they adopted Anyx for themselves before thinking about their team.</div>
+
+      <div class="card-grid cols-2" style="margin-bottom:24px;">
+        <div class="arch-card">
+          <div class="arch-head">
+            <div class="arch-avatar" style="background:var(--purple-light);color:var(--purple);">💼</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;">Operator</div>
+              <div style="font-size:12px;color:var(--gray-500);">CEO · founder · self-made</div>
+            </div>
+          </div>
+          <div class="attr"><span class="attr-label">Drive</span><span class="attr-val">Control & speed. Decisions off their plate.</span></div>
+          <div class="attr"><span class="attr-label">First use</span><span class="attr-val">Inbox triage, scheduling, task clearing</span></div>
+          <div class="attr"><span class="attr-label">Onboard</span><span class="attr-val">Guided — needs to see ROI fast</span></div>
+          <div style="margin-top:10px;"><span class="tag tag-purple">Wow: first autonomous action</span></div>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-head">
+            <div class="arch-avatar" style="background:var(--teal-light);color:var(--teal);">⚙️</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;">Orchestrator</div>
+              <div style="font-size:12px;color:var(--gray-500);">COO · Chief of Staff · Ops lead</div>
+            </div>
+          </div>
+          <div class="attr"><span class="attr-label">Drive</span><span class="attr-val">Alignment & visibility across moving parts.</span></div>
+          <div class="attr"><span class="attr-label">First use</span><span class="attr-val">Summaries, team updates, meeting prep</span></div>
+          <div class="attr"><span class="attr-label">Onboard</span><span class="attr-val">Self-driven — naturally curious, digs in</span></div>
+          <div style="margin-top:10px;"><span class="tag tag-teal">Wow: Groopy triage in a group</span></div>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-head">
+            <div class="arch-avatar" style="background:var(--coral-light);color:var(--coral);">🤝</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;">Dealmaker</div>
+              <div style="font-size:12px;color:var(--gray-500);">Sales lead · BD · lawyer</div>
+            </div>
+          </div>
+          <div class="attr"><span class="attr-label">Drive</span><span class="attr-val">Never miss a follow-up. Pipeline clarity.</span></div>
+          <div class="attr"><span class="attr-label">First use</span><span class="attr-val">CRM nudges, follow-up sequences, reminders</span></div>
+          <div class="attr"><span class="attr-label">Onboard</span><span class="attr-val">Guided — needs a concrete use case first</span></div>
+          <div style="margin-top:10px;"><span class="tag tag-coral">Wow: first automated follow-up sent</span></div>
+        </div>
+
+        <div class="arch-card">
+          <div class="arch-head">
+            <div class="arch-avatar" style="background:var(--amber-light);color:var(--amber);">🌍</div>
+            <div>
+              <div style="font-size:14px;font-weight:600;">Independent</div>
+              <div style="font-size:12px;color:var(--gray-500);">Travel agent · solo pro · consultant</div>
+            </div>
+          </div>
+          <div class="attr"><span class="attr-label">Drive</span><span class="attr-val">Do more alone. Replace what they can't hire.</span></div>
+          <div class="attr"><span class="attr-label">First use</span><span class="attr-val">Client comms, scheduling, task tracking</span></div>
+          <div class="attr"><span class="attr-label">Onboard</span><span class="attr-val">Self-driven — high curiosity, time-poor</span></div>
+          <div style="margin-top:10px;"><span class="tag tag-amber">Wow: first client task handled end-to-end</span></div>
+        </div>
+      </div>
+
+      <div class="section-label">Onboarding paths</div>
+      <div class="card-grid cols-2">
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--teal);">Self-driven path</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-bottom:10px;">Orchestrator & Independent</div>
+          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2;">
+            <li>Explores alone until the wow moment hits</li>
+            <li>Higher friction, higher ownership once they get it</li>
+            <li>Needs clear capability signals early</li>
+            <li>Needs one killer first use case to latch onto</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--purple);">Guided path</div>
+          <div style="font-size:12px;color:var(--gray-500);margin-bottom:10px;">Operator & Dealmaker</div>
+          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2;">
+            <li>Needs founders in the chat to unlock the wow</li>
+            <li>Fastest path to activation, doesn't scale yet</li>
+            <li>Needs a concrete "try this now" moment</li>
+            <li>Needs a real result within the first session</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERVIEW GUIDE -->
+    <div id="page-interview" class="page">
+      <div class="page-header">
+        <h1>Interview guide</h1>
+        <p>18 questions · 5 phases · 30–40 min · Don't read verbatim — use as anchors</p>
+      </div>
+
+      <div class="info-box">
+        <strong>Before booking formal interviews:</strong> Send an informal text to all 10 today: "Hey, I'd love 30 minutes to hear more about how you're using Anyx. When works this week?" No pitch. No program mention. Just book the calls.
+      </div>
+
+      <div class="card">
+        <div class="phase-block">
+          <div class="phase-header">
+            <div class="phase-dot" style="background:#888;"></div>
+            <span class="title">Phase 1 — Warm up & context</span>
+            <span class="timing">5 min · 3 questions</span>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">01</span><div>
+              <div class="q-text">Walk me through a typical day at work before Anyx — what did your morning look like?</div>
+              <div class="q-why">Sets the before-state baseline. Get them feeling the pain before discussing the solution.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">02</span><div>
+              <div class="q-text">What were you using before Anyx to manage your work — tools, habits, workarounds?</div>
+              <div class="q-why">Surfaces competitive landscape and reveals how sophisticated they are.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">03</span><div>
+              <div class="q-text">What was the specific frustration that made you willing to try something new?</div>
+              <div class="q-why">The "job to be done" question. This becomes your GTM pain point language.</div>
+              <div class="q-tags"><span class="tag tag-purple">Operator</span><span class="tag tag-coral">Dealmaker</span><span class="tag tag-amber">Independent</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-header">
+            <div class="phase-dot" style="background:var(--coral);"></div>
+            <span class="title">Phase 2 — The friction zone</span>
+            <span class="timing">8 min · 4 questions</span>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">04</span><div>
+              <div class="q-text">When you first started using Anyx, what confused you or felt unclear?</div>
+              <div class="q-why">Opens the door to honest friction without making it feel like a complaint.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">05</span><div>
+              <div class="q-text">Was there a moment where you almost gave up or lost confidence it would work for you?</div>
+              <div class="q-why">The dropout risk question. This is where you find the exact moment your onboarding needs to intervene.</div>
+              <div class="q-tags"><span class="tag tag-purple">Operator</span><span class="tag tag-amber">Independent</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">06</span><div>
+              <div class="q-text">How long did it take before you felt like you actually understood what Anyx could do?</div>
+              <div class="q-why">Quantifies the time-to-competence gap. If it's days or weeks, that's your onboarding problem statement.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">07</span><div>
+              <div class="q-text">Did someone help you figure it out, or did you work through it alone?</div>
+              <div class="q-why">Directly maps to guided vs self-driven paths. If guided — who, what did they do, what unlocked it?</div>
+              <div class="q-tags"><span class="tag tag-teal">Orchestrator</span><span class="tag tag-coral">Dealmaker</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-header">
+            <div class="phase-dot" style="background:var(--purple);"></div>
+            <span class="title">Phase 3 — The wow moment</span>
+            <span class="timing">10 min · 5 questions</span>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">08</span><div>
+              <div class="q-text">Tell me about the moment it clicked. What were you doing, what happened, and how did it feel?</div>
+              <div class="q-why">The core question. Let them tell it as a story. Don't interrupt. Write down their exact words.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">09</span><div>
+              <div class="q-text">What specific feature or action triggered that feeling?</div>
+              <div class="q-why">Forces specificity. Was it inbox triage? A Groopy summary? First automated action? This becomes the activation target.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">10</span><div>
+              <div class="q-text">What did you do right after that moment — did you tell anyone, try something else, or just keep going?</div>
+              <div class="q-why">The organic virality signal. If they told someone immediately, that's your referral trigger.</div>
+              <div class="q-tags"><span class="tag tag-purple">Operator</span><span class="tag tag-teal">Orchestrator</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">11</span><div>
+              <div class="q-text" style="font-weight:600;color:var(--purple);">If you had to describe that moment to a skeptic in one sentence, what would you say?</div>
+              <div class="q-why">⭐ This is your marketing copy. Write it verbatim. The best product descriptions come from users, not founders.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">12</span><div>
+              <div class="q-text">Looking back, was there anything that could have gotten you to that moment faster?</div>
+              <div class="q-why">Retrospective onboarding design input. They'll often name exactly the thing you need to build.</div>
+              <div class="q-tags"><span class="tag tag-coral">Dealmaker</span><span class="tag tag-amber">Independent</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-header">
+            <div class="phase-dot" style="background:var(--teal);"></div>
+            <span class="title">Phase 4 — Current usage & value</span>
+            <span class="timing">8 min · 3 questions</span>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">13</span><div>
+              <div class="q-text">Walk me through how you use Anyx in a typical day now. What does it actually do for you?</div>
+              <div class="q-why">Maps current usage patterns by archetype. Tells you where the product is sticky.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">14</span><div>
+              <div class="q-text">What would break in your work if Anyx disappeared tomorrow?</div>
+              <div class="q-why">The dependency test. Your retention and value proof point — use in sales and case studies.</div>
+              <div class="q-tags"><span class="tag tag-purple">Operator</span><span class="tag tag-teal">Orchestrator</span><span class="tag tag-amber">Independent</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">15</span><div>
+              <div class="q-text">Is there something you keep wishing Anyx could do that it can't yet?</div>
+              <div class="q-why">Product roadmap input. Patterns across archetypes = feature priority.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="phase-block">
+          <div class="phase-header">
+            <div class="phase-dot" style="background:var(--amber);"></div>
+            <span class="title">Phase 5 — Advocacy & referral</span>
+            <span class="timing">7 min · 3 questions</span>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">16</span><div>
+              <div class="q-text">Have you told anyone about Anyx? What did you say, and what was their reaction?</div>
+              <div class="q-why">Maps organic referral behavior. Who did they tell? What words did they use? Did the other person sign up?</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">17</span><div>
+              <div class="q-text">Who in your network would get the most value from this — and what would make you comfortable introducing them?</div>
+              <div class="q-why">The warm intro unlock question. You're not asking them to refer — you're asking what would make it easy.</div>
+              <div class="q-tags"><span class="tag tag-purple">Operator</span><span class="tag tag-coral">Dealmaker</span></div>
+            </div></div>
+          </div>
+          <div class="q-item">
+            <div class="q-row"><span class="q-num">18</span><div>
+              <div class="q-text" style="font-weight:600;color:var(--amber);">If I gave you a card that said "Anyx changed how I work" — what would you write on the other side to convince a peer to try it?</div>
+              <div class="q-why">⭐ Your testimonial, champion quote, and referral message all in one. Write it verbatim.</div>
+              <div class="q-tags"><span class="tag tag-gray">All archetypes</span></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYNTHESIS TRACKER -->
+    <div id="page-synthesis" class="page">
+      <div class="page-header">
+        <h1>Synthesis tracker</h1>
+        <p>Fill in as you run interviews. Patterns emerge from volume — don't analyse before 5.</p>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="s-label">Interviews run</div>
+          <div class="s-val" id="done-count">0</div>
+          <div class="s-sub">of 10</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Guided onboard</div>
+          <div class="s-val" id="guided-count">0</div>
+          <div class="s-sub">needed human help</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Self-driven</div>
+          <div class="s-val" id="self-count">0</div>
+          <div class="s-sub">figured it out alone</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-label">Referred someone</div>
+          <div class="s-val" id="ref-count">0</div>
+          <div class="s-sub">organic advocates</div>
+        </div>
+      </div>
+
+      <div class="section-label">Mark interviews complete</div>
+      <div class="interview-dots" id="interview-dots"></div>
+
+      <div class="card-grid cols-2" style="margin-bottom:24px;">
+        <div class="card">
+          <div class="section-label" style="margin-bottom:14px;">Friction points — tally as you hear them</div>
+          <div id="friction-tallies"></div>
+        </div>
+        <div class="card">
+          <div class="section-label" style="margin-bottom:14px;">Breakthrough triggers — tally as you hear them</div>
+          <div id="trigger-tallies"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="section-label" style="margin-bottom:14px;">Their words — Q11 & Q18 verbatim (don't clean up the language)</div>
+        <div id="quote-slots"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="section-label" style="margin-bottom:14px;">Archetype breakdown — fill after all 10</div>
+        <table class="arch-table">
+          <thead><tr><th>Archetype</th><th>Main friction</th><th>Wow trigger</th><th>Top feature</th></tr></thead>
+          <tbody id="arch-rows"></tbody>
+        </table>
+      </div>
+
+      <div class="section-label" style="margin-bottom:14px;">Key patterns — fill after all 10</div>
+      <div class="pattern-grid" id="pattern-grid"></div>
+    </div>
+
+    <!-- PARTNER PROGRAM -->
+    <div id="page-program" class="page">
+      <div class="page-header">
+        <h1>Design partner program</h1>
+        <p>Staged launch · Run on Groopy · Lead with status not title</p>
+      </div>
+
+      <div class="info-box">
+        <strong>Three council adjustments:</strong> (1) Staged launch — invite 3-4 clearest fits after 5 interviews, rest after all 10. (2) Lead with "credited for shaping something big" not a title. (3) Run the group on Groopy — you're using the product to run the program.
+      </div>
+
+      <div class="section-label">Three pillars</div>
+      <div class="pillar-grid" style="margin-bottom:24px;">
+        <div class="pillar-card" style="background:var(--purple-light);">
+          <div class="pillar-icon">👑</div>
+          <div class="pillar-title" style="color:var(--purple);">Status</div>
+          <div class="pillar-desc" style="color:#3C3489;">One of 10 people credited for shaping this. Named. Part of the origin story.</div>
+        </div>
+        <div class="pillar-card" style="background:var(--teal-light);">
+          <div class="pillar-icon">🚪</div>
+          <div class="pillar-title" style="color:var(--teal);">Access</div>
+          <div class="pillar-desc" style="color:#085041;">Direct line to the founders. Features first. Real say in what gets built.</div>
+        </div>
+        <div class="pillar-card" style="background:var(--amber-light);">
+          <div class="pillar-icon">🔄</div>
+          <div class="pillar-title" style="color:var(--amber);">Reward</div>
+          <div class="pillar-desc" style="color:#633806;">Personal code. Every conversion earns a free month. No cap.</div>
+        </div>
+      </div>
+
+      <div class="card-grid cols-2" style="margin-bottom:24px;">
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--purple);">What they give</div>
+          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2.2;">
+            <li>30 min/month on the Groopy group call</li>
+            <li>Async reactions to 1-2 questions/month</li>
+            <li>Honest usage reports — what's working and what's not</li>
+            <li>Warm intros via their personal referral code</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--teal);">What they get</div>
+          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2.2;">
+            <li>Named as one of 10 who shaped the product</li>
+            <li>Private Groopy group with both founders</li>
+            <li>Every new feature before anyone else</li>
+            <li>Free plan for life</li>
+            <li>Personal referral code (ANYX-[NAME])</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-label">The referral mechanic</div>
+      <div class="ref-box">
+        <div style="font-size:14px;font-weight:600;color:#185FA5;margin-bottom:4px;">Two-way code system</div>
+        <div style="font-size:13px;color:#185FA5;margin-bottom:14px;">Name-based codes feel like personal recommendations, not marketing links.</div>
+        <div class="ref-flow">
+          <div class="ref-step">
+            <div class="ref-step-title">Partner shares code</div>
+            <div class="ref-step-desc">Personal intro — feels like a recommendation</div>
+          </div>
+          <div class="ref-arrow">→</div>
+          <div class="ref-step">
+            <div class="ref-step-title">New user signs up</div>
+            <div class="ref-step-desc">Enters code at signup, gets discount on first month</div>
+          </div>
+          <div class="ref-arrow">→</div>
+          <div class="ref-step">
+            <div class="ref-step-title">Both sides win</div>
+            <div class="ref-step-desc">Partner earns free month. Code tracks everything.</div>
+          </div>
+        </div>
+        <div class="ref-both">
+          <div class="ref-side" style="background:var(--purple-light);">
+            <div class="ref-side-label" style="color:var(--purple);">Partner earns</div>
+            <div class="ref-side-val" style="color:var(--purple);">+1 free month</div>
+            <div class="ref-side-sub" style="color:#534AB7;">Per converted referral. Stacks, no cap. 5 referrals = 5 free months.</div>
+          </div>
+          <div class="ref-side" style="background:var(--teal-light);">
+            <div class="ref-side-label" style="color:var(--teal);">Referred user gets</div>
+            <div class="ref-side-val" style="color:var(--teal);">Discount on first month</div>
+            <div class="ref-side-sub" style="color:var(--teal);">Applied automatically at checkout when they enter the code.</div>
+          </div>
+        </div>
+        <div class="code-chip">
+          <code>ANYX-SARAH</code>
+          <span style="font-size:12px;color:var(--gray-500);">Personal code per partner — name-based, memorable, trackable</span>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <strong>Technical prerequisite:</strong> Do not send any outreach until the referral codes exist and work. Nothing kills early momentum like promising a personal code and following up to say it's not ready.
+      </div>
+
+      <div class="section-label">Engagement cadence — run on Groopy</div>
+      <div class="cadence-grid">
+        <div class="cadence-card">
+          <div class="cadence-freq">Monthly</div>
+          <div class="cadence-title">Group call</div>
+          <div class="cadence-desc">30 min, all 10. One real decision on the table. They react, we listen.</div>
+          <div class="cadence-who">Both founders</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-freq">Bi-weekly</div>
+          <div class="cadence-title">Groopy pulse</div>
+          <div class="cadence-desc">One question dropped in the group. Async, low friction. Groopy AI surfaces patterns.</div>
+          <div class="cadence-who">Product lead</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-freq">As needed</div>
+          <div class="cadence-title">1-on-1 setup</div>
+          <div class="cadence-desc">The integrator role we already play — now a named exclusive benefit.</div>
+          <div class="cadence-who">Either founder</div>
+        </div>
+        <div class="cadence-card">
+          <div class="cadence-freq">Quarterly</div>
+          <div class="cadence-title">Roadmap preview</div>
+          <div class="cadence-desc">What's coming before the world sees it. Their input shapes it.</div>
+          <div class="cadence-who">Co-founder</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTREACH -->
+    <div id="page-outreach" class="page">
+      <div class="page-header">
+        <h1>Outreach messages</h1>
+        <p>Send after their interview — not before. Personalise [Name] with one specific detail about how they use Anyx.</p>
+      </div>
+
+      <div class="message-card">
+        <div class="message-label">Version 1 — Warm & personal <span class="tag tag-purple" style="margin-left:8px;">Operators · Independents</span></div>
+        <div class="message-body">Hey [Name] — been thinking about you.
+
+You're one of a handful of people who really got Anyx early. The way you use it, the feedback you've given — it's shaped how we're building this thing.
+
+We're formalizing that. We're inviting 10 people to be part of the group that builds this with us from the inside. Not test subjects — the people who get credited for shaping where this goes.
+
+Here's what it means practically:
+— A private group (running on Groopy — you'll see why) with me and Michael. Real decisions, not announcements.
+— Every new feature before anyone else, with your input on how it's built.
+— Free plan for life.
+— Your own personal code (ANYX-[NAME]). Every person you bring in who converts earns you a free month. No cap.
+
+From you, we ask for 30 minutes a month and honest reactions when we ask.
+
+That's it.
+
+Want in?</div>
+        <div class="message-actions">
+          <button class="btn" onclick="copyMessage(0)">Copy message</button>
+        </div>
+      </div>
+
+      <div class="message-card">
+        <div class="message-label">Version 2 — Direct & brief <span class="tag tag-coral" style="margin-left:8px;">Dealmakers · senior execs</span></div>
+        <div class="message-body">Hey [Name] — quick but important.
+
+We're building the inside group that shapes where Anyx goes. 10 people. You're on the list.
+
+What you get: direct access to me and Michael, every feature first, free plan for life, and a personal code (ANYX-[NAME]) — every person you bring in who converts earns you a free month.
+
+What we ask: 30 min/month. Honest feedback when we need it.
+
+You've already been doing this informally. We just want to make it real.
+
+Are you in?</div>
+        <div class="message-actions">
+          <button class="btn" onclick="copyMessage(1)">Copy message</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div id="page-nextsteps" class="page">
+      <div class="page-header">
+        <h1>Next steps</h1>
+        <p>Adjusted sequence — council-approved. Step 0 unblocks everything else.</p>
+      </div>
+
+      <div class="card">
+        <div class="step-row step-zero">
+          <div class="step-num" style="color:var(--coral);">0</div>
+          <div class="step-when" style="color:var(--coral);">Before anything</div>
+          <div class="step-action">
+            <strong>Co-founder shares the list of 10 users with product lead.</strong> Required before any outreach can begin. Use the User Tracker spreadsheet — fill in: name, role, company, contact, and how they found Anyx.
+          </div>
+          <div><span class="tag tag-coral">Co-founder</span></div>
+        </div>
+
+        <div class="step-row step-active">
+          <div class="step-num" style="color:var(--teal);">1</div>
+          <div class="step-when" style="color:var(--teal);">Today (after list)</div>
+          <div class="step-action">Text all 10 users informally to book 30-min calls. No pitch, no program. Just: <em>"I'd love to hear more about how you're using Anyx. When works?"</em></div>
+          <div><span class="tag tag-teal">Product lead</span></div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div class="step-when">This week</div>
+          <div class="step-action">Run first 5 interviews using the guide. Fill in the synthesis tracker as you go. Look for patterns in friction, triggers, and verbatim language.</div>
+          <div><span class="tag tag-gray">Product lead</span></div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div class="step-when">After 5 interviews</div>
+          <div class="step-action">Generate personal referral codes (ANYX-[NAME]) for all 10. Verify they work technically before any outreach goes out.</div>
+          <div><span class="tag tag-gray">Co-founder</span></div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-num">4</div>
+          <div class="step-when">After 5 interviews</div>
+          <div class="step-action">Send design partner outreach to the 3-4 clearest fits. Choose based on archetype clarity, wow moment alignment, and referral network strength.</div>
+          <div><span class="tag tag-gray">Product lead</span></div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-num">5</div>
+          <div class="step-when">After 5 interviews</div>
+          <div class="step-action">Set up the partner group on Groopy — not plain WhatsApp. Configure it to show the product doing what it does in a real-use context.</div>
+          <div><span class="tag tag-gray">Co-founder</span></div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-num">6</div>
+          <div class="step-when">After all 10</div>
+          <div class="step-action">Run remaining 5 interviews. Refine synthesis. Send outreach to remaining partners, updated based on patterns from the first batch.</div>
+          <div><span class="tag tag-gray">Product lead</span></div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-num">7</div>
+          <div class="step-when">After all 10</div>
+          <div class="step-action">Run first group call on Groopy. One real decision on the table. Listen and synthesize.</div>
+          <div><span class="tag tag-gray">Both founders</span></div>
+        </div>
+
+        <div class="step-row">
+          <div class="step-num">8</div>
+          <div class="step-when">After all 10</div>
+          <div class="step-action">Design champion program and scalable onboarding flow based on interview synthesis. Replace the manual integrator role.</div>
+          <div><span class="tag tag-gray">Both founders</span></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ── NAVIGATION ──
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+        n.classList.add('active');
+      }
+    });
+  }
+
+  // ── SYNTHESIS TRACKER ──
+  const interviews = Array.from({length:10}, (_,i) => ({id:i+1, done:false}));
+
+  const frictions = [
+    {label:"Capabilities weren't obvious upfront", n:0},
+    {label:"Didn't know where to start", n:0},
+    {label:"Needed a concrete use case first", n:0},
+    {label:"Took too long to see a real result", n:0},
+    {label:"Integration setup felt unclear", n:0},
+    {label:"Felt like a chatbot, not a co-worker", n:0},
+    {label:"Wasn't sure what to delegate", n:0},
+  ];
+
+  const triggers = [
+    {label:"First autonomous action completed", n:0},
+    {label:"Inbox triage worked perfectly", n:0},
+    {label:"Groopy summarised a long thread", n:0},
+    {label:"First automated follow-up sent", n:0},
+    {label:"End-to-end client task handled alone", n:0},
+    {label:"Scheduling done without back-and-forth", n:0},
+    {label:"Woke up to work already done", n:0},
+  ];
+
+  function renderDots() {
+    const done = interviews.filter(i => i.done).length;
+    document.getElementById('done-count').textContent = done;
+    document.getElementById('interview-dots').innerHTML = interviews.map(iv =>
+      `<div class="iv-dot${iv.done?' done':''}" onclick="toggleInterview(${iv.id})" title="Interview ${iv.id}">${iv.id}</div>`
+    ).join('');
+  }
+
+  function toggleInterview(id) {
+    interviews.find(i => i.id===id).done ^= true;
+    renderDots();
+  }
+
+  function renderTallies(items, containerId, color) {
+    const max = Math.max(...items.map(i => i.n), 1);
+    document.getElementById(containerId).innerHTML = items.map((item, idx) => `
+      <div class="tally-row">
+        <span class="tally-label">${item.label}</span>
+        <div class="tally-bar-wrap"><div class="tally-bar" style="width:${Math.round(item.n/max*100)}%;background:${color};"></div></div>
+        <span class="tally-n">${item.n}/10</span>
+        <button class="tally-btn" onclick="tally('${containerId}',${idx},1)">+</button>
+        <button class="tally-btn" onclick="tally('${containerId}',${idx},-1)">−</button>
+      </div>
+    `).join('');
+  }
+
+  function tally(group, idx, delta) {
+    const arr = group === 'friction-tallies' ? frictions : triggers;
+    arr[idx].n = Math.max(0, Math.min(10, arr[idx].n + delta));
+    renderTallies(frictions, 'friction-tallies', '#534AB7');
+    renderTallies(triggers, 'trigger-tallies', '#0F6E56');
+  }
+
+  function renderQuotes() {
+    const archs = [
+      {label:'Operator', cls:'tag-purple'},
+      {label:'Orchestrator', cls:'tag-teal'},
+      {label:'Dealmaker', cls:'tag-coral'},
+      {label:'Independent', cls:'tag-amber'},
+    ];
+    document.getElementById('quote-slots').innerHTML = archs.map(a => `
+      <div class="quote-slot">
+        <div class="quote-meta">
+          <span class="tag ${a.cls}">${a.label}</span>
+          <span style="font-size:11px;color:var(--gray-500);">Q11 / Q18 verbatim</span>
+        </div>
+        <div class="quote-text empty" contenteditable="true"
+          data-ph="Paste their exact words here..."
+          onfocus="clearPlaceholder(this)"
+          onblur="restorePlaceholder(this)">Paste their exact words here...</div>
+      </div>
+    `).join('');
+  }
+
+  function renderArchRows() {
+    const archs = ['Operator','Orchestrator','Dealmaker','Independent'];
+    document.getElementById('arch-rows').innerHTML = archs.map(a => `
+      <tr>
+        <td><strong>${a}</strong></td>
+        <td contenteditable="true" style="outline:none;min-height:20px;color:var(--gray-500);" data-ph="Add after interviews...">Add after interviews...</td>
+        <td contenteditable="true" style="outline:none;min-height:20px;color:var(--gray-500);" data-ph="Add after interviews...">Add after interviews...</td>
+        <td contenteditable="true" style="outline:none;min-height:20px;color:var(--gray-500);" data-ph="Add after interviews...">Add after interviews...</td>
+      </tr>
+    `).join('');
+    document.querySelectorAll('#arch-rows [contenteditable]').forEach(el => {
+      el.addEventListener('focus', () => { if(el.style.color==='var(--gray-500)'||el.style.color===''){ el.textContent=''; el.style.color=''; } });
+      el.addEventListener('blur', () => { if(!el.textContent.trim()){ el.textContent=el.dataset.ph; el.style.color='var(--gray-500)'; } });
+    });
+  }
+
+  function renderPatterns() {
+    const patterns = [
+      {title:"Most common friction"},
+      {title:"Most common trigger"},
+      {title:"Archetype most likely to refer"},
+      {title:"Archetype needing most guidance"},
+      {title:"Top product gap mentioned"},
+      {title:"Best verbatim quote for GTM"},
+    ];
+    document.getElementById('pattern-grid').innerHTML = patterns.map(p => `
+      <div class="pattern-card">
+        <div class="pattern-title">${p.title}</div>
+        <div class="pattern-content empty" contenteditable="true"
+          data-ph="Fill after 5+ interviews..."
+          onfocus="clearPlaceholder(this)"
+          onblur="restorePlaceholder(this)">Fill after 5+ interviews...</div>
+      </div>
+    `).join('');
+  }
+
+  function clearPlaceholder(el) {
+    if(el.classList.contains('empty')){ el.textContent=''; el.classList.remove('empty'); }
+  }
+  function restorePlaceholder(el) {
+    if(!el.textContent.trim()){ el.textContent=el.dataset.ph; el.classList.add('empty'); }
+  }
+
+  // ── COPY MESSAGE ──
+  function copyMessage(idx) {
+    const msgs = document.querySelectorAll('.message-body');
+    navigator.clipboard.writeText(msgs[idx].textContent.trim())
+      .then(() => alert('Copied to clipboard'));
+  }
+
+  // ── INIT ──
+  renderDots();
+  renderTallies(frictions, 'friction-tallies', '#534AB7');
+  renderTallies(triggers, 'trigger-tallies', '#0F6E56');
+  renderQuotes();
+  renderArchRows();
+  renderPatterns();
+</script>
+</body>
+</html>
