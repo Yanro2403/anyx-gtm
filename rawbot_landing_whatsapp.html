@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RawBot by Anyx — It's you, but better</title>
+<meta name="description" content="RawBot is a personal assistant in your WhatsApp who learns how you talk, think, and write — then handles your work and your life the way you would, with you in charge of every step.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RawBot by Anyx — It's you, but better">
+<meta property="og:description" content="A personal assistant in the WhatsApp you already use. No new app, no account, free to try.">
+<meta property="og:url" content="https://anyx.app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RawBot by Anyx — It's you, but better">
+<meta name="twitter:description" content="A personal assistant in the WhatsApp you already use. No new app, no account, free to try.">
+<style>
+/* ═══ TOKENS — WhatsApp-native palette ═══ */
+:root {
+  --bg: #FFFFFF;
+  --bg-chat: #EFEAE2;
+  --bg-soft: #F7F5F3;
+  --surface: #FFFFFF;
+  --border: #E4E0DA;
+  --ink: #111B21;
+  --ink-soft: #3B4A54;
+  --ink-dim: #667781;
+  --teal: #008069;
+  --teal-dark: #075E54;
+  --green: #25D366;
+  --green-dark: #1DA851;
+  --bubble-out: #D9FDD3;
+  --bubble-in: #FFFFFF;
+  --link: #027EB5;
+  --tick: #53BDEB;
+  --shadow: 0 1px 2px rgba(17,27,33,0.08), 0 2px 12px rgba(17,27,33,0.06);
+  --radius: 12px;
+  --radius-lg: 18px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111B21; --bg-chat: #0B141A; --bg-soft: #182229; --surface: #202C33;
+    --border: #2A3942; --ink: #E9EDEF; --ink-soft: #AEBAC1; --ink-dim: #8696A0;
+    --teal: #00A884; --teal-dark: #008069; --bubble-out: #005C4B; --bubble-in: #202C33;
+    --link: #53BDEB;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 2px 12px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="light"] {
+  --bg: #FFFFFF; --bg-chat: #EFEAE2; --bg-soft: #F7F5F3; --surface: #FFFFFF;
+  --border: #E4E0DA; --ink: #111B21; --ink-soft: #3B4A54; --ink-dim: #667781;
+  --teal: #008069; --teal-dark: #075E54; --bubble-out: #D9FDD3; --bubble-in: #FFFFFF;
+  --link: #027EB5;
+  --shadow: 0 1px 2px rgba(17,27,33,0.08), 0 2px 12px rgba(17,27,33,0.06);
+}
+:root[data-theme="dark"] {
+  --bg: #111B21; --bg-chat: #0B141A; --bg-soft: #182229; --surface: #202C33;
+  --border: #2A3942; --ink: #E9EDEF; --ink-soft: #AEBAC1; --ink-dim: #8696A0;
+  --teal: #00A884; --teal-dark: #008069; --bubble-out: #005C4B; --bubble-in: #202C33;
+  --link: #53BDEB;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 2px 12px rgba(0,0,0,0.25);
+}
+
+/* ═══ RESET ═══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: auto; }
+body {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  padding-bottom: 76px;
+}
+@media (min-width: 861px) { body { padding-bottom: 0; } }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; border: none; background: none; cursor: pointer; }
+svg { display: block; }
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+/* ═══ NAV ═══ */
+nav { position: sticky; top: 0; z-index: 100; background: var(--teal); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 58px; }
+.logo { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 19px; font-weight: 600; letter-spacing: -0.2px; }
+.logo-mark {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #fff; color: var(--teal);
+  display: grid; place-items: center;
+  font-size: 16px; font-weight: 700;
+}
+.logo small { font-size: 12px; font-weight: 400; opacity: 0.75; margin-left: 2px; }
+.nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85);
+  padding: 7px 13px; border-radius: 8px;
+  transition: background 0.15s;
+}
+.nav-links a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.nav-cta {
+  background: #fff !important; color: var(--teal) !important;
+  font-weight: 600 !important; margin-left: 10px;
+  border-radius: 100px !important; padding: 8px 18px !important;
+}
+.nav-cta:hover { background: #F0F2F5 !important; }
+
+/* ═══ HERO ═══ */
+.hero {
+  padding: 60px 0 60px;
+  display: grid; grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px; align-items: center;
+}
+.hero-pain {
+  display: inline-block;
+  font-size: 14px; font-weight: 600; color: var(--teal);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  padding: 7px 16px; border-radius: 100px;
+  margin-bottom: 20px;
+  min-height: 28px;
+}
+
+/* ═══ PERSONAS ═══ */
+.personas { background: var(--bg-soft); }
+.persona-tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 32px; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+.persona-tabs::-webkit-scrollbar { height: 4px; }
+.persona-tabs::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 2px; }
+.persona-tab {
+  flex-shrink: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--ink-soft); font-size: 14px; font-weight: 500;
+  padding: 9px 16px; border-radius: 100px;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.persona-tab:hover { border-color: var(--teal); color: var(--teal); }
+.persona-tab.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+.persona-content {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 36px; align-items: center;
+}
+.persona-txt h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; line-height: 1.2; }
+.persona-txt p { font-size: 15px; color: var(--ink-soft); line-height: 1.65; margin-bottom: 6px; }
+.persona-txt p b { color: var(--ink); font-weight: 600; }
+.persona-demo {
+  background-color: #EFE7DD;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23DDD4C8' stroke-width='1.2'%3E%3Ccircle cx='18' cy='16' r='5'/%3E%3Cpath d='M60 8c3 0 5 2 5 5s-2 5-5 5'/%3E%3Cpath d='M96 20l4 4m0-4l-4 4'/%3E%3Ccircle cx='36' cy='52' r='3'/%3E%3Cpath d='M76 44c0 4 3 7 7 7'/%3E%3Cpath d='M12 78q4-6 8 0t8 0'/%3E%3Ccircle cx='104' cy='64' r='4'/%3E%3Cpath d='M52 88l5 5m0-5l-5 5'/%3E%3Cpath d='M88 96c2-3 6-3 8 0'/%3E%3Ccircle cx='26' cy='106' r='4'/%3E%3Cpath d='M64 112q3-5 7 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  height: 240px; overflow-y: auto;
+  box-shadow: var(--shadow);
+}
+.persona-bubble {
+  position: relative;
+  font-size: 13.5px; line-height: 1.42; padding: 7px 9px 6px 10px;
+  border-radius: 7.5px;
+  color: #111B21;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+  max-width: 88%;
+}
+.persona-bubble .meta {
+  float: right; margin: 8px -1px -3px 8px;
+  font-size: 10px; color: rgba(17,27,33,0.4);
+  display: inline-flex; align-items: center; gap: 2px; line-height: 1;
+}
+.persona-bubble.q { background: #D9FDD3; align-self: flex-end; border-top-right-radius: 0; }
+.persona-bubble.a { background: #FFFFFF; align-self: flex-start; border-top-left-radius: 0; }
+.persona-bubble.q::before {
+  content: ''; position: absolute; top: 0; right: -8px;
+  border-bottom: 10px solid transparent;
+  border-left: 8px solid #D9FDD3;
+}
+.persona-bubble.a::before {
+  content: ''; position: absolute; top: 0; left: -8px;
+  border-bottom: 10px solid transparent;
+  border-right: 8px solid #FFFFFF;
+}
+.persona-bubble b { font-weight: 600; }
+
+/* ═══ EASE SECTION ═══ */
+.ease { background: var(--surface); }
+.ease-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 48px; align-items: center;
+}
+.ease-copy h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.6px; margin-bottom: 14px; line-height: 1.15; }
+.ease-copy p { font-size: 15px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 10px; }
+.ease-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.ease-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  font-size: 15px; color: var(--ink-soft); line-height: 1.5;
+}
+.ease-item svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; color: var(--teal); }
+.ease-visuals { display: flex; flex-direction: column; gap: 12px; }
+.ease-card {
+  background: var(--bg-soft); border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px; text-align: center;
+  font-size: 13px; color: var(--ink-dim);
+}
+.ease-card .label { font-weight: 600; color: var(--ink-soft); margin-bottom: 4px; }
+
+/* ═══ PRIVACY BAND ═══ */
+.privacy-band {
+  background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+  padding: 48px 0;
+  text-align: center;
+}
+.privacy-inner { max-width: 720px; margin: 0 auto; }
+.privacy-inner h2 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 12px; letter-spacing: -0.6px; }
+.privacy-inner p { font-size: 15px; color: rgba(255,255,255,0.88); line-height: 1.6; margin-bottom: 10px; }
+.privacy-promises {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px; margin-top: 24px;
+}
+.promise-item {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 13.5px; color: rgba(255,255,255,0.9);
+  display: flex; align-items: center; gap: 10px;
+}
+.promise-item svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--green); }
+.promise-item b { color: #fff; font-weight: 600; }
+.hero h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 700; letter-spacing: -1.4px; line-height: 1.08;
+  margin-bottom: 18px; text-wrap: balance;
+}
+.hero h1 .tealtxt { color: var(--teal); }
+.hero-sub {
+  font-size: 17px; color: var(--ink-soft);
+  max-width: 47ch; line-height: 1.6; margin-bottom: 26px;
+}
+.hero-sub b { font-weight: 600; color: var(--ink); }
+
+.btn-wa {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--green); color: #fff;
+  font-size: 16.5px; font-weight: 600;
+  padding: 15px 28px; border-radius: 100px;
+  box-shadow: 0 2px 10px rgba(37,211,102,0.35);
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.btn-wa:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,211,102,0.4); }
+.btn-wa svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+.speedline { margin-top: 14px; font-size: 14px; color: var(--ink-soft); }
+.speedline b { font-weight: 600; color: var(--ink); }
+.speedline .sep { color: var(--green-dark); font-weight: 700; margin: 0 3px; }
+.trustline { margin-top: 6px; font-size: 13px; color: var(--ink-dim); }
+
+/* ═══ PHONE — faithful WhatsApp reproduction ═══ */
+.phone-wrap { display: flex; justify-content: center; }
+.phone {
+  background: #010101;
+  border-radius: 44px; padding: 10px;
+  max-width: 320px; width: 100%;
+  box-shadow: 0 24px 60px rgba(17,27,33,0.28), 0 0 0 2px #2a2a2a inset;
+}
+.screen { border-radius: 34px; overflow: hidden; background: #EFE7DD; position: relative; }
+
+.statusbar {
+  background: #F6F6F6;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 22px 2px;
+  font-size: 12px; font-weight: 600; color: #000;
+}
+.statusbar .sb-icons { display: flex; align-items: center; gap: 4px; }
+
+.chat-head {
+  background: #F6F6F6;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding: 4px 8px 8px 4px;
+  display: flex; align-items: center; gap: 4px;
+}
+.back-arrow { color: #007AFF; flex-shrink: 0; display: flex; align-items: center; }
+.chat-avatar {
+  width: 37px; height: 37px; border-radius: 50%;
+  background: linear-gradient(180deg, #00A884, #008069);
+  color: #fff;
+  display: grid; place-items: center;
+  font-weight: 600; font-size: 16px; flex-shrink: 0;
+  margin-right: 6px;
+}
+.chat-info { flex: 1; min-width: 0; }
+.chat-info .name { font-size: 15.5px; font-weight: 600; color: #000; line-height: 1.15; letter-spacing: -0.2px; }
+.chat-info .status { font-size: 12px; color: #8E8E93; }
+.chat-icons { display: flex; gap: 20px; color: #007AFF; padding-right: 8px; }
+
+.chat-body {
+  padding: 10px 12px 8px;
+  display: flex; flex-direction: column; gap: 3px;
+  min-height: 380px;
+  background-color: #EFE7DD;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23DDD4C8' stroke-width='1.2'%3E%3Ccircle cx='18' cy='16' r='5'/%3E%3Cpath d='M60 8c3 0 5 2 5 5s-2 5-5 5'/%3E%3Cpath d='M96 20l4 4m0-4l-4 4'/%3E%3Ccircle cx='36' cy='52' r='3'/%3E%3Cpath d='M76 44c0 4 3 7 7 7'/%3E%3Cpath d='M12 78q4-6 8 0t8 0'/%3E%3Ccircle cx='104' cy='64' r='4'/%3E%3Cpath d='M52 88l5 5m0-5l-5 5'/%3E%3Cpath d='M88 96c2-3 6-3 8 0'/%3E%3Ccircle cx='26' cy='106' r='4'/%3E%3Cpath d='M64 112q3-5 7 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+.day-chip {
+  align-self: center;
+  background: #FFFFFF;
+  color: #54656F; font-size: 10.5px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.2px;
+  padding: 4px 10px; border-radius: 7px;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+  margin: 4px 0 2px;
+}
+.e2e-chip {
+  align-self: center;
+  background: #FFF5C4;
+  color: #54656F; font-size: 10.5px; line-height: 1.4;
+  padding: 5px 12px; border-radius: 7px;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+  margin-bottom: 6px;
+  max-width: 92%; text-align: center;
+}
+.demo-chip {
+  position: absolute; top: 6px; right: 10px; z-index: 5;
+  background: rgba(17,27,33,0.55);
+  color: #fff; font-size: 9.5px; font-weight: 600;
+  letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 6px;
+}
+.msg {
+  position: relative;
+  max-width: 82%; padding: 6px 8px 5px 9px;
+  border-radius: 7.5px;
+  font-size: 13.5px; line-height: 1.38; color: #111B21;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  margin-bottom: 3px;
+}
+.msg.show { opacity: 1; transform: translateY(0); }
+.msg .meta {
+  float: right; margin: 7px -1px -3px 8px;
+  font-size: 10px; color: rgba(17,27,33,0.4);
+  display: inline-flex; align-items: center; gap: 2px;
+  line-height: 1;
+}
+.msg-in  { background: #FFFFFF; align-self: flex-start; }
+.msg-out { background: #D9FDD3; align-self: flex-end; }
+/* real WhatsApp: tail only on the FIRST bubble of a group */
+.msg-in.tail  { border-top-left-radius: 0; }
+.msg-out.tail { border-top-right-radius: 0; }
+.msg-in.tail::before {
+  content: ''; position: absolute; top: 0; left: -8px;
+  width: 0; height: 0;
+  border-bottom: 10px solid transparent;
+  border-right: 8px solid #FFFFFF;
+}
+.msg-out.tail::before {
+  content: ''; position: absolute; top: 0; right: -8px;
+  width: 0; height: 0;
+  border-bottom: 10px solid transparent;
+  border-left: 8px solid #D9FDD3;
+}
+
+/* ── document attachment (real WhatsApp file card) ── */
+.file-card {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(0,0,0,0.055);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 5px;
+  min-width: 205px;
+}
+.file-ic {
+  width: 30px; height: 36px; border-radius: 4px; flex-shrink: 0;
+  background: #E53935; color: #fff;
+  display: grid; place-items: center;
+  font-size: 8.5px; font-weight: 700; letter-spacing: 0.3px;
+  position: relative;
+}
+.file-ic::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  border-top: 7px solid #EFE7DD00;
+  border-left: 7px solid rgba(255,255,255,0.45);
+  border-top-right-radius: 4px;
+}
+.file-info { flex: 1; min-width: 0; }
+.file-name { font-size: 13px; font-weight: 500; color: #111B21; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px; }
+.file-meta { font-size: 11px; color: rgba(17,27,33,0.45); margin-top: 1px; }
+.file-dl {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid rgba(17,27,33,0.22);
+  display: grid; place-items: center;
+  color: rgba(17,27,33,0.4);
+}
+.file-dl svg { width: 14px; height: 14px; }
+
+/* ── voice note (real WhatsApp voice message) ── */
+.voice-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 3px 2px 2px;
+  min-width: 200px;
+}
+.voice-avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(180deg, #6B7C85, #54656F);
+  color: #fff; display: grid; place-items: center;
+  font-size: 14px; font-weight: 600;
+  position: relative;
+}
+.voice-avatar .mic-badge {
+  position: absolute; bottom: -2px; right: -4px;
+  color: #53BDEB;
+}
+.play-btn { color: #54656F; flex-shrink: 0; }
+.play-btn svg { width: 22px; height: 22px; }
+.wave { display: flex; align-items: center; gap: 2px; flex: 1; }
+.wave i { width: 2.5px; border-radius: 2px; background: rgba(17,27,33,0.28); }
+.wave i.played { background: #53BDEB; }
+.voice-dur {
+  position: absolute; bottom: 5px; left: 62px;
+  font-size: 10.5px; color: rgba(17,27,33,0.45);
+}
+.voice-wrap { position: relative; padding-bottom: 14px; }
+.ticks { color: #53BDEB; font-size: 11px; letter-spacing: -2px; }
+.typing {
+  position: relative;
+  background: #FFFFFF; align-self: flex-start;
+  border-radius: 7.5px; border-top-left-radius: 0;
+  padding: 11px 14px; display: none; gap: 4px;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+}
+.typing::before {
+  content: ''; position: absolute; top: 0; left: -8px;
+  border-bottom: 10px solid transparent;
+  border-right: 8px solid #FFFFFF;
+}
+.typing.show { display: flex; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: #8696A0; animation: bnc 1.3s ease-in-out infinite; }
+.typing i:nth-child(2) { animation-delay: 0.18s; }
+.typing i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes bnc { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+.chat-input {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 8px 10px; background: #F6F6F6;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+.ci-icon { color: #54656F; flex-shrink: 0; display: flex; }
+.input-pill {
+  flex: 1; background: #fff; border-radius: 100px;
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 7px 12px; font-size: 13.5px; color: #8696A0;
+  display: flex; align-items: center; gap: 10px;
+}
+.input-pill .ph { flex: 1; }
+.input-pill .ci-icon { color: #8696A0; }
+/* iOS WhatsApp: plain gray camera + mic outside the field, no green fab */
+.ci-out { display: flex; align-items: center; gap: 14px; color: #54656F; flex-shrink: 0; padding-right: 2px; }
+.home-bar {
+  background: #F6F6F6;
+  display: flex; justify-content: center;
+  padding: 3px 0 7px;
+}
+.home-bar i { width: 110px; height: 4px; border-radius: 3px; background: #000; opacity: 0.85; }
+
+/* ═══ TRUST BAR ═══ */
+.trust {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+  padding: 18px 0;
+}
+.trust-inner {
+  display: flex; justify-content: center; align-items: center;
+  gap: 36px; flex-wrap: wrap;
+  font-size: 14px; color: var(--ink-dim);
+}
+.trust-item { display: flex; align-items: center; gap: 8px; }
+.trust-item svg { color: var(--teal); flex-shrink: 0; }
+.trust-item b { color: var(--ink-soft); font-weight: 600; }
+
+/* ═══ SECTIONS ═══ */
+.section { padding: 80px 0; }
+.sec-head { max-width: 640px; margin-bottom: 44px; }
+.sec-kicker { font-size: 13px; font-weight: 600; color: var(--teal); letter-spacing: 0.3px; margin-bottom: 10px; }
+.sec-title {
+  font-size: clamp(26px, 3.6vw, 38px);
+  font-weight: 700; letter-spacing: -1px; line-height: 1.15;
+  margin-bottom: 14px; text-wrap: balance;
+}
+.sec-sub { font-size: 16px; color: var(--ink-soft); line-height: 1.6; }
+
+/* ═══ CAPABILITIES ═══ */
+.cap-list {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.cap-row {
+  display: flex; align-items: center; gap: 18px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.cap-row:last-child { border-bottom: none; }
+.cap-row:hover { background: var(--bg-soft); }
+.cap-ic {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: var(--teal); color: #fff;
+}
+.cap-ic svg { width: 22px; height: 22px; }
+.cap-txt { flex: 1; min-width: 0; }
+.cap-name { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+.cap-desc { font-size: 14px; color: var(--ink-dim); line-height: 1.45; }
+.cap-eg {
+  font-size: 13px; color: var(--ink-dim);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  padding: 8px 14px; border-radius: 8px 8px 8px 0;
+  max-width: 250px; flex-shrink: 0;
+  font-style: italic;
+}
+
+/* ═══ JOURNEY ═══ */
+.journey { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.j-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px 24px;
+  box-shadow: var(--shadow);
+}
+.j-when { font-size: 12.5px; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
+.j-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.2px; }
+.j-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
+
+/* ═══ CONTROL ═══ */
+.control { background: var(--teal-dark); }
+.control-inner { padding: 80px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.control .sec-kicker { color: rgba(255,255,255,0.7); }
+.control .sec-title { color: #fff; }
+.control .sec-sub { color: rgba(255,255,255,0.78); }
+.control-points { display: flex; flex-direction: column; gap: 12px; }
+.cp-row {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+.cp-check {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: var(--green); color: #fff;
+  display: grid; place-items: center; margin-top: 1px;
+}
+.cp-check svg { width: 13px; height: 13px; }
+.cp-txt { font-size: 14.5px; color: rgba(255,255,255,0.92); line-height: 1.5; }
+.cp-txt b { color: #fff; font-weight: 600; }
+.control-tagline {
+  margin-top: 24px; font-size: 15px; color: rgba(255,255,255,0.85);
+  border-left: 3px solid var(--green); padding-left: 16px; line-height: 1.6;
+}
+.control-tagline b { color: #fff; }
+
+/* ═══ SCENARIOS ═══ */
+.scen-zone { background: var(--bg-soft); }
+.scen-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+.tab {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--ink-soft); font-size: 14px; font-weight: 500;
+  padding: 8px 18px; border-radius: 100px;
+  transition: all 0.15s;
+}
+.tab:hover { border-color: var(--teal); color: var(--teal); }
+.tab.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+.scen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.scen-card {
+  background-color: #EFE7DD;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23DDD4C8' stroke-width='1.2'%3E%3Ccircle cx='18' cy='16' r='5'/%3E%3Cpath d='M60 8c3 0 5 2 5 5s-2 5-5 5'/%3E%3Cpath d='M96 20l4 4m0-4l-4 4'/%3E%3Ccircle cx='36' cy='52' r='3'/%3E%3Cpath d='M76 44c0 4 3 7 7 7'/%3E%3Cpath d='M12 78q4-6 8 0t8 0'/%3E%3Ccircle cx='104' cy='64' r='4'/%3E%3Cpath d='M52 88l5 5m0-5l-5 5'/%3E%3Cpath d='M88 96c2-3 6-3 8 0'/%3E%3Ccircle cx='26' cy='106' r='4'/%3E%3Cpath d='M64 112q3-5 7 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+  box-shadow: var(--shadow);
+}
+.sc-demo {
+  align-self: center;
+  font-size: 10px; font-weight: 500; color: #54656F;
+  text-transform: uppercase; letter-spacing: 0.3px;
+  background: #FFFFFF;
+  padding: 3px 10px; border-radius: 7px;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+  margin-bottom: 2px;
+}
+.sc-bubble {
+  position: relative;
+  font-size: 13.5px; line-height: 1.42; padding: 7px 9px 6px 10px;
+  border-radius: 7.5px;
+  color: #111B21;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+}
+.sc-bubble .meta {
+  float: right; margin: 8px -1px -3px 8px;
+  font-size: 10px; color: rgba(17,27,33,0.4);
+  display: inline-flex; align-items: center; gap: 2px; line-height: 1;
+}
+.sc-bubble.q { background: #D9FDD3; align-self: flex-end; max-width: 92%; border-top-right-radius: 0; }
+.sc-bubble.a { background: #FFFFFF; align-self: flex-start; max-width: 92%; border-top-left-radius: 0; }
+.sc-bubble.q::before {
+  content: ''; position: absolute; top: 0; right: -8px;
+  border-bottom: 10px solid transparent;
+  border-left: 8px solid #D9FDD3;
+}
+.sc-bubble.a::before {
+  content: ''; position: absolute; top: 0; left: -8px;
+  border-bottom: 10px solid transparent;
+  border-right: 8px solid #FFFFFF;
+}
+.sc-bubble.a b { font-weight: 600; }
+
+/* ═══ OBJECTION ═══ */
+.obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.obj-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+.obj-vs { font-size: 12.5px; font-weight: 700; color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+.obj-txt { font-size: 15px; color: var(--ink-soft); line-height: 1.65; }
+.obj-txt b { color: var(--ink); font-weight: 600; }
+
+/* ═══ TESTIMONIALS ═══ */
+.testi-zone { background: var(--bg-soft); }
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.testi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px 24px;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.testi-quote { font-size: 15px; color: var(--ink-soft); line-height: 1.65; flex: 1; }
+.testi-quote::before { content: '“'; color: var(--teal); font-size: 26px; font-weight: 700; line-height: 0; margin-right: 2px; vertical-align: -8px; }
+.testi-who { display: flex; align-items: center; gap: 12px; }
+.testi-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: var(--teal); color: #fff;
+  display: grid; place-items: center;
+  font-size: 15px; font-weight: 600;
+}
+.testi-name { font-size: 14px; font-weight: 600; }
+.testi-role { font-size: 12.5px; color: var(--ink-dim); }
+.testi-note {
+  margin-top: 20px; font-size: 12.5px; color: var(--ink-dim);
+  text-align: center;
+}
+
+/* ═══ TRY-IT DEMO ═══ */
+.tryit { background: var(--teal-dark); }
+.tryit .sec-kicker { color: rgba(255,255,255,0.7); }
+.tryit .sec-title { color: #fff; }
+.tryit .sec-sub { color: rgba(255,255,255,0.78); }
+.tryit-grid {
+  display: grid; grid-template-columns: 0.92fr 1.08fr;
+  gap: 48px; align-items: center; margin-top: 8px;
+}
+.tryit-controls { display: flex; flex-direction: column; gap: 12px; }
+.tryit-label {
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.4px;
+  text-transform: uppercase; color: rgba(255,255,255,0.6);
+  margin-bottom: 2px;
+}
+.prompt-btn {
+  display: flex; align-items: center; gap: 12px;
+  text-align: left;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius);
+  padding: 15px 17px;
+  color: #fff; font-size: 14.5px; font-weight: 500; line-height: 1.4;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.prompt-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); transform: translateX(3px); }
+.prompt-btn.active { background: #fff; color: var(--teal-dark); border-color: #fff; }
+.prompt-btn .pb-ic {
+  width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+  background: rgba(255,255,255,0.14);
+  display: grid; place-items: center; color: #fff;
+}
+.prompt-btn.active .pb-ic { background: var(--teal-dark); color: #fff; }
+.prompt-btn .pb-ic svg { width: 18px; height: 18px; }
+.tryit-foot { margin-top: 6px; font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+.tryit-cta {
+  display: inline-flex; align-items: center; gap: 9px;
+  margin-top: 14px;
+  background: var(--green); color: #fff;
+  font-size: 15px; font-weight: 600;
+  padding: 13px 24px; border-radius: 100px;
+  box-shadow: 0 2px 10px rgba(37,211,102,0.35);
+  transition: background 0.15s, transform 0.15s;
+}
+.tryit-cta:hover { background: var(--green-dark); transform: translateY(-1px); }
+.tryit-cta svg { width: 20px; height: 20px; }
+/* reuse the phone; give the demo screen a scrollable body */
+.tryit .phone { transform: none; }
+.demo-body {
+  padding: 10px 12px 12px;
+  display: flex; flex-direction: column; gap: 3px;
+  height: 380px; overflow-y: auto;
+  background-color: #EFE7DD;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23DDD4C8' stroke-width='1.2'%3E%3Ccircle cx='18' cy='16' r='5'/%3E%3Cpath d='M60 8c3 0 5 2 5 5s-2 5-5 5'/%3E%3Cpath d='M96 20l4 4m0-4l-4 4'/%3E%3Ccircle cx='36' cy='52' r='3'/%3E%3Cpath d='M76 44c0 4 3 7 7 7'/%3E%3Cpath d='M12 78q4-6 8 0t8 0'/%3E%3Ccircle cx='104' cy='64' r='4'/%3E%3Cpath d='M52 88l5 5m0-5l-5 5'/%3E%3Cpath d='M88 96c2-3 6-3 8 0'/%3E%3Ccircle cx='26' cy='106' r='4'/%3E%3Cpath d='M64 112q3-5 7 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+.demo-body::-webkit-scrollbar { width: 0; }
+.demo-hint {
+  margin: auto; text-align: center;
+  color: #54656F; font-size: 12.5px; line-height: 1.5;
+  background: rgba(255,255,255,0.75); border-radius: 10px;
+  padding: 12px 16px; max-width: 84%;
+}
+
+/* ═══ GROOPY ═══ */
+.groopy {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  display: flex; gap: 24px; align-items: center;
+  box-shadow: var(--shadow);
+}
+.groopy-avatar {
+  width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+  background: var(--teal); color: #fff;
+  display: grid; place-items: center;
+  font-size: 26px; font-weight: 700;
+}
+.groopy-txt { flex: 1; }
+.groopy-name { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.groopy-desc { font-size: 15px; color: var(--ink-soft); line-height: 1.6; }
+.groopy-link { font-size: 14px; font-weight: 600; color: var(--link); white-space: nowrap; }
+.groopy-link:hover { text-decoration: underline; }
+
+/* ═══ TRIAL ═══ */
+.trial-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 40px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center;
+}
+.trial-steps { display: flex; flex-direction: column; }
+.t-step { display: flex; gap: 16px; padding: 14px 0; border-top: 1px solid var(--border); }
+.t-step:first-child { border-top: none; }
+.t-num {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: var(--teal); color: #fff;
+  display: grid; place-items: center;
+  font-size: 13px; font-weight: 700; margin-top: 1px;
+}
+.t-title { font-size: 15.5px; font-weight: 600; margin-bottom: 2px; }
+.t-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+.trial-copy h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.6px; margin-bottom: 12px; line-height: 1.2; }
+.trial-copy p { font-size: 15px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 8px; }
+.trial-copy p b { color: var(--ink); font-weight: 600; }
+
+/* ═══ FAQ ═══ */
+.faq-list { max-width: 720px; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-q {
+  width: 100%; text-align: left;
+  font-size: 16px; font-weight: 600; color: var(--ink);
+  padding: 18px 36px 18px 0;
+  position: relative;
+}
+.faq-q::after {
+  content: '+'; position: absolute; right: 4px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px; font-weight: 400; color: var(--teal);
+  transition: transform 0.2s;
+}
+.faq-item.open .faq-q::after { transform: translateY(-50%) rotate(45deg); }
+.faq-a {
+  font-size: 15px; color: var(--ink-soft); line-height: 1.6;
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.25s ease, padding 0.25s ease;
+}
+.faq-item.open .faq-a { max-height: 200px; padding-bottom: 20px; }
+
+/* ═══ FINAL CTA ═══ */
+.final { text-align: center; padding: 84px 0 96px; background: var(--bg-soft); }
+.final h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700; letter-spacing: -1.2px; line-height: 1.12;
+  margin-bottom: 14px; text-wrap: balance;
+}
+.final p { font-size: 16px; color: var(--ink-soft); margin-bottom: 30px; max-width: 52ch; margin-left: auto; margin-right: auto; }
+.final .trustline { margin-top: 16px; }
+.human-line { margin-top: 28px; font-size: 14px; color: var(--ink-dim); }
+.human-line a { color: var(--link); font-weight: 600; }
+.human-line a:hover { text-decoration: underline; }
+
+/* ═══ STICKY MOBILE CTA ═══ */
+.sticky-cta {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  display: none;
+  box-shadow: 0 -2px 12px rgba(17,27,33,0.08);
+}
+.sticky-cta .btn-wa {
+  width: 100%; justify-content: center;
+  min-height: 48px; font-size: 16px;
+}
+@media (max-width: 860px) { .sticky-cta { display: block; } }
+
+/* ═══ FOOTER ═══ */
+footer { border-top: 1px solid var(--border); padding: 48px 0 40px; }
+.f-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 44px; margin-bottom: 40px; }
+.f-brand .logo { color: var(--ink); }
+.f-brand .logo-mark { background: var(--teal); color: #fff; }
+.f-brand p { font-size: 13.5px; color: var(--ink-dim); line-height: 1.6; max-width: 30ch; margin-top: 12px; }
+.f-col h4 { font-size: 12px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 14px; }
+.f-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.f-col a { font-size: 14px; color: var(--ink-soft); }
+.f-col a:hover { color: var(--teal); }
+.f-social { display: flex; gap: 10px; margin-top: 14px; }
+.s-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-soft); border: 1px solid var(--border);
+  display: grid; place-items: center;
+  color: var(--ink-soft);
+  transition: all 0.15s;
+}
+.s-btn:hover { color: var(--teal); border-color: var(--teal); }
+.s-btn svg { width: 17px; height: 17px; }
+.f-legal {
+  border-top: 1px solid var(--border); padding-top: 22px;
+  font-size: 12px; color: var(--ink-dim); line-height: 1.7;
+}
+.f-legal p { margin-bottom: 8px; max-width: 90ch; }
+.f-bottom {
+  padding-top: 18px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  font-size: 13px; color: var(--ink-dim);
+}
+
+/* ═══ REVEAL ═══ */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.rv.in { opacity: 1; transform: translateY(0); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; gap: 44px; padding: 40px 0 48px; }
+  .phone { max-width: 290px; }
+  .tryit-grid { grid-template-columns: 1fr; gap: 32px; }
+  .persona-content { grid-template-columns: 1fr; gap: 28px; }
+  .persona-demo { height: 280px; }
+  .ease-inner { grid-template-columns: 1fr; gap: 32px; }
+  .ease-visuals { flex-direction: row; }
+  .privacy-promises { grid-template-columns: 1fr; }
+  .journey { grid-template-columns: 1fr; }
+  .scen-grid { grid-template-columns: 1fr; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .control-inner { grid-template-columns: 1fr; gap: 40px; padding: 60px 0; }
+  .obj-grid { grid-template-columns: 1fr; }
+  .trial-card { grid-template-columns: 1fr; gap: 32px; padding: 28px; }
+  .groopy { flex-direction: column; text-align: center; }
+  .f-grid { grid-template-columns: 1fr 1fr; }
+  .hide-m { display: none; }
+  .cap-eg { display: none; }
+  .section { padding: 56px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .rv { opacity: 1; transform: none; }
+  .msg { opacity: 1; transform: none; }
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is my chat private?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. What you tell RawBot one-on-one stays sealed off. Your messages never teach the AI." } },
+    { "@type": "Question", "name": "What happens after the 14-day trial?", "acceptedAnswer": { "@type": "Answer", "text": "You pick a plan or you stop. No card up front, so nothing charges by surprise." } },
+    { "@type": "Question", "name": "Can RawBot send things without asking me?", "acceptedAnswer": { "@type": "Answer", "text": "No. You approve before anything goes out." } },
+    { "@type": "Question", "name": "What apps does RawBot work with?", "acceptedAnswer": { "@type": "Answer", "text": "Gmail, Calendar, Drive, Monday and more — one at a time, only what you choose." } },
+    { "@type": "Question", "name": "Do I need to learn commands?", "acceptedAnswer": { "@type": "Answer", "text": "No. If you can text a friend, you're already trained." } }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="#" class="logo"><span class="logo-mark">R</span>RawBot <small>by Anyx</small></a>
+      <ul class="nav-links">
+        <li class="hide-m"><a href="#capabilities">RawBot</a></li>
+        <li class="hide-m"><a href="#groopy">Groopy</a></li>
+        <li class="hide-m"><a href="#faq">FAQ</a></li>
+        <li><a href="#" class="nav-cta wa-link" data-loc="nav">Chat with RawBot</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <div class="hero-pain" id="hero-pain">Still carrying everything in your head?</div>
+        <h1>It's you, <span class="tealtxt">but better.</span></h1>
+        <p class="hero-sub">RawBot is a personal assistant in the <b>WhatsApp you already use</b>. RawBot learns how you talk, think, and write — then handles your work and your life the way you would, with you in charge of every step.</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+          <a href="#" class="btn-wa wa-link" data-loc="hero">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Chat with RawBot now
+          </a>
+        </div>
+        <div class="speedline"><b>Tap</b> <span class="sep">→</span> <b>say hi</b> <span class="sep">→</span> hand off your first task within a minute.</div>
+        <div class="trustline">No new app. No account to create. Free to try — no card.</div>
+      </div>
+
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="screen">
+            <div class="demo-chip">Demo</div>
+            <div class="statusbar">
+              <span>09:12</span>
+              <span class="sb-icons">
+                <svg width="16" height="11" viewBox="0 0 16 11" fill="#000"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.3" y="5" width="3" height="6" rx="0.8"/><rect x="8.6" y="2.5" width="3" height="8.5" rx="0.8"/><rect x="12.9" y="0" width="3" height="11" rx="0.8"/></svg>
+                <svg width="15" height="11" viewBox="0 0 15 11" fill="#000"><path d="M7.5 9.2a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8zM7.5 5.8c-1.5 0-2.9.6-3.9 1.6l1.2 1.2a4 4 0 015.4 0l1.2-1.2a5.5 5.5 0 00-3.9-1.6zM7.5 2.3A9 9 0 001.2 4.9l1.2 1.2a7.3 7.3 0 0110.2 0l1.2-1.2A9 9 0 007.5 2.3z" transform="translate(0 -1.5)"/></svg>
+                <svg width="22" height="11" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke="#000" stroke-opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="#000"/><path d="M23 4v4c1-.3 1.6-1 1.6-2s-.6-1.7-1.6-2z" fill="#000" fill-opacity="0.4"/></svg>
+              </span>
+            </div>
+            <div class="chat-head">
+              <span class="back-arrow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+              </span>
+              <div class="chat-avatar">R</div>
+              <div class="chat-info">
+                <div class="name">RawBot</div>
+                <div class="status" id="chat-status">online</div>
+              </div>
+              <div class="chat-icons">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="3"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              </div>
+            </div>
+            <div class="chat-body" id="chat-body">
+              <div class="day-chip">Today</div>
+              <div class="e2e-chip">Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.</div>
+              <div class="msg msg-out tail">
+                <div class="voice-wrap">
+                  <div class="voice-row">
+                    <span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                    <span class="wave">
+                      <i class="played" style="height:5px"></i><i class="played" style="height:9px"></i><i class="played" style="height:14px"></i><i class="played" style="height:8px"></i><i class="played" style="height:12px"></i><i style="height:16px"></i><i style="height:7px"></i><i style="height:11px"></i><i style="height:15px"></i><i style="height:6px"></i><i style="height:10px"></i><i style="height:13px"></i><i style="height:8px"></i><i style="height:12px"></i><i style="height:5px"></i><i style="height:9px"></i><i style="height:14px"></i><i style="height:7px"></i><i style="height:11px"></i><i style="height:6px"></i><i style="height:10px"></i><i style="height:8px"></i><i style="height:5px"></i>
+                    </span>
+                    <span class="voice-avatar">Y<span class="mic-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/></svg></span></span>
+                  </div>
+                  <span class="voice-dur">0:41</span>
+                </div>
+                <span class="meta">09:12 <span class="ticks">✓✓</span></span>
+              </div>
+              <div class="msg msg-in tail">Got it — the client nudge, the invoice for Dana, and Thursday's reminder. Here's the nudge, in your usual tone:<br><br>"Hey David — just circling back on the proposal. Happy to hop on a quick call if the scope needs tweaking."<br><br>Approve, and I'll have it ready to send.<span class="meta">09:12</span></div>
+              <div class="msg msg-out tail">
+                <div class="file-card">
+                  <span class="file-ic">PDF</span>
+                  <span class="file-info">
+                    <span class="file-name">Retainer_Agreement_v3.pdf</span>
+                    <span class="file-meta">40 pages · 1.2 MB · pdf</span>
+                  </span>
+                  <span class="file-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg></span>
+                </div>
+                Summarize this, flag anything unusual
+                <span class="meta">09:13 <span class="ticks">✓✓</span></span>
+              </div>
+              <div class="msg msg-in tail">Done. 3 bullets + one flag: clause 7.2 lets them cancel with 7 days' notice — unusual for a 12-month retainer. Want the full breakdown?<span class="meta">09:14</span></div>
+              <div class="typing" id="typing"><i></i><i></i><i></i></div>
+            </div>
+            <div class="chat-input">
+              <span class="ci-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </span>
+              <div class="input-pill">
+                <span class="ph">Message</span>
+                <span class="ci-icon">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/><path d="M9 10h.01M15 10h.01"/></svg>
+                </span>
+              </div>
+              <span class="ci-out">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><path d="M12 19v4"/></svg>
+              </span>
+            </div>
+            <div class="home-bar"><i></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRY-IT DEMO (moved to top) ═══ -->
+<section class="section tryit" id="try">
+  <div class="wrap">
+    <div class="sec-head rv" style="max-width: 640px;">
+      <div class="sec-kicker">Try it — no download</div>
+      <h2 class="sec-title">See RawBot work, right here</h2>
+      <p class="sec-sub">Tap a message below and watch how RawBot handles it. This is a preview — the real thing runs in your own WhatsApp.</p>
+    </div>
+
+    <div class="tryit-grid rv">
+      <div class="tryit-controls">
+        <div class="tryit-label">Tap a message to send</div>
+        <button class="prompt-btn active" data-demo="pdf">
+          <span class="pb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
+          Summarize a contract PDF
+        </button>
+        <button class="prompt-btn" data-demo="email">
+          <span class="pb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+          Draft a follow-up email
+        </button>
+        <button class="prompt-btn" data-demo="voice">
+          <span class="pb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><path d="M12 19v4"/></svg></span>
+          Turn a voice note into tasks
+        </button>
+        <button class="prompt-btn" data-demo="remind">
+          <span class="pb-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+          Set a smart reminder
+        </button>
+        <div class="tryit-foot">Liked what you saw? Do it for real — with your files, your inbox, your words.</div>
+        <a href="#" class="tryit-cta wa-link" data-loc="tryit">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Do this in my WhatsApp
+        </a>
+      </div>
+
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="screen">
+            <div class="demo-chip">Preview</div>
+            <div class="statusbar">
+              <span>09:41</span>
+              <span class="sb-icons">
+                <svg width="16" height="11" viewBox="0 0 16 11" fill="#000"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.3" y="5" width="3" height="6" rx="0.8"/><rect x="8.6" y="2.5" width="3" height="8.5" rx="0.8"/><rect x="12.9" y="0" width="3" height="11" rx="0.8"/></svg>
+                <svg width="22" height="11" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke="#000" stroke-opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="#000"/><path d="M23 4v4c1-.3 1.6-1 1.6-2s-.6-1.7-1.6-2z" fill="#000" fill-opacity="0.4"/></svg>
+              </span>
+            </div>
+            <div class="chat-head">
+              <span class="back-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></span>
+              <div class="chat-avatar">R</div>
+              <div class="chat-info">
+                <div class="name">RawBot</div>
+                <div class="status" id="demo-status">online</div>
+              </div>
+              <div class="chat-icons">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="3"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              </div>
+            </div>
+            <div class="demo-body" id="demo-body">
+              <div class="demo-hint">👆 Tap a message on the left to see RawBot reply.</div>
+            </div>
+            <div class="chat-input">
+              <span class="ci-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+              <div class="input-pill">
+                <span class="ph">Message</span>
+                <span class="ci-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/><path d="M9 10h.01M15 10h.01"/></svg></span>
+              </div>
+              <span class="ci-out">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><path d="M12 19v4"/></svg>
+              </span>
+            </div>
+            <div class="home-bar"><i></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST BAR ═══ -->
+<div class="trust">
+  <div class="wrap">
+    <div class="trust-inner">
+      <div class="trust-item">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><b>No new app</b> — RawBot lives in your WhatsApp</span>
+      </div>
+      <div class="trust-item">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><b>No setup</b> — the first conversation is the setup</span>
+      </div>
+      <div class="trust-item">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><b>No commands</b> — if you can text a friend, you're trained</span>
+      </div>
+      <div class="trust-item">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><b>Free to try</b> — no card needed</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CAPABILITIES ═══ -->
+<section class="section" id="capabilities">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">What RawBot does</div>
+      <h2 class="sec-title">RawBot remembers, so your head doesn't have to</h2>
+      <p class="sec-sub">The invoices, the birthdays, the follow-ups, the half-promises — text or voice-note the mess into the chat, and RawBot carries it. Work and life, in the same conversation.</p>
+    </div>
+
+    <div class="cap-list rv">
+      <div class="cap-row">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <div class="cap-txt">
+          <div class="cap-name">Writing, in your voice</div>
+          <div class="cap-desc">Emails, proposals, the message you've been putting off. RawBot learns your tone, so drafts arrive send-ready — and nothing goes out without your say-so.</div>
+        </div>
+        <div class="cap-eg">"Tell my accountant I need the reports by Sunday — politely but firmly"</div>
+      </div>
+      <div class="cap-row">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <div class="cap-txt">
+          <div class="cap-name">Documents, summarized</div>
+          <div class="cap-desc">Forward a PDF, contract, or spreadsheet. RawBot returns the short version with the catches flagged.</div>
+        </div>
+        <div class="cap-eg">"Summarize this contract, flag anything unusual"</div>
+      </div>
+      <div class="cap-row">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><path d="M12 19v4M8 23h8"/></svg></div>
+        <div class="cap-txt">
+          <div class="cap-name">Voice notes, understood</div>
+          <div class="cap-desc">Forty seconds of rambling on the way to the car — half-sentences and all. RawBot turns the mess into structured tasks, drafts, or a clean transcript.</div>
+        </div>
+        <div class="cap-eg">"Turn this into action items for the team"</div>
+      </div>
+      <div class="cap-row">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div class="cap-txt">
+          <div class="cap-name">Research, filtered</div>
+          <div class="cap-desc">RawBot searches the web, skips the noise, and returns what actually matters for your decision.</div>
+        </div>
+        <div class="cap-eg">"Compare these two insurance quotes for me"</div>
+      </div>
+      <div class="cap-row">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div class="cap-txt">
+          <div class="cap-name">Your apps, connected</div>
+          <div class="cap-desc">Works with Gmail, Calendar, Drive, Monday and more — one at a time, only what you choose.</div>
+        </div>
+        <div class="cap-eg">"Put the dentist in my calendar and email me the confirmation"</div>
+      </div>
+      <div class="cap-row">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="cap-txt">
+          <div class="cap-name">Reminders that follow through</div>
+          <div class="cap-desc">"Ping me Thursday if she hasn't replied." RawBot checks, and RawBot pings — right there in the chat.</div>
+        </div>
+        <div class="cap-eg">"Remind me Sunday to renew the car insurance"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PERSONAS ═══ -->
+<section class="section personas" id="personas">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">Built for every kind of work</div>
+      <h2 class="sec-title">Different brains, one assistant</h2>
+      <p class="sec-sub">Whether you're running a startup, managing projects, raising a family, or living with ADHD — RawBot adapts to how you actually work.</p>
+    </div>
+
+    <div class="persona-tabs rv" id="persona-tabs">
+      <button class="persona-tab active" data-persona="founder">👨‍💼 Founder</button>
+      <button class="persona-tab" data-persona="manager">📋 Manager</button>
+      <button class="persona-tab" data-persona="parent">👨‍👩‍👧‍👦 Parent</button>
+      <button class="persona-tab" data-persona="adhd">🧠 ADHD</button>
+      <button class="persona-tab" data-persona="freelancer">🎨 Freelancer</button>
+      <button class="persona-tab" data-persona="writer">✍️ Writer</button>
+    </div>
+
+    <div class="persona-content rv" id="persona-content">
+      <!-- Content populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EASE ═══ -->
+<section class="section ease" id="ease">
+  <div class="wrap">
+    <div class="ease-inner rv">
+      <div class="ease-copy">
+        <h2>Everything you don't have to do</h2>
+        <p>We stripped away the friction so you can focus on what matters.</p>
+        <div class="ease-list">
+          <div class="ease-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>No new app to learn.</b> It's your WhatsApp — the one you already live in.</span>
+          </div>
+          <div class="ease-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>No setup required.</b> Your first message to RawBot is the whole onboarding.</span>
+          </div>
+          <div class="ease-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>No commands to memorize.</b> Forget syntax. Just talk like you would to a friend.</span>
+          </div>
+          <div class="ease-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>No folders or filing system.</b> RawBot keeps track. You just ask for what you need.</span>
+          </div>
+          <div class="ease-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>No card upfront.</b> Try it completely free. Pay only when you're convinced.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ease-visuals">
+        <div class="ease-card">
+          <div class="label">Speed</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--teal); margin-bottom: 4px;">60 seconds</div>
+          <div style="font-size: 12px; color: var(--ink-dim);">from WhatsApp to your first result</div>
+        </div>
+        <div class="ease-card">
+          <div class="label">Learning curve</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--teal); margin-bottom: 4px;">0</div>
+          <div style="font-size: 12px; color: var(--ink-dim);">if you can text, you're ready</div>
+        </div>
+        <div class="ease-card">
+          <div class="label">Approval required</div>
+          <div style="font-size: 24px; font-weight: 700; color: var(--teal); margin-bottom: 4px;">100%</div>
+          <div style="font-size: 12px; color: var(--ink-dim);">before anything goes out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ JOURNEY ═══ -->
+<section class="section" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">How it grows on you</div>
+      <h2 class="sec-title">You don't learn to use RawBot.<br>RawBot learns to work with you.</h2>
+    </div>
+    <div class="journey rv">
+      <div class="j-card">
+        <div class="j-when">Day 1</div>
+        <div class="j-title">RawBot does what you hand off</div>
+        <div class="j-desc">Summaries, drafts, answers, reminders. Useful from the first message — no tutorial, no settings screen.</div>
+      </div>
+      <div class="j-card">
+        <div class="j-when">Week 2</div>
+        <div class="j-title">RawBot sounds like you</div>
+        <div class="j-desc">Your vocabulary, your tone, how direct you like to be. Drafts start arriving send-ready instead of edit-ready.</div>
+      </div>
+      <div class="j-card">
+        <div class="j-when">Month 2</div>
+        <div class="j-title">RawBot knows your world</div>
+        <div class="j-desc">Your people, your priorities, the things you always ask about — context that makes every answer sharper.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTROL ═══ -->
+<section class="control" id="control">
+  <div class="wrap">
+    <div class="control-inner">
+      <div class="rv">
+        <div class="sec-kicker">The part that matters most</div>
+        <h2 class="sec-title">RawBot learns you.<br>And you stay in charge.</h2>
+        <p class="sec-sub">The quiet fear with AI is that one day the wrong thing goes to the wrong person. That can't happen here — approval is built into how RawBot works.</p>
+        <div class="control-tagline">RawBot amplifies you — never replaces you. You see everything, you approve what matters, you stay the decision-maker. <b>That's not a limitation. That's the point.</b></div>
+      </div>
+      <div class="control-points rv">
+        <div class="cp-row">
+          <div class="cp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="cp-txt"><b>Nothing goes out without your say-so.</b> Every email, every message — you approve before RawBot sends.</div>
+        </div>
+        <div class="cp-row">
+          <div class="cp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="cp-txt"><b>Your messages never teach the AI.</b> What you tell RawBot one-on-one stays sealed off.</div>
+        </div>
+        <div class="cp-row">
+          <div class="cp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="cp-txt"><b>You choose what connects.</b> Gmail, Calendar, Drive, Monday — one at a time, only what you decide to share.</div>
+        </div>
+        <div class="cp-row">
+          <div class="cp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="cp-txt"><b>You can see everything.</b> No black box — RawBot shows the work, you make the call.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SCENARIOS ═══ -->
+<section class="section scen-zone" id="scenarios">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">In practice</div>
+      <h2 class="sec-title">What people actually say to RawBot</h2>
+      <p class="sec-sub">Example conversations, shown as demos. Pick your lane:</p>
+    </div>
+
+    <div class="scen-tabs rv" id="scen-tabs">
+      <button class="tab active" data-set="work">You run a business</button>
+      <button class="tab" data-set="life">You run a home</button>
+      <button class="tab" data-set="both">You run both</button>
+    </div>
+
+    <div class="scen-grid" id="scen-grid"></div>
+  </div>
+</section>
+
+<!-- ═══ PRIVACY BAND ═══ -->
+<section class="privacy-band" id="privacy">
+  <div class="wrap">
+    <div class="privacy-inner rv">
+      <h2>Your privacy is non-negotiable</h2>
+      <p>We built RawBot to the world's strictest privacy standards. Your data belongs only to you.</p>
+      <div class="privacy-promises">
+        <div class="promise-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span><b>Never trained on your data.</b> Your messages train only you, not the AI.</span>
+        </div>
+        <div class="promise-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span><b>Encrypted in transit & at rest.</b> Your words are yours, not ours to sell or share.</span>
+        </div>
+        <div class="promise-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span><b>You approve everything.</b> No send without your OK. No action without your say.</span>
+        </div>
+        <div class="promise-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span><b>Delete anytime, instantly.</b> Not in 30 days. Not in a queue. Now.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══
+  NOTE: These quotes are PLACEHOLDERS pending the five user interviews.
+  Per positioning doc §07: no invented testimonials go live. Replace each
+  with a verbatim, attributed, permissioned quote before publishing.
+-->
+<section class="section" id="testimonials">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">From early users</div>
+      <h2 class="sec-title">What it feels like after a few weeks</h2>
+    </div>
+    <div class="testi-grid rv">
+      <div class="testi-card">
+        <p class="testi-quote">[PLACEHOLDER — replace with attributed quote from user interview #1. Theme: the relief of handing off mental load.]</p>
+        <div class="testi-who">
+          <div class="testi-avatar">–</div>
+          <div>
+            <div class="testi-name">Full name</div>
+            <div class="testi-role">Role, company / life context</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">[PLACEHOLDER — replace with attributed quote from user interview #2. Theme: drafts that sound like them.]</p>
+        <div class="testi-who">
+          <div class="testi-avatar">–</div>
+          <div>
+            <div class="testi-name">Full name</div>
+            <div class="testi-role">Role, company / life context</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">[PLACEHOLDER — the "limitless pill" quote goes here ONLY once attributed and permissioned.]</p>
+        <div class="testi-who">
+          <div class="testi-avatar">–</div>
+          <div>
+            <div class="testi-name">Full name</div>
+            <div class="testi-role">Role, company / life context</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="testi-note">Quotes are shared with each user's permission, verbatim.</p>
+  </div>
+</section>
+
+<!-- ═══ OBJECTION ═══ -->
+<section class="section testi-zone" id="objection">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">The fair question</div>
+      <h2 class="sec-title">"But I already have AI…"</h2>
+    </div>
+    <div class="obj-grid rv">
+      <div class="obj-card">
+        <div class="obj-vs">ChatGPT</div>
+        <p class="obj-txt">ChatGPT is brilliant — <b>in its own tab</b>, starting from zero every time, touching nothing. RawBot lives where your life already happens, remembers what matters to you, and actually moves things: your Gmail, your Calendar, your Monday board.</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-vs">The AI already in WhatsApp</div>
+        <p class="obj-txt">Meta's AI answers questions. RawBot <b>takes responsibility</b>: remembers your week, drafts in your voice, keeps track of what's unfinished — and checks with you before anything goes out.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRIAL ═══ -->
+<section class="section scen-zone" id="pricing">
+  <div class="wrap">
+    <div class="trial-card rv">
+      <div class="trial-copy">
+        <h3>Try RawBot before anyone asks for anything</h3>
+        <p>The chat is free to start — no account, no card. When you've felt what RawBot can carry, a <b>14-day trial</b> opens the full toolkit.</p>
+        <p><b>One flat price after that.</b> No token math, no metering, no surprise bills. Cancel anytime.</p>
+      </div>
+      <div class="trial-steps">
+        <div class="t-step">
+          <div class="t-num">1</div>
+          <div>
+            <div class="t-title">Say hi</div>
+            <div class="t-desc">Tap the button, send one message. That's the entire setup.</div>
+          </div>
+        </div>
+        <div class="t-step">
+          <div class="t-num">2</div>
+          <div>
+            <div class="t-title">Hand off your first task</div>
+            <div class="t-desc">A draft, a summary, a reminder — feel the relief before you're asked for anything.</div>
+          </div>
+        </div>
+        <div class="t-step">
+          <div class="t-num">3</div>
+          <div>
+            <div class="t-title">Decide in the chat</div>
+            <div class="t-desc">When you're ready, RawBot offers the trial right there. You pick a plan or you stop.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">Questions</div>
+      <h2 class="sec-title">The things people ask first</h2>
+    </div>
+    <div class="faq-list rv">
+      <div class="faq-item">
+        <button class="faq-q">Is my chat private?</button>
+        <div class="faq-a">Yes. What you tell RawBot one-on-one stays sealed off. Your messages never teach the AI.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What happens after the 14-day trial?</button>
+        <div class="faq-a">You pick a plan or you stop. No card up front, so nothing charges by surprise.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Can RawBot send things without asking me?</button>
+        <div class="faq-a">No. You approve before anything goes out.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What apps does RawBot work with?</button>
+        <div class="faq-a">Gmail, Calendar, Drive, Monday and more — one at a time, only what you choose.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need to learn commands?</button>
+        <div class="faq-a">No. If you can text a friend, you're already trained.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is RawBot part of WhatsApp?</button>
+        <div class="faq-a">No. RawBot is an independent product by Anyx that you chat with over WhatsApp, using WhatsApp's official Business API. Anyx is not affiliated with WhatsApp or Meta.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="final">
+  <div class="wrap rv">
+    <h2>Your head has been the office long enough.</h2>
+    <p>Say hi to RawBot — the first message is the whole setup.</p>
+    <a href="#" class="btn-wa wa-link" data-loc="footer" style="font-size: 17px; padding: 16px 32px;">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="23" height="23"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Chat with RawBot now
+    </a>
+    <div class="trustline">No new app. No account to create. Free to try — no card.</div>
+    <div class="human-line">Prefer talking to a human first? <a href="https://www.linkedin.com/company/anyx-ai" target="_blank" rel="noopener">Reach out to us on LinkedIn</a> — we answer.</div>
+  </div>
+</section>
+
+<!-- ═══ GROOPY ═══ -->
+<section class="section personas" id="groopy" style="padding-top: 0;">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-kicker">Also available for teams</div>
+      <h2 class="sec-title">Groopy: Turn group chaos into clarity</h2>
+      <p class="sec-sub">@mention Groopy in any group chat. She extracts what matters, assigns owners, tracks deadlines — everyone stays aligned, no one has to take notes.</p>
+    </div>
+
+    <div class="persona-tabs rv" id="groopy-tabs" style="justify-content: center;">
+      <button class="persona-tab active" data-groopy="standup">📋 Standup</button>
+      <button class="persona-tab" data-groopy="planning">🎯 Planning</button>
+      <button class="persona-tab" data-groopy="family">👨‍👩‍👧‍👦 Family</button>
+    </div>
+
+    <div class="persona-content rv" id="groopy-content">
+      <!-- Content populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div class="f-brand">
+        <a href="#" class="logo"><span class="logo-mark">R</span>RawBot <small style="color: var(--ink-dim);">by Anyx</small></a>
+        <p>A personal assistant who learns you, in the chat you already live in — with you in charge.</p>
+        <div class="f-social">
+          <a href="https://www.linkedin.com/company/anyx-ai" target="_blank" rel="noopener" class="s-btn" aria-label="Anyx on LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 110-4.13 2.07 2.07 0 010 4.13zM7.12 20.45H3.55V9h3.57v11.45z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#capabilities">What RawBot does</a></li>
+          <li><a href="#control">You're in charge</a></li>
+          <li><a href="#pricing">Trial & pricing</a></li>
+          <li><a href="#">Groopy for groups</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="https://www.linkedin.com/company/anyx-ai" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="mailto:hello@anyx.app">Contact</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/cookies">Cookie Policy</a></li>
+          <li><a href="mailto:privacy@anyx.app">Data requests (GDPR)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="f-legal">
+      <p>RawBot and Groopy are products of Anyx. Anyx is an independent company and is not affiliated with, endorsed by, or sponsored by WhatsApp LLC or Meta Platforms, Inc. WhatsApp is a trademark of Meta Platforms, Inc. RawBot communicates over the official WhatsApp Business API. Chat interface shown on this page is a demonstration.</p>
+      <p>RawBot uses artificial intelligence. AI can make mistakes — which is why nothing is sent on your behalf without your approval. RawBot's output is not legal, medical, or financial advice.</p>
+    </div>
+    <div class="f-bottom">
+      <p>© 2026 Anyx. Made in Tel Aviv.</p>
+      <p><a href="mailto:hello@anyx.app">hello@anyx.app</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ STICKY MOBILE CTA ═══ -->
+<div class="sticky-cta" style="display: flex; gap: 8px; padding: 10px calc(16px + env(safe-area-inset-bottom));">
+  <a href="#" class="btn-wa wa-link" data-loc="sticky" style="flex: 1; justify-content: center;">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    RawBot
+  </a>
+  <a href="#groopy" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--teal); background: var(--surface); border: 1px solid var(--border); border-radius: 100px; min-height: 48px; padding: 0 12px;">
+    👥 Groopy
+  </a>
+</div>
+
+<script>
+/* ── Rotating hero pains ── */
+(function () {
+  var pains = [
+    "Still carrying everything in your head?",
+    "Lose track of ideas across a dozen tabs?",
+    "Jump between five apps each morning?",
+    "Keep the same reminders in four different apps?",
+    "Forget to follow up on important things?",
+    "Carry everyone else's memory but your own?",
+    "Feel that 'I'm forgetting something' all day?"
+  ];
+  var painEl = document.getElementById('hero-pain');
+  if (!painEl) return;
+  var idx = 0;
+  function rotate() {
+    painEl.textContent = pains[idx % pains.length];
+    idx++;
+  }
+  rotate();
+  setInterval(rotate, 4500);
+})();
+
+/* ── Persona tabs and content ── */
+(function () {
+  var personas = {
+    founder: {
+      title: "Follow up with the Series A investor tomorrow at 9 AM",
+      desc: "RawBot tracks investor conversations, surfaces follow-ups, and drafts your outreach in your voice. You stay on top of the funnel without the overhead.",
+      bubbles: [
+        { q: true, text: "Follow up with the Series A investor tomorrow at 9 AM" },
+        { q: false, text: "Done. Follow-up reminder set for tomorrow, 9:00 AM. Your calendar is updated." }
+      ]
+    },
+    manager: {
+      title: "Turn this standup audio into action items for the team",
+      desc: "RawBot catches what your team missed, surfaces blockers before they become problems, and formats everything for Slack. Fewer meetings, more clarity.",
+      bubbles: [
+        { q: true, text: "Turn this standup audio into action items for the team" },
+        { q: false, text: "Done. 4 action items extracted with owners and deadlines. Ready for Slack?" }
+      ]
+    },
+    parent: {
+      title: "Remind me to pack Emma's lunch every morning at 7 AM",
+      desc: "RawBot holds family schedules so you don't have to. Birthdays, appointments, school events, permission slips — it's all one conversation, not five apps.",
+      bubbles: [
+        { q: true, text: "Remind me to pack Emma's lunch every morning at 7 AM" },
+        { q: false, text: "Set. Every morning at 7:00 AM you'll get a reminder with Emma's lunch checklist." }
+      ]
+    },
+    adhd: {
+      title: "I'm spiraling on three things, help me pick which one to do first",
+      desc: "No judgment, no folders, no system to maintain. You dump the chaos. RawBot prioritizes, breaks it down, and keeps you unstuck.",
+      bubbles: [
+        { q: true, text: "I'm spiraling on three things, help me pick which one to do first" },
+        { q: false, text: "Here's your priority stack with estimated time for each. Which one feels most doable right now?" }
+      ]
+    },
+    freelancer: {
+      title: "Invoice template for this 3-month retainer, due by end of day",
+      desc: "RawBot knows your rates, your clients, your payment terms. Invoices, proposals, and follow-ups happen in the background. You focus on the work.",
+      bubbles: [
+        { q: true, text: "Invoice template for this 3-month retainer, due by end of day" },
+        { q: false, text: "Invoice drafted and ready. It's waiting in your Stripe. Want me to send the client the payment link?" }
+      ]
+    },
+    writer: {
+      title: "Outline a blog post about the future of AI assistants",
+      desc: "RawBot researches, organizes, and structures. Then you write. It handles the busywork so you can focus on the craft.",
+      bubbles: [
+        { q: true, text: "Outline a blog post about the future of AI assistants" },
+        { q: false, text: "3-part structure: what's changing, why it matters, what's next. Want me to pull research for section 2?" }
+      ]
+    }
+  };
+
+  var tabs = document.querySelectorAll('.persona-tab');
+  var content = document.getElementById('persona-content');
+  if (!tabs.length || !content) return;
+
+  function renderPersona(key) {
+    var p = personas[key];
+    var html = '<div class="persona-txt">' +
+      '<h3>' + p.title + '</h3>' +
+      '<p>' + p.desc + '</p>' +
+      '</div>' +
+      '<div class="persona-demo">';
+    p.bubbles.forEach(function (b) {
+      html += '<div class="persona-bubble ' + (b.q ? 'q' : 'a') + '">' + b.text + '<span class="meta">' + (b.q ? '<span class="ticks">✓✓</span>' : '') + '</span></div>';
+    });
+    html += '</div>';
+    content.innerHTML = html;
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      renderPersona(tab.dataset.persona);
+    });
+  });
+
+  // render first persona on load
+  renderPersona('founder');
+})();
+
+/* ── Groopy group demos ── */
+(function () {
+  var groopy = {
+    standup: {
+      title: "Team standup — who's unblocked, who's stuck?",
+      desc: "Groopy catches blockers before they cascade, assigns follow-ups, and sends a summary everyone can read in 30 seconds instead of rewatching the call.",
+      bubbles: [
+        { q: true, text: "Alex: We're waiting on payment provider API access. Been two weeks. Blocking the checkout flow." },
+        { q: true, text: "Jordan: Talked to them yesterday, said 'end of week'. Want me to chase?" },
+        { q: true, text: "Morgan: @Groopy summarize and extract blockers" },
+        { q: false, text: "📋 **Blockers extracted:**\n\n1️⃣ **Payment provider API access** — awaiting handoff\n   • Owner: Jordan (chase end-of-week deadline)\n   • Blocks: Checkout flow\n   • Due: This week\n\n2️⃣ **Docs for new SDK** — Morgan mentioned needing this\n   • Owner: TBD\n   • Due: Tomorrow\n\n✅ **Quick summary:** 2 blockers, 1 clear owner, checkout can't ship until API lands." }
+      ]
+    },
+    planning: {
+      title: "Product roadmap Q2 — too many ideas, not enough clarity",
+      desc: "Groopy turns the sprawl into a prioritized, owned list. Every item has a reason, an owner, and a deadline. No more 'wait, what were we doing?'",
+      bubbles: [
+        { q: true, text: "Product team discussing 6 feature ideas, everyone adding thoughts..." },
+        { q: true, text: "CTO: @Groopy extract the Q2 priorities from this mess" },
+        { q: false, text: "🎯 **Q2 Priorities Extracted:**\n\n**P1 — API v2 redesign** (confidence: high)\n  • Owner: Engineering\n  • Blocks: 3 features\n  • Deadline: Mid-April\n\n**P2 — Native mobile app** (confidence: medium)\n  • Owner: TBD\n  • Risk: Unknown\n  • Deadline: End-Q2\n\n**P3 — Analytics dashboard** (confidence: medium)\n  • Owner: Data team\n  • Helps: Sales\n  • Deadline: TBD — needs discussion\n\n❓ **Questions for tomorrow:** Owner for mobile, deadline for analytics, timeline confidence for API." }
+      ]
+    },
+    family: {
+      title: "Family group — birthday party, school stuff, carpools",
+      desc: "Groopy keeps the family organized so parents don't drop balls. Assignments, dates, reminders — everyone knows what's theirs.",
+      bubbles: [
+        { q: true, text: "Emma's birthday party Saturday. Need cake, decorations, invite list confirmation..." },
+        { q: true, text: "Also Colin's soccer is Thursday evening, someone needs to drive" },
+        { q: true, text: "And the school forms are due by Friday" },
+        { q: true, text: "Mom: @Groopy make a list before I forget everything" },
+        { q: false, text: "✅ **Family to-dos extracted:**\n\n🎂 **Emma's Birthday Party (Saturday)**\n  • Cake order: Mom (by Wed)\n  • Decorations: Dad (Thu evening)\n  • Invite confirms: Due Fri\n  • Reminders: Fri 9am & Sat 8am\n\n⚽ **Colin's Soccer (Thursday 5pm)**\n  • Carpool: Dad this week, rotation TBD\n  • Reminder: Thu 3pm\n\n📝 **School Forms (due Friday)**\n  • Colin's forms: Mom\n  • Emma's forms: Dad\n\nReminders set. Everything's on the calendar." }
+      ]
+    }
+  };
+
+  var tabs = document.querySelectorAll('#groopy-tabs .persona-tab');
+  var content = document.getElementById('groopy-content');
+  if (!tabs.length || !content) return;
+
+  function renderGroopy(key) {
+    var g = groopy[key];
+    var html = '<div class="persona-txt">' +
+      '<h3>' + g.title + '</h3>' +
+      '<p>' + g.desc + '</p>' +
+      '</div>' +
+      '<div class="persona-demo">';
+    g.bubbles.forEach(function (b) {
+      html += '<div class="persona-bubble ' + (b.q ? 'q' : 'a') + '">' + b.text + '</div>';
+    });
+    html += '</div>';
+    content.innerHTML = html;
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      renderGroopy(tab.dataset.groopy);
+    });
+  });
+
+  // render first groopy on load
+  renderGroopy('standup');
+})();
+
+/* ── wa.me links: build with UTM → ref tag (funnel plan NOW #2) ── */
+(function () {
+  var NUMBER = '972XXXXXXXX'; // TODO: real RawBot number, intl format, no +
+  var params = new URLSearchParams(location.search);
+  var ref = [params.get('utm_source'), params.get('utm_medium'), params.get('utm_campaign')]
+    .filter(Boolean).join('/');
+  var text = 'Hey RawBot' + (ref ? ' (ref: ' + ref + ')' : '');
+  var href = 'https://wa.me/' + NUMBER + '?text=' + encodeURIComponent(text);
+
+  document.querySelectorAll('.wa-link').forEach(function (a) {
+    a.href = href;
+    a.addEventListener('click', function () {
+      if (typeof gtag === 'function') {
+        gtag('event', 'whatsapp_click', {
+          link_location: a.dataset.loc || 'unknown',
+          ref_tag: ref || '(none)'
+        });
+      } else if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'whatsapp_click',
+          link_location: a.dataset.loc || 'unknown',
+          ref_tag: ref || '(none)'
+        });
+      }
+    });
+  });
+})();
+
+/* ── Chat replay loop ── */
+(function () {
+  var msgs = Array.prototype.slice.call(document.querySelectorAll('#chat-body .msg'));
+  var typing = document.getElementById('typing');
+  var status = document.getElementById('chat-status');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) { msgs.forEach(function (m) { m.classList.add('show'); }); return; }
+
+  function play() {
+    msgs.forEach(function (m) { m.classList.remove('show'); });
+    typing.classList.remove('show');
+    var t = 600;
+    msgs.forEach(function (m) {
+      var isBot = m.classList.contains('msg-in');
+      if (isBot) {
+        setTimeout(function () { typing.classList.add('show'); status.textContent = 'typing…'; }, t);
+        t += 1100;
+      }
+      setTimeout(function () {
+        typing.classList.remove('show');
+        status.textContent = 'online';
+        m.classList.add('show');
+      }, t);
+      t += isBot ? 1600 : 1300;
+    });
+    setTimeout(play, t + 4500);
+  }
+  play();
+})();
+
+/* ── Scenario tabs ── */
+(function () {
+  var data = {
+    work: [
+      { q: '<div class="file-card"><span class="file-ic">PDF</span><span class="file-info"><span class="file-name">Service_Contract_2026.pdf</span><span class="file-meta">40 pages · 1.1 MB · pdf</span></span><span class="file-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg></span></div>Summarize this and flag anything unusual', a: 'Here\'s the short version — <b>3 bullets and one flag</b>: the auto-renewal on page 31 kicks in unless you cancel 60 days ahead.' },
+      { q: 'Reply to the client asking why we\'re delayed — honest but not alarming', a: 'Draft ready. It <b>owns the delay</b> without over-apologizing, and offers a new date. Approve and I\'ll prep it to send.' },
+      { q: 'Turn this voice note into action items for the team', a: 'Done — <b>5 tasks with owners and deadlines</b>, formatted to paste straight into the group chat.' }
+    ],
+    life: [
+      { q: 'Write an appeal for this parking ticket — the sign was hidden', a: 'Appeal letter ready, citing <b>the right grounds</b>. Attach your photo of the sign and submit.' },
+      { q: 'Plan a birthday dinner for 8, two vegetarians, under 150 a head', a: 'Three options nearby, <b>menus checked</b> for the vegetarians. Plus a message you can forward to the group.' },
+      { q: 'Remind me Sunday morning to renew the car insurance', a: 'Set. You\'ll get a message <b>Sunday at 9:00</b> — with last year\'s policy details so you can compare.' }
+    ],
+    both: [
+      { q: '<div class="voice-wrap"><div class="voice-row"><span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M8 5v14l11-7z"/></svg></span><span class="wave"><i class="played" style="height:6px"></i><i class="played" style="height:11px"></i><i class="played" style="height:15px"></i><i class="played" style="height:8px"></i><i style="height:13px"></i><i style="height:7px"></i><i style="height:16px"></i><i style="height:9px"></i><i style="height:12px"></i><i style="height:5px"></i><i style="height:10px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:6px"></i><i style="height:13px"></i><i style="height:9px"></i><i style="height:7px"></i><i style="height:12px"></i><i style="height:5px"></i></span><span class="voice-avatar">Y<span class="mic-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/></svg></span></span></div><span class="voice-dur">0:38</span></div>', a: 'Caught all three from your voice note: <b>invoice drafted</b> for your approval, <b>gift reminder set</b> for Wednesday, and a follow-up to the plumber ready when you say go.' },
+      { q: 'What\'s still open from this week?', a: 'Three things: the proposal follow-up (David), the dentist confirmation, and the contract question you flagged Tuesday. Want to knock them out now?' },
+      { q: 'I\'m walking into the meeting — anything I should remember?', a: 'Two things: they asked about delivery dates last time, and you promised the revised quote by today — it\'s drafted, waiting for your approval.' }
+    ]
+  };
+
+  var grid = document.getElementById('scen-grid');
+  var tabs = document.getElementById('scen-tabs');
+
+  function render(set) {
+    grid.innerHTML = data[set].map(function (c) {
+      return '<div class="scen-card">' +
+        '<div class="sc-demo">Demo</div>' +
+        '<div class="sc-bubble q">' + c.q + '<span class="meta">10:0' + (Math.floor(1 + (c.q.length % 8))) + ' <span class="ticks">✓✓</span></span></div>' +
+        '<div class="sc-bubble a">' + c.a + '<span class="meta">10:0' + (Math.floor(2 + (c.q.length % 7))) + '</span></div>' +
+        '</div>';
+    }).join('');
+  }
+
+  tabs.addEventListener('click', function (e) {
+    var btn = e.target.closest('.tab');
+    if (!btn) return;
+    tabs.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    render(btn.dataset.set);
+  });
+
+  render('work');
+})();
+
+/* ── FAQ accordion ── */
+(function () {
+  document.querySelectorAll('.faq-q').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+})();
+
+/* ── Try-it interactive demo (scripted preview) ── */
+(function () {
+  var TICKS = ' <span class="ticks">✓✓</span>';
+  var scripts = {
+    pdf: [
+      { side: ‘out’, html: ‘<div class=”file-card”><span class=”file-ic”>PDF</span><span class=”file-info”><span class=”file-name”>Contract_2025.pdf</span><span class=”file-meta”>32 pages · 2.4 MB · pdf</span></span></div>Summarize this, flag anything unusual’, t: ‘09:41’ },
+      { side: ‘in’, html: ‘Reading now...’, t: ‘09:41’ },
+      { side: ‘in’, html: ‘<b>Summary (3 key points)</b><br><br>• <b>12-month term</b>, £45k annually, paid quarterly<br>• You own all deliverables, IP stays with you<br>• Auto-renews unless cancelled 60 days prior<br><br><b>⚠️ Red flag:</b> Section 8.3 lets them terminate with 14 days notice while you need 90. That’s asymmetrical. You’ll want to push for matching terms or a kill fee.<br><br>Want me to draft a redline email?’, t: ‘09:42’ }
+    ],
+    email: [
+      { side: ‘out’, html: ‘Draft follow-up to Sarah. Proposal went quiet 10 days ago, keep it warm but not desperate.’, t: ‘10:15’ },
+      { side: ‘in’, html: ‘Here’s what I’d send (your tone, professional but direct):<br><br><i>”Hi Sarah — wanted to touch base on the proposal we sent over. Happy to clarify anything or adjust the scope if it’s not quite right. Are you still looking at this month, or should I resync next week?”</i><br><br><b>Approve to send via Gmail</b>, or I can tweak the tone.’, t: ‘10:15’ }
+    ],
+    voice: [
+      { side: ‘out’, html: ‘<div class=”voice-wrap”><div class=”voice-row”><span class=”play-btn”><svg viewBox=”0 0 24 24” fill=”currentColor” width=”22” height=”22”><path d=”M8 5v14l11-7z”/></svg></span><span class=”wave”><i class=”played” style=”height:6px”></i><i class=”played” style=”height:11px”></i><i class=”played” style=”height:15px”></i><i class=”played” style=”height:8px”></i><i class=”played” style=”height:13px”></i><i class=”played” style=”height:7px”></i><i class=”played” style=”height:16px”></i><i style=”height:9px”></i><i style=”height:12px”></i><i style=”height:5px”></i><i style=”height:10px”></i><i style=”height:14px”></i><i style=”height:8px”></i></span><span class=”voice-avatar”>Y</span></div><span class=”voice-dur”>0:41</span></div>’, t: ‘11:03’ },
+      { side: ‘in’, html: ‘<b>From your voice note, I extracted:</b><br><br>✅ <b>Email draft</b> to client re: the revised brief<br>✅ <b>Calendar event</b> (Thursday 3pm) for the kickoff<br>✅ <b>Task reminder</b> to get legal to review the SOW by Wednesday<br><br>All ready. Want me to send the email now, or review first?’, t: ‘11:03’ }
+    ],
+    remind: [
+      { side: ‘out’, html: ‘Set a reminder for Friday — check if Marcus replied to the proposal. If he hasn’t, nudge him.’, t: ‘14:27’ },
+      { side: ‘in’, html: ‘Done. I’ll check Friday morning. If Marcus hasn’t replied, I’ll give you a reminder with a ready-to-send follow-up. If he has, I’ll stay quiet. Either way, you’re covered. ✓’, t: ‘14:27’ }
+    ]
+  };
+
+  var body = document.getElementById('demo-body');
+  var statusEl = document.getElementById('demo-status');
+  var btns = document.querySelectorAll('.prompt-btn');
+  var timers = [];
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  function bubble(step, tail) {
+    var div = document.createElement('div');
+    div.className = 'msg msg-' + step.side + (tail ? ' tail' : '') + ' show';
+    div.innerHTML = step.html + '<span class="meta">' + step.t + (step.side === 'out' ? TICKS : '') + '</span>';
+    return div;
+  }
+
+  function typing() {
+    var d = document.createElement('div');
+    d.className = 'typing show';
+    d.innerHTML = '<i></i><i></i><i></i>';
+    return d;
+  }
+
+  function run(key) {
+    clearTimers();
+    body.innerHTML = '';
+    var steps = scripts[key];
+    var delay = 300;
+    steps.forEach(function (step, i) {
+      var prevSide = i > 0 ? steps[i - 1].side : null;
+      var isTail = step.side !== prevSide;
+      if (step.side === 'in') {
+        timers.push(setTimeout(function () {
+          var tp = typing(); body.appendChild(tp); body.scrollTop = body.scrollHeight;
+          statusEl.textContent = 'typing…';
+        }, delay));
+        delay += reduced ? 200 : 900;
+        timers.push(setTimeout(function () {
+          var tp = body.querySelector('.typing'); if (tp) tp.remove();
+          statusEl.textContent = 'online';
+          body.appendChild(bubble(step, isTail)); body.scrollTop = body.scrollHeight;
+        }, delay));
+        delay += reduced ? 150 : 700;
+      } else {
+        timers.push(setTimeout(function () {
+          body.appendChild(bubble(step, isTail)); body.scrollTop = body.scrollHeight;
+        }, delay));
+        delay += reduced ? 200 : 850;
+      }
+    });
+  }
+
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      run(btn.dataset.demo);
+    });
+  });
+
+  // auto-play the first script when the section scrolls into view
+  var started = false;
+  var demoIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !started) { started = true; run('pdf'); demoIO.disconnect(); }
+    });
+  }, { threshold: 0.4 });
+  var tryEl = document.getElementById('try');
+  if (tryEl) demoIO.observe(tryEl);
+})();
+
+/* ── Scroll reveal ── */
+(function () {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>
