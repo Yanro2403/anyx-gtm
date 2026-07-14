@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RawBot — It's you, but better | Anyx</title>
+<meta name="description" content="A personal assistant in your WhatsApp that learns how you talk, think, and write — then handles your work and your life the way you would. Tap once to start. No install, no account, no card.">
+
+<!-- ============================================================
+  ANYX LANDING PAGE · WhatsApp-first funnel · v2
+  Changes vs v1: identity positioning ("It's you, but better"), pain eyebrow,
+  speed sequence under CTA, audience line, "learns you" section,
+  "ChatGPT is everyone's" objection section, human-in-the-loop + dashboard
+  reframe, flat-price framing, 2 personal-life scenarios.
+  DEV NOTES:
+  1. Replace WHATSAPP_NUMBER with the real RawBot number (intl format, no +).
+  2. Load the same GTM container as the homepage (GTM-M3N4MWJ6); mark
+     whatsapp_click as a KEY EVENT in GA4.
+  3. UTMs are appended to the prefilled WhatsApp message as "(ref: ...)" —
+     bot must log this tag on first inbound message for channel attribution.
+  4. No site navigation on this page — do not add the global header.
+  5. Host at anyx.app/start (or similar). Do NOT replace the homepage.
+  COPY NOTES:
+  - Vocabulary: "personal assistant" / "it". Never "co-worker", never "agent".
+  - Scenarios: 4 carried from pricing page (validated wording), 2 personal-life
+    ones are new drafts — replace with real user language after interviews.
+  - "600+" claim carried from pricing page — Yan to confirm before launch.
+============================================================ -->
+
+<style>
+  :root{
+    --ink:#0f1222;
+    --ink-soft:#3d4157;
+    --dim:#7a7f96;
+    --bg:#ffffff;
+    --bg-soft:#f6f7fb;
+    --purple:#7c3aed;
+    --purple-soft:#f1eafe;
+    --wa:#25d366;
+    --wa-dark:#1eb257;
+    --bubble-out:#d9fdd3;
+    --bubble-in:#ffffff;
+    --chat-bg:#e9e2d8;
+    --border:#e7e8f0;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+
+  .topbar{padding:18px 0}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-0.4px;color:var(--ink);text-decoration:none}
+  .logo span{color:var(--purple)}
+  .logo small{display:block;font-size:10px;font-weight:600;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase}
+
+  /* ---------- hero ---------- */
+  .hero{padding:24px 0 56px;display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center}
+  .pain{
+    display:inline-block;font-size:13px;font-weight:600;color:var(--purple);
+    background:var(--purple-soft);border-radius:100px;padding:6px 14px;margin-bottom:16px;
+  }
+  .hero h1{font-size:clamp(34px,5.6vw,52px);font-weight:800;letter-spacing:-1.4px;line-height:1.08;margin-bottom:16px}
+  .hero h1 em{font-style:normal;color:var(--purple)}
+  .hero .sub{font-size:17px;color:var(--ink-soft);margin-bottom:12px;max-width:48ch}
+  .hero .sub b{color:var(--ink)}
+  .audience{font-size:13.5px;color:var(--dim);margin-bottom:24px}
+
+  .cta{
+    display:inline-flex;align-items:center;gap:12px;
+    background:var(--wa);color:#fff;text-decoration:none;
+    font-size:17px;font-weight:700;letter-spacing:-0.2px;
+    padding:16px 28px;border-radius:100px;
+    box-shadow:0 8px 24px rgba(37,211,102,0.35);
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .cta:hover{transform:translateY(-2px);background:var(--wa-dark);box-shadow:0 12px 28px rgba(37,211,102,0.4)}
+  .cta svg{width:24px;height:24px;flex-shrink:0}
+  .speedline{margin-top:12px;font-size:13.5px;color:var(--ink-soft)}
+  .speedline b{color:var(--ink)}
+  .speedline .sep{color:var(--wa);font-weight:800;margin:0 4px}
+  .speedsub{font-size:12.5px;color:var(--dim);margin-top:4px}
+
+  /* ---------- phone mock ---------- */
+  .phone{
+    background:#111;border-radius:38px;padding:12px;max-width:340px;margin:0 auto;
+    box-shadow:0 24px 60px rgba(15,18,34,0.25);
+  }
+  .screen{background:var(--chat-bg);border-radius:28px;overflow:hidden}
+  .chat-head{background:#075e54;color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#4a90d9);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff}
+  .chat-head .name{font-size:14px;font-weight:600;line-height:1.2}
+  .chat-head .status{font-size:11px;opacity:.8}
+  .chat-body{padding:14px 12px 18px;display:flex;flex-direction:column;gap:8px;min-height:360px}
+  .msg{max-width:84%;padding:8px 12px;border-radius:10px;font-size:13px;line-height:1.45;
+    box-shadow:0 1px 1px rgba(0,0,0,0.08);position:relative}
+  .msg.out{background:var(--bubble-out);align-self:flex-end;border-top-right-radius:2px}
+  .msg.in{background:var(--bubble-in);align-self:flex-start;border-top-left-radius:2px}
+  .msg .time{display:block;font-size:9.5px;color:#8a8d91;text-align:right;margin-top:3px}
+  .msg b{font-weight:700}
+  .typing{display:inline-flex;gap:4px;padding:12px 14px;background:var(--bubble-in);border-radius:10px;
+    align-self:flex-start;box-shadow:0 1px 1px rgba(0,0,0,0.08)}
+  .typing i{width:6px;height:6px;border-radius:50%;background:#9aa0a6;animation:blink 1.3s infinite}
+  .typing i:nth-child(2){animation-delay:.2s}
+  .typing i:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0}
+  section.soft{background:var(--bg-soft)}
+  .kicker{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:10px}
+  h2{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-0.8px;line-height:1.15;margin-bottom:12px}
+  .lead{font-size:16px;color:var(--ink-soft);max-width:62ch;margin-bottom:36px}
+  .lead b{color:var(--ink)}
+
+  /* ask grid */
+  .ask-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .ask{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+  .soft .ask{box-shadow:0 2px 10px rgba(15,18,34,0.04)}
+  .ask .q{display:inline-block;background:var(--bubble-out);border-radius:10px;border-top-right-radius:2px;
+    padding:8px 12px;font-size:13.5px;font-weight:500;margin-bottom:10px}
+  .ask .a{font-size:13px;color:var(--ink-soft)}
+  .ask .a b{color:var(--ink)}
+  .ask .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    color:var(--dim);margin-bottom:8px}
+
+  /* learning timeline */
+  .learn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .learn{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .learn .when{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px}
+  .learn h3{font-size:16px;font-weight:700;margin-bottom:6px}
+  .learn p{font-size:13.5px;color:var(--ink-soft)}
+  .learn .ex{margin-top:10px;background:var(--bg-soft);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--ink-soft);font-style:italic}
+
+  /* vs chatgpt */
+  .vs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .vs{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .vs .them{font-size:12.5px;color:var(--dim);text-decoration:line-through;margin-bottom:4px}
+  .vs h3{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--purple)}
+  .vs p{font-size:13.5px;color:var(--ink-soft)}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .step{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .step .n{width:34px;height:34px;border-radius:50%;background:var(--purple-soft);color:var(--purple);
+    font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .step h3{font-size:16px;font-weight:700;margin-bottom:6px}
+  .step p{font-size:13.5px;color:var(--ink-soft)}
+
+  /* integrations */
+  .integrations{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:#fff;border:1px solid var(--border);border-radius:100px;padding:8px 16px;
+    font-size:13px;font-weight:600;color:var(--ink-soft)}
+
+  /* control / privacy */
+  .ctrl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .ctrl{border-left:3px solid var(--purple);background:#fff;border-radius:0 var(--radius) var(--radius) 0;
+    padding:18px 20px;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .ctrl h3{font-size:15px;font-weight:700;margin-bottom:6px}
+  .ctrl p{font-size:13px;color:var(--ink-soft)}
+  .dash-note{margin-top:16px;font-size:13.5px;color:var(--dim);max-width:64ch}
+  .dash-note b{color:var(--ink-soft)}
+
+  /* faq */
+  .faq-list{display:flex;flex-direction:column;gap:10px;max-width:720px}
+  .faq{background:#fff;border:1px solid var(--border);border-radius:12px;padding:0}
+  .faq summary{cursor:pointer;font-size:15px;font-weight:600;padding:16px 20px;list-style:none;position:relative}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);
+    color:var(--purple);font-weight:700;font-size:18px}
+  .faq[open] summary::after{content:"–"}
+  .faq p{padding:0 20px 16px;font-size:13.5px;color:var(--ink-soft)}
+
+  /* testimonials */
+  .quote-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;text-align:left}
+  .quote{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px}
+  .quote p{font-size:14.5px;font-weight:500;line-height:1.5;letter-spacing:-0.2px}
+  .quote .who{font-size:12.5px;color:var(--dim);margin-top:10px}
+  @media (max-width:820px){.quote-grid{grid-template-columns:1fr}}
+
+  /* proof */
+  .proofline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;text-align:center;flex-direction:column}
+  .proofline .big{font-size:clamp(22px,3.2vw,30px);font-weight:800;letter-spacing:-0.6px}
+  .proofline .big em{font-style:normal;color:var(--purple)}
+  .proofline .small{font-size:14px;color:var(--dim)}
+  .proofline .small b{color:var(--ink-soft)}
+
+  /* final cta */
+  .final{background:var(--ink);color:#fff;text-align:center;border-radius:24px;padding:56px 24px;margin:0 20px}
+  .final h2{color:#fff;margin-bottom:8px}
+  .final p{color:#b9bdd0;font-size:15px;margin-bottom:28px}
+
+  footer{padding:36px 0 48px;text-align:center;font-size:12.5px;color:var(--dim)}
+  footer a{color:var(--dim)}
+
+  .sticky-cta{display:none}
+
+  @media (max-width:820px){
+    .hero{grid-template-columns:1fr;gap:36px;padding:12px 0 40px;text-align:center}
+    .hero .sub,.audience{margin-left:auto;margin-right:auto}
+    .ask-grid,.learn-grid,.vs-grid,.steps,.ctrl-grid{grid-template-columns:1fr}
+    section{padding:48px 0}
+    .sticky-cta{
+      display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;
+      background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);
+      border-top:1px solid var(--border);padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+      justify-content:center;
+    }
+    .sticky-cta .cta{width:100%;max-width:420px;justify-content:center;padding:14px 20px;font-size:16px}
+    body{padding-bottom:76px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap topbar">
+  <a class="logo" href="#">Anyx<span>.</span><small>RawBot — Personal Assistant</small></a>
+</div>
+
+<!-- ================= HERO ================= -->
+<div class="wrap hero">
+  <div>
+    <div class="pain">Still carrying everything in your head?</div>
+    <h1>It's you, <em>but better</em>.</h1>
+    <p class="sub">
+      RawBot is a personal assistant in your WhatsApp that <b>learns how you talk, think, and write</b> —
+      then handles your work and your life the way <b>you</b> would.
+      Text it, voice-note it, forward it things. It amplifies you. It never replaces you.
+    </p>
+    <p class="audience">For professionals, parents, students — all of the above. If you can use WhatsApp, you’re qualified.</p>
+    <a class="cta js-wa" href="#">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.9-4.44 9.9-9.9C21.94 6.44 17.5 2 12.04 2zm0 18.1c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.38-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg>
+      Chat with RawBot now
+    </a>
+    <div class="speedline">Tap <span class="sep">→</span> say hi <span class="sep">→</span> <b>hand off your first task within a minute.</b></div>
+    <div class="speedsub">No install. No account. No card. Free to try.</div>
+    <div class="speedsub">🔒 Private by design — your messages never teach the AI.</div>
+  </div>
+
+  <div class="phone" aria-hidden="true">
+    <div class="screen">
+      <div class="chat-head">
+        <div class="avatar">R</div>
+        <div>
+          <div class="name">RawBot</div>
+          <div class="status">online</div>
+        </div>
+      </div>
+      <div class="chat-body">
+        <div class="msg out">Give me my morning brief <span class="time">08:02</span></div>
+        <div class="msg in"><b>Morning ☀️</b> 3 things need you today:<br>1. Reply to David — proposal expires Friday<br>2. Investor call moved to 14:00<br>3. Invoice #204 still unpaid (day 12)<span class="time">08:02</span></div>
+        <div class="msg out">Draft the follow-up to David. You know my tone <span class="time">08:03</span></div>
+        <div class="msg in">Done — friendly but firm, like your last three. It's waiting in your Gmail outbox. Send as-is? <span class="time">08:03</span></div>
+        <div class="msg out">👍 and remind me tmrw to book the dentist <span class="time">08:04</span></div>
+        <div class="typing"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WHAT PEOPLE ASK ================= -->
+<section class="soft">
+  <div class="wrap">
+    <div class="kicker">Real requests · real results</div>
+    <h2>What people actually say to it</h2>
+    <p class="lead">No commands to learn, no prompts, no syntax. If you can text a friend, you're already trained. Work or life — same chat. Six examples below — <b>yours will look different. They always do.</b></p>
+    <div class="ask-grid">
+      <div class="ask"><span class="tag">Work</span><div class="q">"What was the final price quote the agency sent?"</div><div class="a">Scans your Gmail and answers in seconds. <b>No digging.</b></div></div>
+      <div class="ask"><span class="tag">Work</span><div class="q">"My mind is a mess. I need to launch the feature and hire a dev."</div><div class="a">Your brain-dump becomes a <b>prioritized plan and Monday.com tasks.</b></div></div>
+      <div class="ask"><span class="tag">Life</span><div class="q">"Plan my mom's 60th — venue ideas near her, and nudge me weekly."</div><div class="a">Options researched, reminders set. <b>It doesn't forget. You don't have to.</b></div></div>
+      <div class="ask"><span class="tag">Work</span><div class="q">"Schedule a follow-up with Sarah tomorrow at 10."</div><div class="a">Added to Google Calendar <b>without touching a screen.</b></div></div>
+      <div class="ask"><span class="tag">Life</span><div class="q">🎙️ voice note, 40 seconds, half-sentences, walking to the car</div><div class="a">Understood anyway. <b>Three tasks captured, one reminder set.</b></div></div>
+      <div class="ask"><span class="tag">Work</span><div class="q">"3-bullet summary of the risks in this PDF."</div><div class="a">Actionable insights <b>while you walk to the meeting.</b></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHO IT'S FOR ================= -->
+<section>
+  <div class="wrap">
+    <div class="kicker">Who it's for</div>
+    <h2>If your to-do list lives in your head,<br>this is for you.</h2>
+    <div class="steps">
+      <div class="step"><div class="n">&#9889;</div><h3>You run a business</h3><p>Clients, invoices, follow-ups, the person who still hasn't replied. RawBot keeps track of all of it — so you don't have to.</p></div>
+      <div class="step"><div class="n">&#127925;</div><h3>You run a home</h3><p>Appointments, birthdays, school things, the endless list. Same assistant, same chat — it remembers so your head doesn't have to.</p></div>
+      <div class="step"><div class="n">&#127968;</div><h3>You run both</h3><p>Most people do. Proposals and dentist appointments, deadlines and gifts — one assistant for the whole list, work and life together.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= IT LEARNS YOU ================= -->
+<section class="soft">
+  <div class="wrap">
+    <div class="kicker">Like any great working relationship</div>
+    <h2>Zero learning curve for you.<br>A steep one for it.</h2>
+    <p class="lead">You don't learn to use RawBot — <b>it learns to work with you</b>, the way people learn to work with one another. Your tone. Your people. Your priorities. And it runs both ways: every week brings another <i>"wait — it can do that too?"</i> It gets more yours; you get more out of it.</p>
+    <div class="learn-grid">
+      <div class="learn">
+        <div class="when">Day 1</div>
+        <h3>It does what you hand it</h3>
+        <p>Tasks, reminders, lookups, drafts. Useful from the first message.</p>
+        <div class="ex">"Remind me Thursday about the invoice." — done.</div>
+      </div>
+      <div class="learn">
+        <div class="when">Week 2</div>
+        <h3>It sounds like you</h3>
+        <p>It knows your people and your projects, and drafts in your voice — not a template's.</p>
+        <div class="ex">"Draft the reply to Dana." — in your tone, first try.</div>
+      </div>
+      <div class="learn">
+        <div class="when">Month 2</div>
+        <h3>It's ahead of you</h3>
+        <p>It notices what you'd notice — before you have to.</p>
+        <div class="ex">"David hasn't replied in 4 days — want me to prep the follow-up?"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY NOT CHATGPT ================= -->
+<section>
+  <div class="wrap">
+    <div class="kicker">"Can't I just use ChatGPT?"</div>
+    <h2>ChatGPT is everyone's.<br>This one becomes yours.</h2>
+    <div class="vs-grid">
+      <div class="vs">
+        <div class="them">Answers questions</div>
+        <h3>Acts on your behalf</h3>
+        <p>It doesn't tell you how to write the email — it writes it, files the task, books the slot. In your Gmail, your calendar, your Monday.</p>
+      </div>
+      <div class="vs">
+        <div class="them">Starts cold every chat</div>
+        <h3>Knows your world</h3>
+        <p>Your people, projects, and preferences carry over. You never re-explain who Dana is or what the Q3 push means.</p>
+      </div>
+      <div class="vs">
+        <div class="them">Pay-per-use meters</div>
+        <h3>One flat price</h3>
+        <p>No meters to watch, no math, no surprise bills. One monthly price — use it the way you'd talk to a person.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="soft">
+  <div class="wrap">
+    <div class="kicker">10 seconds to start</div>
+    <h2>How it works</h2>
+    <p class="lead">The first conversation is the setup. There is no other setup.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Tap the green button</h3><p>It opens a WhatsApp chat with RawBot — in the app already on your phone.</p></div>
+      <div class="step"><div class="n">2</div><h3>Say what's on your plate</h3><p>Type it or voice-note it, in any language. It starts learning how you work from message one.</p></div>
+      <div class="step"><div class="n">3</div><h3>Connect tools when ready</h3><p>Plug in Gmail, Calendar, Monday, Slack — one at a time, only what you choose.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INTEGRATIONS ================= -->
+<section>
+  <div class="wrap">
+    <div class="kicker">Integration hub</div>
+    <h2>Talks to your tools, so you don't have to</h2>
+    <p class="lead">Connect once, delegate forever — all through one secure WhatsApp chat.</p>
+    <div class="integrations">
+      <span class="chip">Gmail</span><span class="chip">Google Calendar</span><span class="chip">Monday.com</span>
+      <span class="chip">Slack</span><span class="chip">Jira</span><span class="chip">GitHub</span>
+      <span class="chip">HubSpot</span><span class="chip">Drive</span><span class="chip">Sheets</span>
+      <span class="chip">+ many more</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SECURITY ================= -->
+<section class="soft">
+  <div class="wrap">
+    <div class="kicker">Security</div>
+    <h2>Built inside the world's most personal app.<br>Engineered like it.</h2>
+    <p class="lead">Letting an assistant into your WhatsApp is an act of trust. We treat it that way: security isn't a feature we added — <b>it's the architecture.</b></p>
+    <div class="ctrl-grid">
+      <div class="ctrl"><h3>Your private chat stays private</h3><p>What you tell it one-on-one is sealed off. It can never slip into any group chat — the system is built so it can’t.</p></div>
+      <div class="ctrl"><h3>Your data never teaches the AI</h3><p>Your emails, files, and chats are yours. They are never used to make the AI smarter for anyone else. Period.</p></div>
+      <div class="ctrl"><h3>Locked connections</h3><p>When you connect Gmail or anything else, the connection is encrypted end to end — nothing is stored in the open.</p></div>
+      <div class="ctrl"><h3>You decide what it sees</h3><p>Connect only what you want, one thing at a time. See exactly what it can look at — and switch anything off, anytime.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HUMAN IN THE LOOP ================= -->
+<section>
+  <div class="wrap">
+    <div class="kicker">You stay in charge</div>
+    <h2>It amplifies you. You decide.</h2>
+    <p class="lead">RawBot drafts, prepares, and proposes — <b>you approve.</b> Emails wait in your outbox. Big moves come back as a question, not a surprise. You're the decision-maker; it's the doer.</p>
+    <p class="dash-note">Nothing happens in a black box: want to <b>see</b> everything it's holding for you — tasks, memory, connected tools? There's a dashboard for that. Most people never open it. <b>Everything works from the chat.</b></p>
+  </div>
+</section>
+
+<!-- ================= PROOF ================= -->
+<!-- ================= FAQ ================= -->
+<section class="soft">
+  <div class="wrap">
+    <div class="kicker">Common questions</div>
+    <h2>Before you tap</h2>
+    <div class="faq-list">
+      <details class="faq"><summary>Do I need to install anything?</summary><p>No. RawBot works inside the WhatsApp already on your phone. Tap the green button, say hi, and you're in.</p></details>
+      <details class="faq"><summary>Is it free?</summary><p>Free to try — no card, no account to start. When you're ready, plans start at $15/mo, one flat price. No token math, no surprise bills.</p></details>
+      <details class="faq"><summary>What happens to my data?</summary><p>It stays yours. Your messages never teach the AI, your private chat is sealed off from any group, connections are encrypted, and you can see — and switch off — anything it has access to.</p></details>
+      <details class="faq"><summary>Do I need tech skills?</summary><p>None. Type or send a voice note, in any language, the way you'd text a friend. There are no commands or prompts to learn.</p></details>
+      <details class="faq"><summary>Can it send things without me?</summary><p>No. It drafts and prepares — you approve. Emails wait in your outbox; important moves come back as a question first.</p></details>
+      <details class="faq"><summary>What can it actually do?</summary><p>Sort out your inbox, manage your calendar, turn a messy brain-dump into a clear task list, draft messages in your tone, research, remind, summarize documents — across tools like Gmail, Google Calendar, Monday.com, and Slack. And it learns your way of working as you go.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROOF ================= -->
+<section>
+  <div class="wrap proofline">
+    <!-- ============ TESTIMONIALS — READY, AWAITING REAL QUOTES ============
+         Rules: (1) real quotes only, verbatim; (2) first name + role + explicit permission;
+         (3) users can say "limitless pill" — the brand never says it about itself.
+         Uncomment when at least 2 of 3 slots are filled. One lone quote looks thin.
+    <div class="quote-grid">
+      <div class="quote">
+        <p>"It's like taking a limitless pill."</p>
+        <div class="who">— [First name], [role]</div>
+      </div>
+      <div class="quote">
+        <p>"[Verbatim quote from interview — what changed since using it]"</p>
+        <div class="who">— [First name], [role]</div>
+      </div>
+      <div class="quote">
+        <p>"[Verbatim quote — the 'wait, it can do that?' moment]"</p>
+        <div class="who">— [First name], [role]</div>
+      </div>
+    </div>
+    ============================================================ -->
+    <div class="big"><em>600+</em> people already delegate to Anyx</div>
+    <div class="small">Free to start · <b>one flat price from $15/mo</b> when you're ready · cancel anytime</div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section>
+  <div class="final">
+    <h2>You, but better — one tap away.</h2>
+    <p>The first message takes 10 seconds. The first "wait — it can do that?" takes about a day.</p>
+    <a class="cta js-wa" href="#">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.9-4.44 9.9-9.9C21.94 6.44 17.5 2 12.04 2zm0 18.1c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.38-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg>
+      Chat with RawBot now
+    </a>
+    <p style="margin-top:14px;margin-bottom:0;font-size:12.5px;color:#8f93a8">🔒 Free to try · no account, no card · your messages never teach the AI</p>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Do I need to install anything to use RawBot?","acceptedAnswer":{"@type":"Answer","text":"No. RawBot works inside the WhatsApp already on your phone. Tap the chat button, say hi, and you're in."}},
+    {"@type":"Question","name":"Is RawBot free?","acceptedAnswer":{"@type":"Answer","text":"RawBot is free to try — no card and no account needed to start. Paid plans start at $15/month at one flat price, with no per-token billing."}},
+    {"@type":"Question","name":"What happens to my data?","acceptedAnswer":{"@type":"Answer","text":"Your data stays yours. Your messages are never used to teach the AI, your private one-on-one chat is sealed off from any group, connections are encrypted, and you can see and switch off anything RawBot has access to."}},
+    {"@type":"Question","name":"Do I need technical skills?","acceptedAnswer":{"@type":"Answer","text":"None. Type or send a voice note in any language, the way you'd text a friend. There are no commands or prompts to learn."}},
+    {"@type":"Question","name":"Can RawBot send things without my approval?","acceptedAnswer":{"@type":"Answer","text":"No. RawBot drafts and prepares — you approve. Emails wait in your outbox, and important actions come back as a question first."}},
+    {"@type":"Question","name":"What can RawBot actually do?","acceptedAnswer":{"@type":"Answer","text":"RawBot sorts out your inbox, manages your calendar, turns brain-dumps into task lists, drafts messages in your tone, researches, reminds, and summarizes documents — across tools like Gmail, Google Calendar, Monday.com, and Slack. It learns your way of working over time."}}
+  ]
+}
+</script>
+
+<footer class="wrap">
+  Anyx AI · <a href="https://anyx.app/privacy">Privacy</a> · <a href="https://anyx.app/terms">Terms</a>
+</footer>
+
+<!-- sticky CTA (mobile only) -->
+<div class="sticky-cta">
+  <a class="cta js-wa" href="#">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.9-4.44 9.9-9.9C21.94 6.44 17.5 2 12.04 2z"/></svg>
+    Chat with RawBot now
+  </a>
+</div>
+
+<script>
+(function(){
+  // ============ CONFIG ============
+  var WHATSAPP_NUMBER = "000000000000"; // TODO(dev): real RawBot number, intl format, no '+'
+  var BASE_MESSAGE = "Hey RawBot 👋 I'd like to try you out.";
+
+  var params = new URLSearchParams(window.location.search);
+  var src = params.get("utm_source") || "";
+  var camp = params.get("utm_campaign") || "";
+  var ref = [src, camp].filter(Boolean).join("-");
+  var message = BASE_MESSAGE + (ref ? " (ref: " + ref + ")" : " (ref: start-page)");
+
+  var waUrl = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+
+  document.querySelectorAll(".js-wa").forEach(function(a){
+    a.setAttribute("href", waUrl);
+    a.addEventListener("click", function(){
+      if (typeof gtag === "function") {
+        gtag("event", "whatsapp_click", {
+          link_location: a.closest(".sticky-cta") ? "sticky" : (a.closest(".final") ? "footer_cta" : "hero"),
+          ref_tag: ref || "start-page"
+        });
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

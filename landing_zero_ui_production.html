@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANYX – Zero UI. Just Talk.</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+      line-height: 1.5;
+    }
+
+    .hero-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .headline {
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+
+    .subheadline {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0;
+      text-align: center;
+      color: #b0b0b0;
+      margin-bottom: 3rem;
+      max-width: 700px;
+    }
+
+    .video-container {
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+      border: 1px solid #333333;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 3rem;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .video-placeholder {
+      text-align: center;
+      color: #666666;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+    }
+
+    .video-placeholder svg {
+      margin: 0 auto 12px;
+      opacity: 0.4;
+    }
+
+    .video-placeholder p:last-child {
+      font-size: 0.85rem;
+      color: #555555;
+      margin-top: 4px;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, #25D366 0%, #20BA5A 100%);
+      color: white;
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      font-weight: 600;
+      padding: clamp(1rem, 3vw, 1.25rem) clamp(2rem, 5vw, 3rem);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      box-shadow: 0 20px 50px rgba(37, 211, 102, 0.3);
+      transition: all 0.3s ease;
+      min-width: 280px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .cta-button:hover {
+      background: linear-gradient(135deg, #20BA5A 0%, #1BA84F 100%);
+      box-shadow: 0 30px 70px rgba(37, 211, 102, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .cta-button:active {
+      transform: translateY(0);
+    }
+
+    .whatsapp-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero-container {
+        padding: 1.5rem;
+      }
+      .headline {
+        margin-bottom: 1rem;
+      }
+      .subheadline {
+        margin-bottom: 2rem;
+      }
+      .video-container {
+        margin-bottom: 2rem;
+      }
+      .cta-button {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-container">
+    <!-- HEADLINE -->
+    <h1 class="headline">Stop managing software. Just talk.</h1>
+
+    <!-- SUBHEADLINE -->
+    <p class="subheadline">Send a messy 10-second voice note on WhatsApp. Get a structured project plan, Monday.com tasks, and email drafts in 3 seconds. No dashboards. No apps. Pure execution.</p>
+
+    <!-- VIDEO PLACEHOLDER -->
+    <div class="video-container">
+      <div class="video-placeholder">
+        <div>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <rect width="48" height="48" rx="12" fill="#333333"/>
+            <path d="M19 14L32 24L19 34V14Z" fill="#666666"/>
+          </svg>
+        </div>
+        <p>Split-screen demo video</p>
+        <p>Messy voice → Instant organization</p>
+      </div>
+    </div>
+
+    <!-- CTA BUTTON -->
+    <a href="https://wa.me/972501234567?text=Hi%20ANYX%2C%20I%27d%20like%20to%20try%20you%20out" target="_blank" rel="noopener" class="cta-button">
+      <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+      </svg>
+      Try it in WhatsApp (No Signup)
+    </a>
+  </div>
+</body>
+</html>

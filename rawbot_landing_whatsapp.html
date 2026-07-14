@@ -1961,26 +1961,11 @@ footer { border-top: 1px solid var(--border); padding: 48px 0 40px; }
     });
   });
 
-  // auto-play the first script when the section scrolls into view
-  var started = false;
-  var demoIO = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting && !started) { started = true; run('pdf'); demoIO.disconnect(); }
-    });
-  }, { threshold: 0.4 });
-  var tryEl = document.getElementById('try');
-  if (tryEl) demoIO.observe(tryEl);
 })();
 
-/* ── Scroll reveal ── */
-(function () {
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
-})();
+/* ── Scroll reveal (disabled to prevent hang) ── */
+// Temporarily disabled - removed IntersectionObserver that was causing scroll hang
+// Will re-enable after performance optimization
 </script>
 
 </body>

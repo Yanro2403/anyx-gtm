@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MICHAEL'S EXECUTION GUIDE — anyx.app/ Redesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #222230;
+    --text: #e8e8f0;
+    --text-dim: #6b6b88;
+    --text-mid: #a0a0c0;
+    --red: #ff5f72;
+    --yellow: #f0b429;
+    --green: #3dd68c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 48px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .header { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 28px; }
+  .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+  .header .sub { font-size: 14px; color: var(--text-dim); margin-bottom: 10px; }
+  .urgency { display: inline-block; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; }
+
+  .alert { background: rgba(61,214,140,0.08); border: 1px solid rgba(61,214,140,0.3); border-radius: 8px; padding: 16px; margin: 20px 0; font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+  .alert strong { color: var(--green); font-weight: 700; }
+
+  h2 { font-size: 22px; font-weight: 700; margin: 32px 0 18px; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 20px 0 12px; color: #fff; }
+
+  .step { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--yellow); border-radius: 8px; padding: 18px; margin-bottom: 16px; }
+  .step-number { display: inline-block; background: var(--yellow); color: var(--bg); font-weight: 800; padding: 3px 10px; border-radius: 20px; font-size: 12px; margin-bottom: 10px; }
+  .step-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+  .step-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; margin-bottom: 12px; }
+
+  .code-block {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 11px;
+    color: var(--text);
+    overflow-x: auto;
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+
+  .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .ba-box { background: var(--surface2); border-radius: 6px; padding: 12px; }
+  .ba-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+  .ba-old { color: var(--red); }
+  .ba-new { color: var(--green); }
+  .ba-content { font-size: 12px; line-height: 1.5; }
+
+  .checklist { list-style: none; }
+  .checklist li { font-size: 13px; color: var(--text-mid); margin-bottom: 10px; padding-left: 28px; position: relative; line-height: 1.5; }
+  .checklist li::before { content: "□"; position: absolute; left: 0; font-weight: 700; color: var(--yellow); font-size: 16px; }
+  .checklist li code { background: var(--surface2); padding: 2px 6px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text); }
+
+  .p0 { display: inline-block; background: var(--red); color: #fff; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 12px; margin-right: 8px; }
+  .p1 { display: inline-block; background: var(--yellow); color: var(--bg); font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 12px; margin-right: 8px; }
+
+  .note { background: rgba(240, 180, 41, 0.08); border-left: 3px solid var(--yellow); border-radius: 0 6px 6px 0; padding: 12px; margin: 12px 0; font-size: 12px; color: var(--text-mid); }
+  .note strong { color: var(--yellow); font-weight: 700; }
+
+  .section-order { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 20px 0; font-size: 12px; }
+  .section-order ol { margin: 10px 0 10px 20px; }
+  .section-order li { margin-bottom: 8px; color: var(--text-mid); }
+
+  .copy-table { width: 100%; border-collapse: collapse; margin: 16px 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .copy-table th { background: var(--surface2); padding: 12px; text-align: left; font-weight: 700; font-size: 11px; border-bottom: 1px solid var(--border); color: var(--text); }
+  .copy-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .copy-table tr:last-child td { border-bottom: none; }
+  .copy-table .location { color: var(--text-dim); }
+  .copy-table .old { color: var(--red); }
+  .copy-table .new { color: var(--green); }
+
+  .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
+  .footer strong { color: var(--text-mid); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div><span class="urgency">GET IT DONE</span></div>
+  <h1>MICHAEL'S EXECUTION GUIDE</h1>
+  <div class="sub">anyx.app/ — Complete Redesign (Structure + Copy)</div>
+  <div class="sub" style="margin-top: 8px; color: var(--text-dim); font-size: 12px;">Read top to bottom. Copy/paste every section. Tick off checklist as you go. ~6–8 hours total.</div>
+</div>
+
+<div class="alert">
+  <strong>Goal:</strong> Restructure homepage to match RawBot landing page conversion funnel + copy the exact language from landing page + pricing page (don't write new copy). Remove all jargon (co-worker, WorkOS, autonomous, mental tracking). <strong>CORE POSITIONING: "It amplifies you. It never replaces you." — human stays in control, every section, every word.</strong> Ship as anyx.app/ (replace current). Single page, no new URL — we're committing.
+</div>
+
+---
+
+<!-- ===== PART 1: STRUCTURE CHANGES ===== -->
+
+<h2>PART 1: Structural Changes (Delete/Move/Reorder)</h2>
+
+<div class="step">
+  <div class="step-number">1A</div>
+  <div class="step-title">Simplify Header Navigation</div>
+  <div class="step-desc">
+    <strong>Current header has too many links.</strong> Replace with minimal nav.
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-old">DELETE these header links:</div>
+      <div class="ba-content">
+        • Our Products<br>
+        • Brain Dashboard<br>
+        • WorkOS<br>
+        • Integration Hub<br>
+        • Enterprise AI OS
+      </div>
+    </div>
+    <div class="ba-box">
+      <div class="ba-label ba-new">KEEP in header:</div>
+      <div class="ba-content">
+        • Anyx logo<br>
+        • Pricing link<br>
+        • "Start Free" CTA button
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <strong>Why:</strong> Every nav link is an exit from the funnel. Remove them. Users should only go: down the page or tap the CTA.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">1B</div>
+  <div class="step-title">Delete These Entire Sections (Won't Appear on Homepage)</div>
+  <div class="step-desc">
+    Find and delete these section blocks from the HTML:
+  </div>
+  <ul class="checklist">
+    <li><strong>Delete:</strong> "Meet the ecosystem of AI personas tailored to eliminate your cognitive load" section (the whole narrative block with three cards)</li>
+    <li><strong>Delete:</strong> "Comparisons" section (Versus Zapier / Make / n8n, Versus Basic Chatbots, etc.)</li>
+    <li><strong>Delete:</strong> "Meet the Team" section (Michael, Antigravity, Cursor, Claude, Gemini, ChatGPT cards)</li>
+    <li><strong>Delete:</strong> Footer links to: "Learn," "Hackathons Program," "Vision & Infrastructure"</li>
+  </ul>
+</div>
+
+<div class="step">
+  <div class="step-number">1C</div>
+  <div class="step-title">Move Integration Hub Lower on Page</div>
+  <div class="step-desc">
+    Currently: Hero → Chat Demo → Products → Security → Ecosystem → Comparisons → Integration Hub → FAQ<br><br>
+    <strong>Change to:</strong> Hero → Chat Demo → Scenarios → Who It's For → Objections → How It Works → Security → Integration Hub → FAQ → Proof → Final CTA
+  </div>
+  <div class="note">
+    <strong>Checklist:</strong> Find the "INTEGRATION HUB / Connect Your World" section and move it to after "How it works" section.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">1D</div>
+  <div class="step-title">Restructure Product Sections</div>
+  <div class="step-desc">
+    The page currently has three equal product sections (RawBot, Groopy, Viki). Change this.
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-old">Current Structure:</div>
+      <div class="ba-content">
+        Section: "RAWBOT — Your 1-on-1 Co-worker" [full card]<br>
+        Section: "GROOPY — The Team PM" [full card]<br>
+        Section: "VIKI — The AI Voice Agent" [full card]
+      </div>
+    </div>
+    <div class="ba-box">
+      <div class="ba-label ba-new">New Structure:</div>
+      <div class="ba-content">
+        Keep RawBot + Groopy as main sections<br>
+        Move Viki to: "What's Viki?" in FAQ section<br>
+        Answer: "Our voice AI layer for contact centers. Learn more." + link
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">1E</div>
+  <div class="step-title">Add Sticky Mobile CTA</div>
+  <div class="step-desc">
+    Add a fixed bottom bar that appears when hero scrolls out of view (mobile only). Copy from RawBot landing page.
+  </div>
+  <div class="code-block">
+&lt;!-- Add after closing &lt;body&gt; tag or in footer --&gt;
+&lt;div class="sticky-cta"&gt;
+  &lt;div class="sticky-cta-text"&gt;Start free — 14 days, no card required&lt;/div&gt;
+  &lt;a href="[SIGNUP_URL]" class="sticky-cta-btn"&gt;Start Free&lt;/a&gt;
+&lt;/div&gt;
+
+CSS (add to stylesheet):
+.sticky-cta {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 99; display: none;
+  background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
+  border-top: 1px solid #e7e8f0;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+}
+.sticky-cta.show { display: flex; justify-content: center; }
+  </div>
+  <div class="note">
+    <strong>Why:</strong> Mobile users (65% of traffic) need one-tap access to signup. Sticky CTA keeps it available after hero scrolls.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">1F</div>
+  <div class="step-title">Add Missing Sections (Copy Structure from RawBot Landing Page)</div>
+  <div class="step-desc">
+    The homepage is missing sections that convert. Add these after Chat Demo:
+  </div>
+  <ul class="checklist">
+    <li><strong>Add "Real Scenarios" section:</strong> Grid of 6 real user requests + results (copy from RawBot landing page "What people actually say to it")</li>
+    <li><strong>Add "Who It's For" section:</strong> Three situation cards (you run a business, you run a team, you run both) — copy from RawBot landing page</li>
+    <li><strong>Add "Why Anyx?" section:</strong> Contrast vs. ChatGPT (why not) + Zapier comparison</li>
+    <li><strong>Add "How It Works" section:</strong> 3 simple steps (copy from RawBot landing page)</li>
+  </ul>
+  <div class="note">
+    <strong>Where to find originals:</strong> Open anyx_rawbot_landing_v2.html. Copy the HTML of these sections and paste into homepage. Exact section names are: "What people actually say to it," "Who it's for," "How it works."
+  </div>
+</div>
+
+---
+
+<h2>PART 2: New Page Structure (Correct Order)</h2>
+
+<div class="section-order">
+  <strong>This is the order sections should appear on the page (top to bottom):</strong>
+  <ol>
+    <li><strong>Header</strong> (simplified nav: Logo + Pricing + CTA)</li>
+    <li><strong>Hero</strong> (pain eyebrow + H1 + subhead + audience + CTA + speed sequence)</li>
+    <li><strong>Chat Demo</strong> (animated WhatsApp screen showing RawBot in action)</li>
+    <li><strong>Real Scenarios</strong> (6 cards: what people ask + what it does) ← ADD THIS</li>
+    <li><strong>Who It's For</strong> (three situation cards) ← ADD THIS</li>
+    <li><strong>Why Anyx, Not X?</strong> (vs ChatGPT, vs Zapier) ← ADD THIS</li>
+    <li><strong>How It Works</strong> (3 simple steps) ← ADD THIS</li>
+    <li><strong>Security + Privacy</strong> (current section, update copy)</li>
+    <li><strong>RawBot Description</strong> (current, update copy)</li>
+    <li><strong>Groopy Description</strong> (current, update copy)</li>
+    <li><strong>Integration Hub</strong> (move here from current location)</li>
+    <li><strong>FAQ</strong> (add Viki answer, update other copy)</li>
+    <li><strong>Proof</strong> (600+ people, testimonials section)</li>
+    <li><strong>Final CTA</strong> (repeat the button with trust line)</li>
+    <li><strong>Footer</strong> (legal links + social)</li>
+    <li><strong>Sticky Mobile CTA</strong> (appears after hero on mobile)</li>
+  </ol>
+</div>
+
+---
+
+<!-- ===== PART 2: COPY CHANGES ===== -->
+
+<h2>PART 2: Copy Changes (Search & Replace + New Sections)</h2>
+
+<h3>CRITICAL: Search/Replace All (Terminology)</h3>
+
+<p style="font-size: 12px; color: var(--text-mid); margin-bottom: 14px;"><strong>Do NOT make up alternatives.</strong> Use the EXACT language from landing page and pricing page. If it's not in those pages, don't use it.</p>
+
+<div class="copy-table">
+  <tr>
+    <th>Find This (WRONG)</th>
+    <th>Replace With (FROM LANDING/PRICING)</th>
+  </tr>
+  <tr>
+    <td class="old">"AI Co-Worker"</td>
+    <td class="new">"RawBot" or "Groopy" (use product names, not abstract terms)</td>
+  </tr>
+  <tr>
+    <td class="old">"co-worker" / "Co-worker"</td>
+    <td class="new">Delete entirely or say "personal assistant" / "your team's assistant"</td>
+  </tr>
+  <tr>
+    <td class="old">"autonomous agents"</td>
+    <td class="new">"RawBot and Groopy" (product names only)</td>
+  </tr>
+  <tr>
+    <td class="old">"autonomous AI co-workers"</td>
+    <td class="new">"RawBot and Groopy" (simple, clear)</td>
+  </tr>
+  <tr>
+    <td class="old">"WorkOS" (all instances)</td>
+    <td class="new">Delete or say "WhatsApp" (that's where they live)</td>
+  </tr>
+  <tr>
+    <td class="old">"mental tracking"</td>
+    <td class="new">Delete or say "remembering your tasks" (concrete, human language)</td>
+  </tr>
+  <tr>
+    <td class="old">"orchestrate workflows"</td>
+    <td class="new">"handle your inbox, calendar, and tasks" (from pricing page)</td>
+  </tr>
+  <tr>
+    <td class="old">"execute complex workflows in plain English"</td>
+    <td class="new">"Chat one-on-one about your inbox, calendar, tasks, and research" (from pricing)</td>
+  </tr>
+  <tr>
+    <td class="old">"cognitive load"</td>
+    <td class="new">Delete entirely. Jargon. Not in landing page.</td>
+  </tr>
+  <tr>
+    <td class="old">"Zero-Knowledge Context"</td>
+    <td class="new">"your messages never teach the AI" (from landing page hero)</td>
+  </tr>
+</div>
+
+<div class="step">
+  <div class="step-number">2A</div>
+  <div class="step-title">Hero Section (Replace Entire Block) — HUMAN IN LOOP</div>
+  <div class="step-desc">
+    Find the H1 tag that says "Your brain is not a database" and replace everything from there through the CTA button. Use the EXACT copy from the landing page we built. <strong>CRITICAL: "It amplifies you. It never replaces you" must be visible in hero.</strong>
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-old">❌ Current (Wrong)</div>
+      <div class="ba-content">
+Your brain is not a database.
+Stop managing chaos.
+
+Anyx transforms WhatsApp into your actual WorkOS. Hire autonomous AI co-workers that live in your chats, handle the mental tracking, and execute complex workflows in plain English.
+
+Hire your first AI Co-Worker
+      </div>
+    </div>
+    <div class="ba-box">
+      <div class="ba-label ba-new">✅ New (From Landing Page)</div>
+      <div class="ba-content">
+Still carrying it all in your head?
+
+It's you, but better.
+
+RawBot is a personal assistant in your WhatsApp that learns how you talk, think, and write — then handles your work and your life the way you would. Text it, voice-note it, forward it things. <strong>It amplifies you. It never replaces you.</strong>
+
+For professionals, parents, students — all of the above. If you can use WhatsApp, you're qualified.
+
+Chat with RawBot now
+
+Tap → say hi → hand off your first task within a minute.
+No install. No account. No card. Free to try.
+🔒 Private by design — your messages never teach the AI.
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <strong>CRITICAL:</strong> Copy EXACT from lines 227-241. The chat demo (lines 254-261) shows human-in-loop: RawBot drafts email, asks "Send as-is?" before acting. This PROOF that human stays in control must be visible right after hero.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">2B</div>
+  <div class="step-title">RawBot Product Section (Update Copy) — YOU STAY IN CONTROL</div>
+  <div class="step-desc">
+    Find the section that says "Your 1-on-1 Co-worker" and update it. Use exact copy from pricing page. <strong>ADD a line emphasizing human control.</strong>
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-old">Current (Wrong)</div>
+      <div class="ba-content">
+<strong>Your 1-on-1 Co-worker</strong>
+
+Your private executive assistant on WhatsApp. RawBot triages your inbox...
+      </div>
+    </div>
+    <div class="ba-box">
+      <div class="ba-label ba-new">New (From Pricing + Control)</div>
+      <div class="ba-content">
+<strong>RawBot</strong> <span style="font-size: 11px; color: #999;">Personal</span>
+
+Your personal assistant. Chat one-on-one about your inbox, calendar, tasks, and research — RawBot drafts, organizes, and thinks a step ahead, the way a great assistant would. You stay in control; it handles the overhead.
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <strong>Key phrase:</strong> "You stay in control; it handles the overhead." This is from landing page (line ~335). Don't cut it.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">2C</div>
+  <div class="step-title">Groopy Product Section (Update Copy) — TEAM STAYS IN CONTROL</div>
+  <div class="step-desc">
+    Find the section that says "The Team PM" and update it. Use exact copy from pricing page. <strong>Emphasize team approves and controls.</strong>
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-old">Current (Wrong)</div>
+      <div class="ba-content">
+<strong>The Team PM</strong>
+
+Drop Groopy into any WhatsApp group to turn chaos into alignment. Automatically capture decisions...
+      </div>
+    </div>
+    <div class="ba-box">
+      <div class="ba-label ba-new">New (From Pricing)</div>
+      <div class="ba-content">
+<strong>Groopy</strong> <span style="font-size: 11px; color: #999;">Team</span>
+
+Your team's assistant. @mention Groopy in any group chat — she turns talk into tasks, drafts what's needed, chases follow-ups, and keeps everyone caught up. Your team stays in the loop; she handles the coordination.
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <strong>Key phrase:</strong> "Your team stays in the loop; she handles the coordination." Human approval and visibility is non-negotiable.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">2D</div>
+  <div class="step-title">ADD: "You Stay in Control" Section (After Chat Demo, Before Scenarios) — HUMAN IN LOOP</div>
+  <div class="step-desc">
+    Add a NEW section after the chat demo that explicitly shows how human control works. This is not optional — it's core to Anyx positioning. Copy the philosophy from landing page "How It Works" section but frame it as "YOU STAY IN CONTROL."
+  </div>
+  <div class="code-block">
+ADD THIS SECTION (new, between chat demo and "Real Scenarios"):
+
+SECTION HEADING: "How it works"
+SUBHEAD: "You're always in charge. It handles the busywork."
+
+THREE CARDS (copy structure from landing page lines 354-365):
+
+CARD 1: "You ask"
+It starts when you text something. A task, a question, a brain-dump. You direct, it listens.
+
+CARD 2: "It drafts & handles"
+It does the work: reads emails, updates calendars, writes drafts, researches answers. Everything behind the scenes until you see it.
+
+CARD 3: "You decide"
+It shows you what it did — or what it suggests — and waits for your thumbs-up. You approve, modify, or ask it to redo. You're always the final word.
+
+KEY PHRASES (must include):
+✓ "You're always in charge"
+✓ "You approve"
+✓ "You decide"
+✓ "You're always the final word"
+  </div>
+  <div class="note">
+    <strong>Why:</strong> This section must appear EARLY (before product descriptions) so users understand immediately: "This doesn't replace me, it empowers me." This is the differentiator vs. ChatGPT or autonomous agents.
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">2E</div>
+  <div class="step-title">Security Section (Update With Plain Language)</div>
+  <div class="step-desc">
+    Find "DATA PROTECTION / Enterprise-Grade Privacy" section. Replace all three cards.
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-old">Current Three Cards</div>
+      <div class="ba-content">
+Zero-Knowledge Context
+[crypto jargon about data isolation]
+
+No Training on Your Data
+[technical explanation]
+
+Strictly Encrypted Keys
+[jargon about OAuth]
+      </div>
+    </div>
+    <div class="ba-box">
+      <div class="ba-label ba-new">New Three Cards</div>
+      <div class="ba-content">
+Your Private Chat Stays Private
+What you tell RawBot one-on-one is completely sealed off. It can never slip into a Groopy group chat or be seen by anyone else.
+
+Your Data Is Never Used to Train the AI
+Your emails, files, and messages are yours alone. We never use them to make Anyx smarter for other users.
+
+Encrypted Connections
+When you connect Gmail, Calendar, or any other app, the connection is encrypted. You choose what RawBot can see, and you can switch anything off anytime.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">2F</div>
+  <div class="step-title">Add "Why Not ChatGPT?" Section (Copy from Landing Page)</div>
+  <div class="step-desc">
+    After "Who It's For" and before "How It Works," add this comparison section. Copy the HTML block from anyx_rawbot_landing_v2.html (section titled "Why not ChatGPT?").
+  </div>
+  <div class="code-block">
+Section location in landing page: Lines ~700-750 (approx)
+Section title: "ChatGPT is everyone's. This one becomes yours."
+Has three compare cards with strikethrough vs. benefit
+Copy entire section HTML and paste into new homepage
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-number">2G</div>
+  <div class="step-title">FAQ Section (Add Viki Question + Update Existing) — ADD HUMAN CONTROL QUESTIONS</div>
+  <div class="step-desc">
+    Add one new FAQ item about Viki. Update other FAQ copy to remove jargon.
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-new">ADD THIS FAQ ITEM (new):</div>
+      <div class="ba-content">
+<strong>Q: What's Viki?</strong>
+A: Viki is our voice AI layer. It handles inbound and outbound calls for contact centers with real-time data integration. Not needed for personal or team use of RawBot and Groopy.
+      </div>
+    </div>
+  </div>
+  <div class="step-desc" style="margin-top: 14px;">
+    <strong>Add these NEW FAQ items (human-in-loop):</strong>
+  </div>
+  <div class="copy-table">
+    <tr>
+      <th>NEW FAQ Questions to Add</th>
+      <th>Answer (From Landing Page)</th>
+    </tr>
+    <tr>
+      <td class="location">"Can RawBot send emails or do things without me?"</td>
+      <td class="new">It drafts everything and asks you first. "Send as-is?" is the pattern. You're always in control.</td>
+    </tr>
+    <tr>
+      <td class="location">"What if I don't like what it did?"</td>
+      <td class="new">You see it first, before it goes anywhere. You can modify, redo, or reject. It's your decision, always.</td>
+    </tr>
+    <tr>
+      <td class="location">"Am I replacing my assistant with Anyx?"</td>
+      <td class="new">No. RawBot amplifies you. It never replaces you. It handles the overhead so you can focus on what matters.</td>
+    </tr>
+  </table>
+  
+  <div class="step-desc" style="margin-top: 14px;">
+    <strong>Update existing FAQ items and remove jargon:</strong>
+  </div>
+  <div class="copy-table">
+    <tr>
+      <th>Existing FAQ Question</th>
+      <th>If It Contains This Jargon</th>
+      <th>Replace With</th>
+    </tr>
+    <tr>
+      <td class="location">"What is RawBot?"</td>
+      <td class="old">"co-worker," "triage," "orchestrate"</td>
+      <td class="new">Use "assistant," "sort," "manage"</td>
+    </tr>
+    <tr>
+      <td class="location">"Can RawBot reply to emails?"</td>
+      <td class="old">"on my behalf"</td>
+      <td class="new">"I can see what it wrote first and approve it" (you stay in control)</td>
+    </tr>
+    <tr>
+      <td class="location">"Do I need to know how to code?"</td>
+      <td class="old">Keep as-is, good question</td>
+      <td class="new">Answer: "No. Just talk to them like you'd text a friend."</td>
+    </tr>
+  </table>
+</div>
+
+<div class="step">
+  <div class="step-number">2H</div>
+  <div class="step-title">Page Title + Meta Description (SEO)</div>
+  <div class="step-desc">
+    Update the <code>&lt;title&gt;</code> tag and <code>&lt;meta name="description"&gt;</code> tag in the HTML <code>&lt;head&gt;</code>.
+  </div>
+  <div class="before-after">
+    <div class="ba-box">
+      <div class="ba-label ba-old">Current</div>
+      <div class="ba-content">
+&lt;title&gt;Anyx - AI-Native Workspace on WhatsApp&lt;/title&gt;
+&lt;meta name="description" content="[current]"&gt;
+      </div>
+    </div>
+    <div class="ba-box">
+      <div class="ba-label ba-new">New</div>
+      <div class="ba-content">
+&lt;title&gt;Anyx — Your AI Assistants in WhatsApp | RawBot & Groopy&lt;/title&gt;
+&lt;meta name="description" content="RawBot is your personal assistant. Groopy is your team's. Both live in WhatsApp and handle your inbox, calendar, and tasks. Start free for 14 days."&gt;
+      </div>
+    </div>
+  </div>
+</div>
+
+---
+
+<h2>PART 3: Implementation Checklist</h2>
+
+<h3><span class="p0">P0 — DO TODAY (2–3 hours)</span></h3>
+
+<ul class="checklist">
+  <li>Open anyx.app HTML file in editor</li>
+  <li>Delete navigation links (Our Products, Brain Dashboard, WorkOS, Integration Hub, Enterprise AI OS)</li>
+  <li>Delete entire "Meet the ecosystem" section</li>
+  <li>Delete entire "Comparisons" section</li>
+  <li>Delete entire "Meet the Team" section</li>
+  <li>Run search/replace for all terminology violations (see table above)</li>
+  <li><strong>Keep visible: Chat demo showing RawBot asking "Send as-is?" before acting — this is PROOF human stays in control</strong></li>
+  <li>Replace hero section completely (copy from instructions 2A) — must include "It amplifies you. It never replaces you"</li>
+  <li><strong>Add "How It Works" section with "You're always in charge" framing (instruction 2D)</strong></li>
+  <li>Update RawBot product description (instruction 2B) — must include "You stay in control"</li>
+  <li>Update Groopy product description (instruction 2C) — must include "Your team stays in the loop"</li>
+  <li>Replace Security section copy (instruction 2E)</li>
+  <li>Add "Why not ChatGPT?" section (instruction 2F)</li>
+  <li>Update FAQ section with human control questions (instruction 2G)</li>
+  <li>Update page <code>&lt;title&gt;</code> and meta description (instruction 2H)</li>
+  <li><strong>Search page for: "amplifies," "stays in control," "you decide," "you approve" — should see these multiple times. If 0, you missed the human-in-loop positioning.</strong></li>
+  <li>Test homepage on mobile (22-second rule: can user understand that THEY stay in control?)</li>
+  <li>Deploy to anyx.app/</li>
+</ul>
+
+<h3><span class="p1">P1 — DO TOMORROW (2–3 hours)</span></h3>
+
+<ul class="checklist">
+  <li>Add sticky mobile CTA bar (instruction 1E)</li>
+  <li>Add "Real Scenarios" section (instruction 1F)</li>
+  <li>Add "Who It's For" section (instruction 1F)</li>
+  <li>Add "How It Works" section (instruction 1F)</li>
+  <li>Move Integration Hub to correct position in page order (instruction 1C)</li>
+  <li>Update FAQ section: add Viki question (instruction 2F)</li>
+  <li>Reorganize product sections (move Viki to FAQ-only) (instruction 1D)</li>
+  <li>Test full mobile experience (scroll to sticky CTA, check all sections readable)</li>
+  <li>Deploy updated version</li>
+</ul>
+
+<h3><span class="p1">P2 — NEXT WEEK (Optional Polish)</span></h3>
+
+<ul class="checklist">
+  <li>Add testimonials section (waiting for real user quotes from interviews)</li>
+  <li>Add proof section with updated user count</li>
+  <li>Run GA4 event tracking: mark "Start free" button click as a key event</li>
+  <li>Set up UTM parameters for all external links (LinkedIn posts, emails, etc.)</li>
+</ul>
+
+---
+
+<h2>PART 4: Quick Reference — Copy From These Pages Only</h2>
+
+<div class="section-order" style="background: var(--surface); border: 1px solid var(--border);">
+  <strong>Source 1: anyx_rawbot_landing_v2.html</strong><br>
+  <ul style="margin-top: 10px;">
+    <li><strong>Lines 228-241 (Hero):</strong> Copy hero pain → H1 → subhead → audience → CTA. Paste into homepage hero.</li>
+    <li><strong>Lines 268-280 (Scenarios):</strong> "What people actually say to it" section. Paste as-is.</li>
+    <li><strong>Lines 285-293 (Who it's for):</strong> Three cards. Paste as-is.</li>
+    <li><strong>Lines 325-347 (Why not ChatGPT?):</strong> Three compare cards. Paste as-is.</li>
+    <li><strong>Lines 350-365 (How it works):</strong> Three steps. Paste as-is.</li>
+    <li><strong>Lines 600+ (FAQ):</strong> Use structure, update copy for homepage-specific questions.</li>
+  </ul>
+
+  <strong>Source 2: anyx_pricing_redesign.html</strong><br>
+  <ul style="margin-top: 10px;">
+    <li><strong>Lines 590-597 (Product descriptions):</strong> RawBot + Groopy glosses. Use this exact copy in product sections.</li>
+    <li><strong>Line 581 (Hero subhead):</strong> "They learn how you work, then handle it the way you would." Use this framing.</li>
+  </ul>
+
+  <strong>DO NOT:</strong>
+  <ul style="margin-top: 10px;">
+    <li>Make up new copy. It must come from these two files.</li>
+    <li>Use jargon. If it's not in the landing/pricing pages, don't write it.</li>
+    <li>Paraphrase. Copy word-for-word where possible.</li>
+  </ul>
+</div>
+
+---
+
+<h2>PART 5: Quality Checklist (Before You Ship)</h2>
+
+<ul class="checklist">
+  <li>Search for every instance of: "co-worker," "WorkOS," "mental tracking," "orchestrate," "autonomous agents" — should be 0 results</li>
+  <li>Mobile test: Is the value prop clear in first 22 seconds? (Read hero + first section)</li>
+  <li>Mobile test: Can I tap the "Start free" button from any position on the page?</li>
+  <li>Desktop test: Does the page flow make sense top-to-bottom? Is the narrative logical?</li>
+  <li>CTA test: "Start free" button should appear at least 3 times (hero, after scenarios, sticky mobile)</li>
+  <li>Copy test: Read every sentence out loud. Does it sound like English a non-technical person would understand?</li>
+  <li>Link test: All internal links (Pricing, learn more) should work</li>
+  <li>SEO test: New page title and meta description in place?</li>
+  <li>GA4 test: Is "Start free" button firing a conversion event? (Will be empty now, but should fire when installed)</li>
+</ul>
+
+---
+
+<div class="footer">
+  <strong>Questions?</strong> Ask Yan. She approved all copy.<br>
+  <strong>Time estimate:</strong> P0 = 2–3 hours, P1 = 2–3 hours. Total: ~6 hours.<br>
+  <strong>Deployment:</strong> Replace current anyx.app/ (don't create new URL — we're committing to this structure).<br>
+  <strong>Post-deployment:</strong> Monitor GA4 for signup rate + mobile engagement. Yan will help interpret data.
+</div>
+
+</body>
+</html>

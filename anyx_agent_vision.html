@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anyx — Agent Vision Brainstorm</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #222230;
+    --border-soft: #1a1a28;
+    --text: #e8e8f0;
+    --text-dim: #6b6b88;
+    --text-mid: #a0a0c0;
+
+    --blue: #4a90d9;
+    --blue-dim: #1a2a3f;
+    --blue-border: #2a4a70;
+
+    --green: #3dd68c;
+    --green-dim: #0f2018;
+    --green-border: #1e4a30;
+
+    --purple: #9b6dff;
+    --purple-dim: #1a1028;
+    --purple-border: #3a2060;
+
+    --amber: #f0b429;
+    --amber-dim: #1e1508;
+    --amber-border: #4a3800;
+
+    --red: #ff5f72;
+    --red-dim: #1e0f10;
+    --red-border: #4a1a20;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 48px 40px;
+    max-width: 860px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 28px;
+  }
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--purple);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.8px;
+    margin-bottom: 8px;
+  }
+  .header h1 span { color: var(--purple); }
+  .header-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    margin-top: 40px;
+  }
+  .section-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-red { background: var(--red); }
+  .dot-green { background: var(--green); }
+  .dot-purple { background: var(--purple); }
+  .dot-amber { background: var(--amber); }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* FLOW DIAGRAMS */
+  .flow-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px 20px;
+    margin-bottom: 8px;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .node {
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+  .node sub {
+    display: block;
+    font-size: 9.5px;
+    font-weight: 400;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+  .node-person {
+    background: var(--blue-dim);
+    border: 1.5px solid var(--blue-border);
+    color: var(--blue);
+  }
+  .node-ai {
+    background: var(--green-dim);
+    border: 1.5px solid var(--green-border);
+    color: var(--green);
+  }
+  .node-pain {
+    background: var(--red-dim);
+    border: 1.5px solid var(--red-border);
+    color: var(--red);
+  }
+  .node-new {
+    background: var(--purple-dim);
+    border: 1.5px solid var(--purple-border);
+    color: var(--purple);
+  }
+  .node-mkt {
+    background: var(--amber-dim);
+    border: 1.5px solid var(--amber-border);
+    color: var(--amber);
+  }
+
+  .arrow {
+    font-size: 14px;
+    color: var(--border);
+    margin: 0 8px;
+    flex-shrink: 0;
+  }
+  .arrow-down-wrap {
+    padding: 4px 0 4px 52px;
+    font-size: 14px;
+    color: var(--border);
+  }
+
+  .flow-note {
+    font-size: 11.5px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+  .note-red {
+    background: var(--red-dim);
+    border: 1px solid var(--red-border);
+    color: #c06070;
+  }
+  .note-green {
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    color: #50b070;
+  }
+
+  /* VS DIVIDER */
+  .vs-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .vs-line { flex: 1; height: 1px; background: var(--border); }
+  .vs-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border-radius: 20px;
+  }
+
+  /* INSIGHT */
+  .insight-box {
+    background: var(--green-dim);
+    border-left: 3px solid var(--green);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 20px;
+    margin-bottom: 4px;
+    font-size: 13.5px;
+    color: var(--text-mid);
+    line-height: 1.75;
+  }
+  .insight-box strong { color: var(--green); font-weight: 600; }
+
+  /* QUESTIONS */
+  .q-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px;
+  }
+  .q-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 5px;
+  }
+  .q-text {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.55;
+  }
+
+  /* SUMMARY */
+  .summary-box {
+    background: var(--purple-dim);
+    border: 1.5px solid var(--purple-border);
+    border-radius: 16px;
+    padding: 24px 22px;
+  }
+  .summary-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 12px;
+  }
+  .summary-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+  .summary-text em {
+    color: var(--purple);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 52px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 28px 16px; }
+    .flow-row { gap: 4px; }
+    .node { min-width: 70px; font-size: 10.5px; padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-eyebrow">Anyx AI · Internal Vision Doc</div>
+  <h1>The <span>Agent-to-Agent</span> Future</h1>
+  <div class="header-sub">Brainstorm capture for Michael · July 2026 · Not for distribution</div>
+</div>
+
+
+<!-- CURRENT STATE -->
+<div class="section-header">
+  <div class="section-dot dot-red"></div>
+  <div class="section-title">Current World — The Broken Loop</div>
+</div>
+
+<div class="flow-container">
+  <div class="flow-row">
+    <div class="node node-person">Person A<sub>has a need</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-ai">Their AI<sub>generates output</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-pain">Manual Handoff<sub>human routes it</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-person">Person B<sub>receives it</sub></div>
+  </div>
+  <div class="arrow-down-wrap">↓</div>
+  <div class="flow-row">
+    <div class="node node-ai">Person B's AI<sub>re-processes</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-pain">Ping-Pong<sub>back and forth</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-person">Person A<sub>reviews again</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-pain">Repeat 🔁<sub>no end state</sub></div>
+  </div>
+  <div class="flow-note note-red">
+    ⚠️ AI amplifies individual work but the <strong>human remains the router, translator, and handoff layer</strong> at every step. AI sits inside silos. People bridge the gaps.
+  </div>
+</div>
+
+
+<div class="vs-divider">
+  <div class="vs-line"></div>
+  <div class="vs-pill">VS</div>
+  <div class="vs-line"></div>
+</div>
+
+
+<!-- NEW WORLD -->
+<div class="section-header">
+  <div class="section-dot dot-green"></div>
+  <div class="section-title">Anyx Vision — Agents as the Interface Between People</div>
+</div>
+
+<div class="flow-container">
+  <div class="flow-row">
+    <div class="node node-person">Person A<sub>states need</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-ai">A's Agent<sub>"brain clone"</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-mkt">Expert Network<sub>finds best agent</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-new">B's Agent<sub>"brain clone"</sub></div>
+  </div>
+  <div class="arrow-down-wrap">↓</div>
+  <div class="flow-row">
+    <div class="node node-new">Agents Align<sub>no ping-pong</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-ai">Fitted Output<sub>both sides aligned</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-person">Person A<sub>approves &amp; decides</sub></div>
+    <div class="arrow">→</div>
+    <div class="node node-person">Person B<sub>notified, in loop</sub></div>
+  </div>
+  <div class="flow-note note-green">
+    ✅ Humans stay in charge — but <strong>elevated from operators to decision-makers</strong>. The agent layer handles routing, translation, and negotiation. No one's time is the bottleneck.
+  </div>
+</div>
+
+
+<!-- INSIGHT -->
+<div class="section-header" style="margin-top: 36px;">
+  <div class="section-dot dot-green"></div>
+  <div class="section-title">The Core Insight</div>
+</div>
+
+<div class="insight-box">
+  Today, <strong>AI is a tool inside a person's workflow.</strong> The human is still the gap between every collaboration — routing files, writing summaries, waiting for replies.<br><br>
+  Anyx makes <strong>AI the connective layer between people</strong> — not just between a person and a task. A "brain clone" means your expertise, judgment, and domain knowledge travels at agent speed, without your time being the bottleneck.<br><br>
+  This isn't AI talking to AI. It's <strong>your intelligence, represented and exchanged at scale.</strong> The collaboration structure changes — not just the speed of individual work.
+</div>
+
+
+<!-- OPEN QUESTIONS -->
+<div class="section-header" style="margin-top: 36px;">
+  <div class="section-dot dot-amber"></div>
+  <div class="section-title">Open Questions — Must Answer Before Pitching</div>
+</div>
+
+<div class="q-list">
+  <div class="q-card">
+    <div class="q-tag">Trust & Authenticity</div>
+    <div class="q-text">How does Person A know the expert's agent genuinely represents that expert's judgment — and isn't hallucinating their expertise? What's the credibility layer?</div>
+  </div>
+  <div class="q-card">
+    <div class="q-tag">Brain Clone — Product Definition</div>
+    <div class="q-text">What does it actually mean to "clone" someone's brain? How do you build, train, and maintain an agent that encodes a specific person's knowledge, style, and constraints?</div>
+  </div>
+  <div class="q-card">
+    <div class="q-tag">Expert Marketplace</div>
+    <div class="q-text">Who curates and vets the agent network? How are agents discovered, rated, and priced — what's free vs. paid, and who sets those terms?</div>
+  </div>
+  <div class="q-card">
+    <div class="q-tag">Human Control UX</div>
+    <div class="q-text">"Person stays in charge on both sides" — what does that look like in practice? Approval gates? Agent summaries before proceeding? Veto moments? What's the UX of oversight?</div>
+  </div>
+  <div class="q-card">
+    <div class="q-tag">WhatsApp as Medium</div>
+    <div class="q-text">Is agent-to-agent collaboration native to WhatsApp long-term, or is WhatsApp the bootstrapping layer that proves the model before it lives somewhere else?</div>
+  </div>
+  <div class="q-card">
+    <div class="q-tag">Business Model</div>
+    <div class="q-text">Where does Anyx capture value — the platform subscription, a marketplace take rate on paid expert agents, or enterprise "brain clone" licensing deals?</div>
+  </div>
+  <div class="q-card">
+    <div class="q-tag">Defensibility</div>
+    <div class="q-text">What stops a well-funded competitor from replicating the marketplace once proven? Is the moat the brain clone quality, the network density, or something else?</div>
+  </div>
+</div>
+
+
+<!-- PITHY SUMMARY -->
+<div class="section-header" style="margin-top: 36px;">
+  <div class="section-dot dot-purple"></div>
+  <div class="section-title">For Michael — One Paragraph</div>
+</div>
+
+<div class="summary-box">
+  <div class="summary-eyebrow">The vision in plain English</div>
+  <div class="summary-text">
+    Right now, when two people collaborate using AI, the human is still the bridge between them — routing, translating, and manually ping-ponging while each side uses AI in its own silo. <em>Anyx changes the collaboration structure itself.</em> Each user has an agent that's a "brain clone" — encoding their expertise, judgment, and domain knowledge. When Person A needs something only Person B's expertise can solve, A's agent finds and engages B's agent directly. They align, negotiate, and produce a fitted output — <em>while both humans stay in control,</em> elevated from operators to decision-makers. The result: expert collaboration at agent speed, with no one's time as the bottleneck. This isn't a better AI assistant. <em>It's a new protocol for how human expertise gets exchanged.</em>
+  </div>
+</div>
+
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Anyx AI Inc. · Internal</span>
+  <span>Yan + Michael · July 2026</span>
+</div>
+
+</body>
+</html>
