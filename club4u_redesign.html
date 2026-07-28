@@ -300,6 +300,10 @@
   .fbottom{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:24px;font-size:13.5px;color:#7c84b4}
   .age{display:inline-flex;align-items:center;gap:8px;background:rgba(224,79,95,.14);border:1px solid rgba(224,79,95,.35);color:#ffb3bc;font-weight:700;padding:6px 13px;border-radius:100px;font-size:13px}
   .responsible{background:rgba(255,255,255,.04);border-radius:12px;padding:16px 18px;margin-top:20px;font-size:13px;color:#8f97c4;line-height:1.7}
+  /* RTL / Hebrew typography */
+  bdi{unicode-bidi:isolate}
+  h1,.sec h2,.cta h2,.eyebrow,.logo,.logo small,.jackpot .cap,.method-visual .quote,.stat .num,.step h3,.bcard h3,.plan .pname{letter-spacing:normal}
+  .eyebrow{text-transform:none}
 </style>
 </head>
 <body>
@@ -327,7 +331,7 @@
     <div class="nav-cta">
       <a class="nav-phone" href="tel:*4000">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        4000*
+        <bdi>*4000</bdi>
       </a>
       <a class="btn btn-gold btn-sm" href="#plans">הצטרפו למועדון</a>
     </div>
@@ -357,7 +361,7 @@
 
     <div class="jackpot reveal d2">
       <div class="cap"><span class="dot" style="background:var(--gold)"></span> היתרון של המנוי</div>
-      <div class="amount">×10</div>
+      <div class="amount"><bdi>×10</bdi></div>
       <div class="sub">יותר טורים באותו תקציב — בזכות טורים משותפים</div>
       <div class="balls">
         <span class="ball">7</span><span class="ball">13</span><span class="ball">21</span>
@@ -374,15 +378,15 @@
   <div class="wrap stats-grid">
     <div class="stat reveal"><div class="num">17</div><div class="lbl">שנות פעילות בתחום</div></div>
     <div class="stat reveal d1"><div class="num">מיליוני <i>₪</i></div><div class="lbl">חולקו למנויים במצטבר</div></div>
-    <div class="stat reveal d2"><div class="num">×10</div><div class="lbl">עד פי 10 יותר טורים באותו תקציב</div></div>
-    <div class="stat reveal d3"><div class="num">10<i>+</i></div><div class="lbl">שנים — הוותק של רוב המנויים</div></div>
+    <div class="stat reveal d2"><div class="num"><bdi>×10</bdi></div><div class="lbl">עד פי 10 יותר טורים באותו תקציב</div></div>
+    <div class="stat reveal d3"><div class="num"><bdi>10<i>+</i></bdi></div><div class="lbl">שנים — הוותק של רוב המנויים</div></div>
   </div>
 </section>
 
 <!-- how it works -->
 <section class="sec" id="how">
   <div class="wrap center">
-    <span class="eyebrow reveal">פשוט כמו 1-2-3-4</span>
+    <span class="eyebrow reveal">פשוט כמו <bdi>1-2-3-4</bdi></span>
     <h2 class="reveal d1">איך מועדון הלוטו עובד</h2>
     <p class="sub reveal d2">אתם בוחרים את המספרים — ואנחנו דואגים לכל השאר. אין דוכנים, אין תורים, ואין טפסים שנשכחים בבית.</p>
   </div>
@@ -498,7 +502,7 @@
     <div class="plan reveal">
       <div class="pname">מנוי יחיד</div>
       <div class="pdesc">משחקים לבד, עם המספרים שלכם, בכל הגרלה.</div>
-      <div class="price">₪49<span> / חודש</span></div>
+      <div class="price"><bdi>₪49</bdi><span> / חודש</span></div>
       <div class="pnote">כ־8 הגרלות בחודש</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> טור אישי קבוע עם המספרים שלכם</li>
@@ -513,7 +517,7 @@
       <div class="tag">★ הכי פופולרי</div>
       <div class="pname">שותפות קבוצתית</div>
       <div class="pdesc">חלק בכמות גדולה של טורים משותפים — יותר צירופים, פחות עלות.</div>
-      <div class="price">₪99<span> / חודש</span></div>
+      <div class="price"><bdi>₪99</bdi><span> / חודש</span></div>
       <div class="pnote">חלק יחסי בזכיות הקבוצה</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> שותפות בכמות גדולה של טורים משותפים</li>
@@ -527,7 +531,7 @@
     <div class="plan reveal d2">
       <div class="pname">חבילת פרימיום</div>
       <div class="pdesc">יחיד + קבוצה יחד, למקסימום נוכחות בכל הגרלה.</div>
-      <div class="price">₪149<span> / חודש</span></div>
+      <div class="price"><bdi>₪149</bdi><span> / חודש</span></div>
       <div class="pnote">השילוב המשתלם ביותר</div>
       <ul>
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> טור אישי + שותפות קבוצתית מורחבת</li>
@@ -557,12 +561,12 @@
     <div class="wcard reveal d1">
       <div class="stars">★★★★★</div>
       <p>"הכי אהבתי את השקיפות — רואים בדיוק במה משתתפים. ובאותו תקציב יש הרבה יותר טורים ממה שיכולתי להשיג לבד."</p>
-      <div class="wperson"><span class="wava">ר</span><div><b>רונית כ.</b><small>שותפות קבוצתית · ראשל"צ</small></div></div>
+      <div class="wperson"><span class="wava">ר</span><div><b>רונית כ.</b><small>שותפות קבוצתית · ראשל״צ</small></div></div>
     </div>
     <div class="wcard reveal d2">
       <div class="stars">★★★★★</div>
       <p>"השירות אנושי וזמין. רציתי לשנות מספרים והכל טופל בשיחת טלפון אחת. מקצועיים ואמינים לכל אורך הדרך."</p>
-      <div class="wperson"><span class="wava">א</span><div><b>אבי ל.</b><small>חבילת פרימיום · ב"ש</small></div></div>
+      <div class="wperson"><span class="wava">א</span><div><b>אבי ל.</b><small>חבילת פרימיום · ב״ש</small></div></div>
     </div>
   </div>
   <p class="center" style="margin-top:22px;font-size:13px;color:var(--muted-2)">חוות דעת להמחשה. השתתפות בהגרלות אינה מבטיחה זכייה.</p>
@@ -621,7 +625,7 @@
       <h2>הצטרפו למועדון הלוטו השיטתי</h2>
       <p>מזה 17 שנה אנחנו מלווים מנויים בשיטה עקבית, בשקיפות מלאה ובזכיות שמועברות ישירות לבנק. בלי הבטחות — עם התמדה שמעלה סיכויים.</p>
       <div class="hero-cta">
-        <a class="btn btn-gold" href="tel:*4000">הצטרפו עכשיו · 4000*</a>
+        <a class="btn btn-gold" href="tel:*4000">הצטרפו עכשיו · <bdi>*4000</bdi></a>
         <a class="btn btn-ghost" href="#plans">השוו מסלולים</a>
       </div>
       <div class="fineprint">ההשתתפות מותרת מגיל 18 ומעלה · שחקו באחריות</div>
@@ -659,8 +663,8 @@
       <div>
         <h5>יצירת קשר</h5>
         <div class="fcontact">
-          <a href="tel:*4000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 4000*</a>
-          <a href="mailto:info@club4u.co.il"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg> info@club4u.co.il</a>
+          <a href="tel:*4000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> <bdi>*4000</bdi></a>
+          <a href="mailto:info@club4u.co.il"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg> <bdi>info@club4u.co.il</bdi></a>
           <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ישראל</a>
         </div>
       </div>
@@ -669,7 +673,7 @@
       <strong style="color:#c3c9ef">שחק באחריות.</strong> ההשתתפות בהגרלות מיועדת לבני 18 ומעלה בלבד. הימורים עלולים להיות ממכרים. ההשתתפות בהגרלות מפעל הפיס כרוכה בסיכון ואינה מבטיחה זכייה. אם ההימורים משבשים לך את החיים — פנייה לעזרה היא צעד של אחריות.
     </div>
     <div class="fbottom">
-      <span>© 2026 קלאב פור יו · כל הזכויות שמורות</span>
+      <span><bdi>© 2026</bdi> קלאב פור יו · כל הזכויות שמורות</span>
       <span class="age">🔞 מותר מגיל 18</span>
     </div>
   </div>
