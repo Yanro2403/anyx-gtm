@@ -316,6 +316,23 @@
     *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
     html.js .reveal{opacity:1!important;transform:none!important}
   }
+  /* live lotto results widget (hidden until real מפעל הפיס data loads) */
+  .results-sec{display:none;padding:46px 0;background:linear-gradient(180deg,#fff,#f7f8fd);border-bottom:1px solid var(--line)}
+  .results-sec.live{display:block}
+  .results-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:stretch}
+  @media(max-width:720px){.results-grid{grid-template-columns:1fr}}
+  .rcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow-sm)}
+  .rcard.next{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;border-color:transparent;text-align:center;display:flex;flex-direction:column;justify-content:center}
+  .rcap{font-size:13px;font-weight:800;letter-spacing:.4px;color:var(--gold-2);margin-bottom:8px}
+  .rcard.next .rcap{color:var(--gold)}
+  .rmeta{font-size:14px;color:var(--muted);margin-bottom:16px}
+  .rballs{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .rballs .ball{width:44px;height:44px;font-size:18px;animation:none}
+  .rballs .ball.strong{color:#fff;background:radial-gradient(circle at 32% 28%,#fff,#aab6ff 55%,var(--indigo));box-shadow:0 6px 14px rgba(0,0,0,.2)}
+  .rplus{color:var(--muted-2);font-weight:800}
+  .rnext-date{font-size:22px;font-weight:900;margin:2px 0 8px}
+  .rcountdown{font-size:15px;color:#c8cdf0;font-weight:700;font-variant-numeric:tabular-nums}
+  .rsrc{text-align:center;font-size:12.5px;color:var(--muted-2);margin-top:16px}
 </style>
 </head>
 <body>
@@ -384,6 +401,23 @@
     </div>
   </div>
   <svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none"><path fill="#f5f6fb" d="M0,32L60,29.3C120,27,240,21,360,24C480,27,600,37,720,40C840,43,960,37,1080,32C1200,27,1320,21,1380,18.7L1440,16L1440,60L0,60Z"/></svg>
+</section>
+
+<!-- live lotto results (revealed by JS only when real מפעל הפיס data loads) -->
+<section class="sec results-sec" id="results" aria-live="polite">
+  <div class="wrap results-grid">
+    <div class="rcard">
+      <div class="rcap">תוצאות ההגרלה האחרונה</div>
+      <div class="rmeta" id="rMeta"></div>
+      <div class="rballs" id="rBalls"></div>
+    </div>
+    <div class="rcard next">
+      <div class="rcap">ההגרלה הקרובה</div>
+      <div class="rnext-date" id="rNextDate"></div>
+      <div class="rcountdown" id="rCountdown"></div>
+    </div>
+  </div>
+  <p class="rsrc">הנתונים מתעדכנים אוטומטית · המקור: מפעל הפיס</p>
 </section>
 
 <!-- stats -->
@@ -712,6 +746,44 @@
       });
     },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
     els.forEach(function(el){io.observe(el)});
+  })();
+</script>
+<script>
+  // Live מפעל הפיס results. Reveals the widget ONLY when the /api/lotto proxy
+  // returns real, parseable data — so nothing broken or fake shows before the
+  // feed is validated on the live domain.
+  (function(){
+    var sec=document.getElementById('results'); if(!sec) return;
+    function fmtDate(iso){ if(!iso) return ''; try{return new Date(iso).toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'});}catch(e){return '';} }
+    function ball(n,strong){ var s=document.createElement('span'); s.className='ball'+(strong?' strong':''); s.textContent=n; return s; }
+    var timer;
+    function countdown(target){
+      var el=document.getElementById('rCountdown');
+      function tick(){
+        var diff=target-Date.now();
+        if(diff<=0){ el.textContent='ההגרלה מתקיימת בקרוב'; clearInterval(timer); return; }
+        var d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000), m=Math.floor(diff%3600000/60000);
+        var parts=[];
+        if(d>0) parts.push(d===1?'יום':d+' ימים');
+        parts.push(h===1?'שעה':h+' שעות');
+        parts.push(m===1?'דקה':m+' דקות');
+        el.textContent='עוד '+parts.join(' · ');
+      }
+      tick(); timer=setInterval(tick,60000);
+    }
+    function render(d){
+      if(!d || d.ok===false || !(d.numbers && d.numbers.length===6)) return; // stay hidden
+      var meta=[]; if(d.draw) meta.push('הגרלה '+d.draw); if(d.date) meta.push(d.date);
+      document.getElementById('rMeta').textContent=meta.join(' · ');
+      var wrap=document.getElementById('rBalls'); wrap.innerHTML='';
+      d.numbers.forEach(function(n){ wrap.appendChild(ball(n,false)); });
+      if(d.strong!=null){ var p=document.createElement('span'); p.className='rplus'; p.textContent='+'; wrap.appendChild(p); wrap.appendChild(ball(d.strong,true)); }
+      var nd=d.next && d.next.date;
+      document.getElementById('rNextDate').textContent = nd ? fmtDate(nd) : '';
+      sec.classList.add('live');
+      if(nd) countdown(new Date(nd).getTime());
+    }
+    fetch('/api/lotto').then(function(r){return r.json();}).then(render).catch(function(){});
   })();
 </script>
 </body>
