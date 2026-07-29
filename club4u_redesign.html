@@ -333,6 +333,23 @@
   .rnext-date{font-size:22px;font-weight:900;margin:2px 0 8px}
   .rcountdown{font-size:15px;color:#c8cdf0;font-weight:700;font-variant-numeric:tabular-nums}
   .rsrc{text-align:center;font-size:12.5px;color:var(--muted-2);margin-top:16px}
+  /* why-us comparison table */
+  .compare-sec{background:linear-gradient(180deg,#fff,#f7f8fd)}
+  .ctable-wrap{margin-top:44px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+  .ctable{width:100%;min-width:300px;border-collapse:collapse;background:var(--surface);font-size:15.5px}
+  .ctable th,.ctable td{padding:15px 16px;text-align:right;border-bottom:1px solid var(--line);vertical-align:middle}
+  .ctable tbody tr:last-child td{border-bottom:0}
+  .ctable .cfeat{font-weight:700;color:var(--ink)}
+  .ctable .cus{background:#fff8e6;text-align:center;width:27%;font-weight:600}
+  .ctable .cdiy{color:var(--muted);text-align:center;width:24%}
+  .ctable thead th{font-weight:800;font-size:15px}
+  thead .cfeat{color:var(--muted)}
+  thead .cus{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#3a2a00}
+  thead .cdiy{background:#eef0f6;color:var(--muted)}
+  .ctable .cus b{font-weight:800;color:var(--navy-3)}
+  .ctable .ck{display:inline-flex;vertical-align:-3px;margin-left:5px}
+  .ctable .ck svg{width:16px;height:16px;color:var(--green)}
+  @media(max-width:560px){.ctable{font-size:13px}.ctable th,.ctable td{padding:11px 9px}.ctable .ck{margin-left:3px}.ctable .ck svg{width:14px;height:14px}}
 </style>
 </head>
 <body>
@@ -353,6 +370,7 @@
     <nav class="nav-links">
       <a href="#how">איך זה עובד</a>
       <a href="#benefits">למה אנחנו</a>
+      <a href="#compare">השוואה</a>
       <a href="#plans">מסלולים</a>
       <a href="#winners">המלצות</a>
       <a href="#faq">שאלות נפוצות</a>
@@ -535,6 +553,36 @@
         <span class="ball">26</span><span class="ball">37</span>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- why us vs DIY -->
+<section class="sec compare-sec" id="compare">
+  <div class="wrap center">
+    <span class="eyebrow reveal">מועדון מול קנייה עצמית</span>
+    <h2 class="reveal d1">למה במועדון — ולא לבד?</h2>
+    <p class="sub reveal d2">לשחק לבד זה לגיטימי לגמרי — פשוט צריך לזכור, למלא, לבדוק ולפדות הכול בעצמכם. הנה מה שאנחנו עושים בשבילכם, בכמות ובעלות שקשה להגיע אליהן לבד.</p>
+  </div>
+  <div class="wrap reveal d2">
+    <div class="ctable-wrap">
+      <table class="ctable">
+        <thead>
+          <tr><th class="cfeat">מה מקבלים</th><th class="cus">עם <bdi>Big Save</bdi></th><th class="cdiy">לבד בדוכן</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cfeat">כמות טורים בכל הגרלה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><b>עד 98</b> טורים</td><td class="cdiy">כמה שתקנו ותשלמו</td></tr>
+          <tr><td class="cfeat">עלות לכמות טורים גדולה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>מחולקת בין החברים</td><td class="cdiy">על כל טור בנפרד</td></tr>
+          <tr><td class="cfeat">תוכנה סטטיסטית לצירופי טורים</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td><td class="cdiy">אין</td></tr>
+          <tr><td class="cfeat">מילוי ושליחה בכל הגרלה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>אוטומטי וממוחשב</td><td class="cdiy">ידני, בדוכן</td></tr>
+          <tr><td class="cfeat">אף פעם לא מפספסים הגרלה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td><td class="cdiy">תלוי בכם</td></tr>
+          <tr><td class="cfeat">בדיקת תוצאות ועדכון זכייה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>אנחנו בשבילכם</td><td class="cdiy">בודקים לבד</td></tr>
+          <tr><td class="cfeat">קבלת זכיות</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>ישירות לבנק</td><td class="cdiy">פדיון עצמאי</td></tr>
+          <tr><td class="cfeat">שירות אנושי + שובר חופשה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td><td class="cdiy">אין</td></tr>
+          <tr><td class="cfeat">ביטול בכל עת</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td><td class="cdiy">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="center" style="margin-top:16px;font-size:13px;color:var(--muted-2)">* השוואה כללית להמחשה. ההשתתפות בהגרלות מפעל הפיס בכפוף לתקנון המועדון ולתקנון מפעל הפיס.</p>
   </div>
 </section>
 
