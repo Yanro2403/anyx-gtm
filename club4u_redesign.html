@@ -783,7 +783,13 @@
       sec.classList.add('live');
       if(nd) countdown(new Date(nd).getTime());
     }
-    fetch('/api/lotto').then(function(r){return r.json();}).then(render).catch(function(){});
+    function load(url,next){
+      fetch(url,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(d){ if(d&&d.ok&&d.numbers&&d.numbers.length===6){render(d);} else if(next){next();} })
+        .catch(function(){ if(next) next(); });
+    }
+    // committed static file first (fast, always reachable), live proxy as fallback
+    load('/lotto.json', function(){ load('/api/lotto'); });
   })();
 </script>
 </body>

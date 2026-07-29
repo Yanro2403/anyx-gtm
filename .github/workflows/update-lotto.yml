@@ -1,0 +1,41 @@
+name: Update Lotto results
+
+# Pulls the latest מפעל הפיס Lotto results from a GitHub-hosted runner (which
+# can reach pais.co.il, unlike Vercel's US region) and commits lotto.json.
+# The site reads that committed file, so results are always fast and never
+# depend on Pais being reachable at request time.
+
+on:
+  schedule:
+    - cron: '0 5 * * *' # daily 05:00 UTC (~07:00–08:00 Israel), after Tue/Sat draws
+  workflow_dispatch: {} # allow manual runs (use this to validate connectivity)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-lotto
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fetch latest Lotto results
+        run: node scripts/fetch-lotto.js
+      - name: Commit lotto.json if changed
+        run: |
+          git config user.name "lotto-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- lotto.json; then
+            git add lotto.json
+            git commit -m "chore(data): update lotto.json"
+            git push
+            echo "Committed updated lotto.json"
+          else
+            echo "No change in lotto.json"
+          fi
