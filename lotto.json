@@ -1,4 +1,11 @@
 {
-  "ok": false,
-  "reason": "pending first scheduled fetch (run the Update Lotto results workflow)"
+  "ok": true,
+  "draw": 3950,
+  "date": "28/07/2026",
+  "numbers": [1, 8, 9, 19, 21, 23],
+  "strong": 7,
+  "next": { "date": "2026-08-01T20:00:00.000Z", "jackpot": null },
+  "attribution": "מפעל הפיס",
+  "source": "manual snapshot (verified via web search, 2 sources)",
+  "fetchedAt": "2026-07-29T11:15:00.000Z"
 }
