@@ -24,8 +24,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+      # NOTE: pais.co.il blocks GitHub/Azure datacenter IPs, so this fetch fails
+      # from a hosted runner. To activate: add a repo secret PAIS_PROXY pointing
+      # at an Israeli/allowed egress proxy, OR run this job on a self-hosted
+      # runner with an Israeli IP. continue-on-error keeps scheduled runs green
+      # until then (a failed fetch simply leaves lotto.json unchanged).
       - name: Fetch latest Lotto results
+        continue-on-error: true
+        env:
+          PAIS_PROXY: ${{ secrets.PAIS_PROXY }}
         run: node scripts/fetch-lotto.js
       - name: Commit lotto.json if changed
         run: |
