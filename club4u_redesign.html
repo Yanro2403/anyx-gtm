@@ -304,6 +304,18 @@
   bdi{unicode-bidi:isolate}
   h1,.sec h2,.cta h2,.eyebrow,.logo,.logo small,.jackpot .cap,.method-visual .quote,.stat .num,.step h3,.bcard h3,.plan .pname{letter-spacing:normal}
   .eyebrow{text-transform:none}
+  /* QA fixes */
+  section[id]{scroll-margin-top:90px}
+  .logo span:not(.logo-mark){white-space:nowrap}
+  @media(max-width:900px){.nav-cta .btn-sm{padding:10px 15px;font-size:14px}.nav-cta{gap:10px}}
+  @media(max-width:400px){.logo{font-size:19px}.logo small{display:none}}
+  .nav-call{display:none;width:42px;height:42px;border-radius:12px;place-items:center;background:var(--navy);color:#fff;flex-shrink:0}
+  .nav-call svg{width:19px;height:19px}
+  @media(max-width:900px){.nav-call{display:grid}}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+    html.js .reveal{opacity:1!important;transform:none!important}
+  }
 </style>
 </head>
 <body>
@@ -333,6 +345,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <bdi>*4000</bdi>
       </a>
+      <a class="nav-call" href="tel:*4000" aria-label="חייגו *4000"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
       <a class="btn btn-gold btn-sm" href="#plans">הצטרפו למועדון</a>
     </div>
   </div>
@@ -651,7 +664,7 @@
           <li><a href="#how">איך זה עובד</a></li>
           <li><a href="#benefits">למה אנחנו</a></li>
           <li><a href="#plans">מסלולים</a></li>
-          <li><a href="#winners">זוכים</a></li>
+          <li><a href="#winners">המלצות</a></li>
           <li><a href="#faq">שאלות נפוצות</a></li>
         </ul>
       </div>
