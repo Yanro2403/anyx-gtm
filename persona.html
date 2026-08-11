@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>ביג סייב | מסמך עבודה: פרסונת הלקוח</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#f3f4f8; --surface:#ffffff; --surface-2:#f8f9fc;
+    --ink:#191c28; --muted:#565d76; --muted-2:#828aa3;
+    --line:#e4e6f0; --line-2:#eef0f7;
+    --accent:#3b3fb6; --accent-soft:#ecedfb;
+    --teal:#0e7c86; --teal-soft:#e2f2f3;
+    --amber:#b45309; --amber-soft:#fbf0e0;
+    --shadow:0 1px 2px rgba(20,24,50,.04),0 8px 30px rgba(20,24,50,.06);
+    --radius:16px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1018; --surface:#161a26; --surface-2:#1b2030;
+      --ink:#eef0f7; --muted:#a6adc4; --muted-2:#7982a0;
+      --line:#282e40; --line-2:#222736;
+      --accent:#8b8ff5; --accent-soft:#20233a;
+      --teal:#4fc3cf; --teal-soft:#122a2c;
+      --amber:#e0a85a; --amber-soft:#2b2113;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 34px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1018; --surface:#161a26; --surface-2:#1b2030;
+    --ink:#eef0f7; --muted:#a6adc4; --muted-2:#7982a0;
+    --line:#282e40; --line-2:#222736;
+    --accent:#8b8ff5; --accent-soft:#20233a;
+    --teal:#4fc3cf; --teal-soft:#122a2c;
+    --amber:#e0a85a; --amber-soft:#2b2113;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 34px rgba(0,0,0,.4);
+  }
+  :root[data-theme="light"]{
+    --bg:#f3f4f8; --surface:#ffffff; --surface-2:#f8f9fc;
+    --ink:#191c28; --muted:#565d76; --muted-2:#828aa3;
+    --line:#e4e6f0; --line-2:#eef0f7;
+    --accent:#3b3fb6; --accent-soft:#ecedfb;
+    --teal:#0e7c86; --teal-soft:#e2f2f3;
+    --amber:#b45309; --amber-soft:#fbf0e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Arial,"Helvetica Neue",-apple-system,sans-serif;line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px}
+  a{color:var(--accent)}
+  bdi{unicode-bidi:isolate}
+
+  header.top{padding:48px 0 28px;border-bottom:1px solid var(--line)}
+  .kicker{display:inline-flex;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.03em;color:var(--accent);background:var(--accent-soft);padding:6px 13px;border-radius:100px}
+  h1{font-size:clamp(26px,4.6vw,38px);line-height:1.15;font-weight:800;margin:18px 0 10px;text-wrap:balance}
+  .dek{font-size:18px;color:var(--muted);max-width:66ch}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:20px;font-size:13.5px;color:var(--muted-2)}
+  .meta-row b{color:var(--muted)}
+
+  section{padding:40px 0;border-bottom:1px solid var(--line)}
+  .sec-num{font-size:13px;font-weight:700;color:var(--accent)}
+  h2{font-size:clamp(21px,3.2vw,27px);font-weight:800;margin:6px 0 10px;text-wrap:balance}
+  h3{font-size:18px;font-weight:700;margin:22px 0 8px}
+  .lede{color:var(--muted);max-width:72ch;margin-bottom:8px}
+  p{margin:10px 0;max-width:74ch}
+  strong{font-weight:700}
+
+  .note{background:var(--accent-soft);border-radius:var(--radius);padding:20px 22px;margin-top:14px}
+  .note p{margin:6px 0}
+  .note b{color:var(--accent)}
+
+  .personas{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:20px}
+  @media(max-width:760px){.personas{grid-template-columns:1fr}}
+  @media(min-width:761px) and (max-width:920px){.personas{grid-template-columns:1fr 1fr}}
+  .pface{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:17px 18px;display:flex;flex-direction:column;gap:9px}
+  .pface .ph{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .pface .nm{font-size:16.5px;font-weight:800}
+  .pface .ag{font-size:12.5px;color:var(--muted-2);font-weight:700}
+  .pface .loc{font-size:13px;color:var(--muted)}
+  .pface .job{margin-top:auto;font-size:14px;background:var(--amber-soft);color:var(--amber);border-radius:9px;padding:9px 11px;font-weight:600}
+  .pface .job span{display:block;font-size:10.5px;color:var(--muted-2);font-weight:700;letter-spacing:.03em;margin-bottom:2px}
+  .validate{display:flex;gap:13px;align-items:flex-start;background:var(--amber-soft);border:1px solid color-mix(in srgb,var(--amber) 32%,transparent);border-radius:14px;padding:17px 19px;margin-top:18px}
+  .validate svg{width:22px;height:22px;flex-shrink:0;color:var(--amber);margin-top:2px}
+  .validate .q b{color:var(--amber)}
+
+  /* two client pictures */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+  @media(max-width:700px){.two{grid-template-columns:1fr}}
+  .cc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;border-top:4px solid var(--muted-2)}
+  .cc.research{border-top-color:var(--teal)}
+  .cc.reality{border-top-color:var(--accent)}
+  .cc .lbl{font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--muted-2)}
+  .cc.research .lbl{color:var(--teal)} .cc.reality .lbl{color:var(--accent)}
+  .cc .ttl{font-size:19px;font-weight:800;margin:3px 0 12px}
+  .cc ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .cc li{position:relative;padding-inline-start:20px;font-size:14.5px}
+  .cc li::before{content:"";position:absolute;inset-inline-start:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--muted-2)}
+  .cc.research li::before{background:var(--teal)} .cc.reality li::before{background:var(--accent)}
+  .cc li b{font-weight:700}
+
+  .tbl-wrap{overflow-x:auto;margin-top:18px;border:1px solid var(--line);border-radius:var(--radius)}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+  th,td{text-align:start;padding:12px 15px;border-bottom:1px solid var(--line-2);vertical-align:top}
+  thead th{background:var(--surface-2);font-weight:700;font-size:13px;color:var(--muted)}
+  thead th.a{color:var(--teal)} thead th.b{color:var(--accent)}
+  tbody tr:last-child td{border-bottom:none}
+  td.dim{color:var(--muted);font-weight:600}
+
+  .qblock{margin-top:18px}
+  .qgroup{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px;margin-bottom:14px}
+  .qgroup h4{font-size:15.5px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .qgroup .star{color:var(--amber)}
+  .qgroup ol{margin:8px 18px 0;padding:0}
+  .qgroup li{margin:7px 0;padding-inline-start:4px}
+  .qgroup li::marker{color:var(--accent);font-weight:700}
+
+  .imp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:18px}
+  @media(max-width:700px){.imp{grid-template-columns:1fr}}
+  .icard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+  .icard .h{font-size:15px;font-weight:800;margin-bottom:5px}
+  .icard p{font-size:14px;color:var(--muted);margin:0}
+
+  .closing{background:var(--teal-soft);border-radius:var(--radius);padding:22px 24px;margin-top:20px;font-size:16px}
+  .closing b{color:var(--teal)}
+
+  footer{padding:30px 0 56px;color:var(--muted-2);font-size:13px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <span class="kicker">מסמך עבודה · לדיון משותף</span>
+    <h1>מי הלקוח של ביג סייב?</h1>
+    <p class="dek">ריכזתי מחקר שוק על מי קונה מנוי לוטו בישראל, והצלבתי אותו עם מה שגיל שיתף. המסמך נועד <strong>לדיון ולחידוד משותף</strong>, לא להסקת מסקנות. 17 שנה בשטח שוות יותר מכל מחקר, והמטרה כאן היא לחבר בין השניים ולבנות מיקוד חד יותר.</p>
+    <div class="meta-row">
+      <span><b>עבור:</b> ביג סייב · גיל ושניר</span>
+      <span><b>סטטוס:</b> טיוטה לדיון</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="sec-num">01</div>
+  <h2>שתי תמונות של הלקוח, ופה מתחיל מה שמעניין</h2>
+  <p class="lede">בצד אחד מה שמחקר השוק אומר על "שחקן הלוטו הישראלי". בצד השני מי שגיל תיאר כלקוחות בפועל. הם לא אותו אדם, וזה בדיוק מה ששווה לבחון יחד.</p>
+
+  <div class="two">
+    <div class="cc research">
+      <div class="lbl">מה שמחקר השוק מצא</div>
+      <div class="ttl">שחקן הלוטו ה"קלאסי"</div>
+      <ul>
+        <li><b>גיל:</b> מבוגר, 55+</li>
+        <li><b>מגדר:</b> נוטה לגברים</li>
+        <li><b>הכנסה:</b> ממוצעת ומעלה (לפי דיווח עצמי)</li>
+        <li><b>מיקום:</b> מרכז הארץ</li>
+        <li><b>אופי:</b> הרגלי, משחק שנים מתוך שגרה</li>
+      </ul>
+    </div>
+    <div class="cc reality">
+      <div class="lbl">מי שגיל תיאר (לקוחות בפועל)</div>
+      <div class="ttl">הלקוחות של ביג סייב</div>
+      <ul>
+        <li><b>זוג מהמגזר החרדי</b> בבני ברק, מצב כלכלי לחוץ</li>
+        <li><b>זוג צעיר עם משכנתה</b>, במינוס, בפריפריה</li>
+        <li><b>בחורה צעירה בת <bdi>22</bdi></b>, מתחילה את דרכה</li>
+        <li><b>אזורי ירושלים ומודיעין עילית</b>: לקוחות טובים לאורך 17 שנה</li>
+        <li><b>אופי:</b> צעירים יותר, שאיפה לשינוי גדול</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>למה זה מעניין ולא "בעיה":</b> התיאוריה של השוק והמציאות בשטח נפגשות במקומות שונים, וזה נורמלי. יכול להיות שהמחקר מתאר את מי ש"אמור" לשחק, בעוד שאתם יודעים מי <em>באמת</em> קונה ונשאר. שתי הזוויות נכונות, והחיבור ביניהן הוא מה שיחדד את המיקוד.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-num">02</div>
+  <h2>הפער, בטבלה אחת</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>ממד</th><th class="a">מחקר השוק</th><th class="b">מה שגיל תיאר</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="dim">גיל</td><td>מבוגר, 55+</td><td>צעירים (זוג צעיר, בת 22)</td></tr>
+        <tr><td class="dim">הכנסה</td><td>בינונית ומעלה</td><td>לחץ כלכלי: מינוס, משכנתה</td></tr>
+        <tr><td class="dim">מיקום</td><td>מרכז</td><td>פריפריה, ירושלים, ערים חרדיות</td></tr>
+        <tr><td class="dim">מגזר</td><td>כללי</td><td>חרדי (בני ברק, מודיעין עילית)</td></tr>
+        <tr><td class="dim">מה מחפשים</td><td>שגרה והרגל</td><td>שינוי, "הפרס הגדול"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:14px;color:var(--muted)">השאלה הפתוחה: האם הלקוחות שגיל תיאר הם <strong>הכי נפוצים</strong>, הכי <strong>רווחיים</strong>, או הכי <strong>נאמנים</strong>? כל תשובה מובילה למיקוד אחר. את זה רק אתם יכולים לענות, ולכן השאלות בהמשך.</p>
+</section>
+
+<section>
+  <div class="sec-num">03</div>
+  <h2>הפרסונות שגיל תיאר: טיוטת ארכיטיפים לאימות</h2>
+  <p class="lede">שש דמויות שגיל שרטט מהשטח. שמתי אותן כאן כדי שיהיה על מה לדבר, עדיין כטיוטה שממתינה לאישרור (ראו למטה).</p>
+
+  <div class="personas">
+    <div class="pface">
+      <div class="ph"><span class="nm">זוג חרדי</span><span class="ag">·</span><span class="loc">בני ברק</span></div>
+      <div class="job"><span>הזכייה נותנת:</span>לסיים את החודש בכבוד</div>
+    </div>
+    <div class="pface">
+      <div class="ph"><span class="nm">משה</span><span class="ag">בן <bdi>50</bdi>, גרוש</span></div>
+      <div class="job"><span>הזכייה נותנת:</span>לכסות הלוואה של <bdi>₪50,000</bdi></div>
+    </div>
+    <div class="pface">
+      <div class="ph"><span class="nm">מיכל</span><span class="ag">בת <bdi>21</bdi></span></div>
+      <div class="loc">אוהבת מסיבות, נמצאת במינוס</div>
+      <div class="job"><span>הזכייה נותנת:</span>לצאת מהמינוס</div>
+    </div>
+    <div class="pface">
+      <div class="ph"><span class="nm">סימה וצחי</span><span class="ag">בני <bdi>32</bdi></span></div>
+      <div class="loc">באר שבע · נשואים <bdi>+2</bdi> ילדים</div>
+      <div class="job"><span>הזכייה נותנת:</span>לעמוד בתשלומי המשכנתה</div>
+    </div>
+    <div class="pface">
+      <div class="ph"><span class="nm">סבא וסבתא</span><span class="ag">גיל שלישי</span></div>
+      <div class="loc">רואים את הקושי של הילדים והנכדים</div>
+      <div class="job"><span>הזכייה נותנת:</span>לעזור לדור הצעיר במשפחה</div>
+    </div>
+    <div class="pface">
+      <div class="ph"><span class="nm">חייל משוחרר</span><span class="ag">~<bdi>21</bdi></span></div>
+      <div class="job"><span>הזכייה נותנת:</span>"המכה" שתסדר אותו לכל החיים</div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:20px">
+    <p><b>מה שמאחד את כולם, וזה העיקר:</b> לא הגיל (21 עד גיל שלישי) ולא העיר, אלא <strong>לחץ כלכלי בשילוב חלום זכייה ספציפי מאוד</strong>. לכל דמות יש "בעיה שהזכייה פותרת". כלומר הפרסונה האמיתית של ביג סייב היא <strong>מצבית, לא דמוגרפית</strong>. מוכרים לא "לוטו", אלא את הפתרון לסיפור הספציפי של הלקוח.</p>
+  </div>
+
+  <div class="validate">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/></svg>
+    <div class="q"><b>שאלת האישרור לשותפים:</b> מכל הלקוחות שלכם, כמה (בערך, באחוזים) נראים כמו כל טיפוס כזה? ואיך אתם יודעים, מהרגשה או מפתיחת המערכת וספירה? זה מה שיהפוך את הארכיטיפים היפים האלה למספרים שאפשר לתעדף לפיהם.</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-num">04</div>
+  <h2>שאלות לאישרור וחידוד</h2>
+  <p class="lede">מסודרות לפי נושא. הכוכב <span class="star">★</span> מסמן את החשובות ביותר. אפשר לעבור עליהן בשיחה, אין צורך בהכול בבת אחת.</p>
+
+  <div class="qblock">
+    <div class="qgroup">
+      <h4><span class="star">★</span> א · מי הלקוח הכי <em>טוב</em>, לא הכי נפוץ</h4>
+      <ol>
+        <li>מי הלקוחות שנשארים איתכם הכי הרבה שנים ומשלמים בקביעות? תארו 2 או 3 כאלה.</li>
+        <li>מי הלקוחות הכי <strong>רווחיים</strong>, לאו דווקא הכי הרבה, אלא הכי שווים לאורך זמן?</li>
+        <li>יש פער בין מי שקל לסגור בשיחה לבין מי שבאמת נשאר ומרוצה?</li>
+      </ol>
+    </div>
+
+    <div class="qgroup">
+      <h4>ב · גיל ומגזר</h4>
+      <ol>
+        <li>מה התמהיל האמיתי: יותר צעירים או מבוגרים? יותר חרדים או חילונים?</li>
+        <li>הקהל החרדי (בני ברק, מודיעין עילית, ירושלים): כיוונתם אליו במכוון, או שהם פשוט הכי מגיבים? למה לדעתכם הם לקוחות טובים?</li>
+        <li>יש גם בסיס של מנויים ותיקים בני 60+? כמה הוא משמעותי?</li>
+      </ol>
+    </div>
+
+    <div class="qgroup">
+      <h4>ג · מה מניע "כן", ומה מניע הישארות</h4>
+      <ol>
+        <li>מה הכי גורם ללקוח להגיד "כן" בשיחה?</li>
+        <li>מה גורם להם להישאר שנים: הרגל? אמון בכם? השיטה?</li>
+        <li>מה הסיבה הכי שכיחה שלקוח כן עוזב?</li>
+      </ol>
+    </div>
+
+    <div class="qgroup">
+      <h4>ד · איך הם מגיעים, ולאן להמשיך</h4>
+      <ol>
+        <li>איך לקוח חדש מגיע היום: רשימות, המלצות, פרסום? מה עובד הכי טוב?</li>
+        <li>אם הייתם יכולים לשכפל סוג לקוח אחד, מי זה היה?</li>
+        <li>יש קהל שהייתם רוצים להגיע אליו ועדיין לא הצלחתם?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-num">05</div>
+  <h2>לאן זה מוביל (בכיוון)</h2>
+  <p class="lede">בלי לקבוע, רק כדי להראות איך התשובות שלכם יזיזו את המיקוד.</p>
+  <div class="imp">
+    <div class="icard">
+      <div class="h">מיצוב על אמון</div>
+      <p>ככל שהקהל צעיר ורגיש יותר, ההימור הנכון הוא מיצוב של אמינות, שקיפות ושירות אנושי, לא הבטחות. זה גם מבדל את המותג במגרש חשוד.</p>
+    </div>
+    <div class="icard">
+      <div class="h">ערוצים נכונים</div>
+      <p>אם הבסיס נמצא בטלפון, בוואטסאפ ובהמלצות, שם צריך להשקיע. פרסום ממומן דורש בדיקה נפרדת של היתכנות והתאמה.</p>
+    </div>
+    <div class="icard">
+      <div class="h">לשמר או להרחיב</div>
+      <p>החלטה אמיתית: להמשיך לחזק את הבסיס הקיים, או להרחיב לקהל נוסף. שתי הדרכים לגיטימיות, אבל דורשות טקסטים ותסריטים שונים.</p>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:none">
+  <div class="closing">
+    <p><b>שורה תחתונה:</b> אין לי שום כוונה "לתקן" 17 שנה של ניסיון, להפך. אתם מכירים את הלקוחות טוב מכל מחקר. המסמך הזה הוא נקודת פתיחה לשיחה: אתם מאשרים, מתקנים ומוסיפים, ואני מחבר את זה למחקר כדי לבנות מיקוד חד, אמין וארוך טווח. כל דבר שתחדדו לי שווה זהב.</p>
+  </div>
+</section>
+
+<footer class="wrap">
+  מסמך עבודה לפרסונת הלקוח, טיוטה לדיון, אוגוסט 2026. מבוסס על מחקר שוק ועל ההקלטות של גיל, והנתונים ממתינים לאישרור והשלמה מצד השותפים.
+</footer>
+</main>
+
+<script>
+  (function(){var r=document.documentElement;r.setAttribute('dir','rtl');r.setAttribute('lang','he');
+   try{var t=localStorage.getItem('bs-gildoc-theme');if(t)r.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</body>
+</html>
