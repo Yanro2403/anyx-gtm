@@ -1,2098 +1,847 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anyx — GTM Workspace</title>
+<title>Big Save — מועדון הלוטו השיטתי</title>
+<meta name="description" content="Big Save — מועדון הלוטו השיטתי של ישראל. אנחנו ממלאים ושולחים את הטפסים עבורך, בצורה ממוחשבת ומקצועית. זכייה אינה תלויה רק במזל, אלא בשיטתיות והתמדה.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  /* ── TOKENS ── */
-  :root {
-    --purple: #534AB7;
-    --purple-light: #EEEDFE;
-    --purple-mid: #AFA9EC;
-    --teal: #0F6E56;
-    --teal-light: #E1F5EE;
-    --coral: #993C1D;
-    --coral-light: #FAECE7;
-    --amber: #854F0B;
-    --amber-light: #FAEEDA;
-    --gray-900: #1a1a1a;
-    --gray-700: #444;
-    --gray-500: #888;
-    --gray-200: #e8e8e8;
-    --gray-100: #f5f5f5;
-    --white: #ffffff;
-    --font: 'Inter', system-ui, -apple-system, sans-serif;
-    --radius: 10px;
-    --radius-sm: 6px;
+  :root{
+    --navy:#12327a;
+    --navy-2:#173d96;
+    --navy-3:#1f56b0;
+    --indigo:#2a4bb0;
+    --gold:#ffce3a;
+    --gold-2:#f4b400;
+    --gold-deep:#c98a00;
+    --cream:#fffaf0;
+    --green:#12b76a;
+    --green-light:#d6f5e6;
+    --red:#e11b22;
+    --red-2:#c1141b;
+    --ink:#0f2350;
+    --muted:#5a6689;
+    --muted-2:#8a90ad;
+    --line:#e6e9f3;
+    --surface:#ffffff;
+    --bg:#f4f6fc;
+    --radius:18px;
+    --radius-sm:12px;
+    --shadow-sm:0 2px 8px rgba(16,21,52,.06);
+    --shadow:0 18px 45px rgba(16,21,52,.10);
+    --shadow-gold:0 14px 34px rgba(224,168,0,.35);
+    --font:'Heebo',system-ui,-apple-system,'Segoe UI',sans-serif;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: var(--font);
-    background: #f7f7f9;
-    color: var(--gray-900);
-    min-height: 100vh;
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
   }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+  section{position:relative}
 
-  /* ── LAYOUT ── */
-  .app { display: flex; min-height: 100vh; }
+  /* reveal — visible by default; JS only enhances so no-JS still shows content */
+  .reveal{opacity:1;transform:none}
+  html.js .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+  html.js .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
 
-  .sidebar {
-    width: 220px;
-    flex-shrink: 0;
-    background: var(--gray-900);
-    padding: 24px 0;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    overflow-y: auto;
-    z-index: 10;
+  /* ── buttons ── */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:var(--font);font-weight:800;font-size:17px;
+    padding:16px 30px;border-radius:100px;cursor:pointer;border:0;
+    transition:transform .18s ease,box-shadow .25s ease,background .2s ease;
+    white-space:nowrap;
   }
+  .btn-gold{background:linear-gradient(135deg,var(--red) 0%,var(--red-2) 100%);color:#fff;box-shadow:0 14px 30px rgba(225,27,34,.34)}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 20px 42px rgba(225,27,34,.5)}
+  .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.28)}
+  .btn-ghost:hover{background:rgba(255,255,255,.16);transform:translateY(-2px)}
+  .btn-navy{background:var(--navy);color:#fff}
+  .btn-navy:hover{background:var(--navy-2);transform:translateY(-2px)}
+  .btn-sm{padding:11px 22px;font-size:15px}
 
-  .sidebar-logo {
-    padding: 0 20px 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    margin-bottom: 16px;
+  /* ── announcement bar ── */
+  .topbar{
+    background:linear-gradient(90deg,var(--gold-deep),var(--gold-2),var(--gold-deep));
+    color:#3a2a00;font-weight:700;font-size:14.5px;text-align:center;
+    padding:9px 16px;
   }
+  .topbar b{font-weight:900}
+  .topbar .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3a2a00;margin:0 8px;vertical-align:middle;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-  .sidebar-logo span {
-    font-size: 18px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: -0.5px;
+  /* ── header ── */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:900;font-size:22px;letter-spacing:-.5px}
+  .logo-mark{
+    width:42px;height:42px;border-radius:12px;flex-shrink:0;
+    background:linear-gradient(140deg,var(--navy-3),var(--navy));
+    display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:19px;
+    box-shadow:inset 0 0 0 2px var(--gold-2),var(--shadow-sm);
   }
+  .logo small{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;margin-top:-2px}
+  .nav-links{display:flex;align-items:center;gap:30px;font-weight:600;font-size:15.5px;color:var(--muted)}
+  .nav-links a{transition:color .15s}
+  .nav-links a:hover{color:var(--navy-3)}
+  .nav-cta{display:flex;align-items:center;gap:16px}
+  .nav-phone{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--navy-3);font-size:16px}
+  .nav-phone svg{width:18px;height:18px}
+  @media(max-width:900px){.nav-links,.nav-phone{display:none}}
 
-  .sidebar-logo small {
-    display: block;
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-    margin-top: 2px;
-    font-weight: 400;
+  /* ── hero ── */
+  .hero{
+    background:
+      radial-gradient(1100px 520px at 85% -10%,rgba(246,201,69,.18),transparent 60%),
+      radial-gradient(900px 500px at 0% 0%,rgba(43,59,160,.55),transparent 55%),
+      linear-gradient(165deg,var(--navy) 0%,var(--navy-2) 55%,#0c1857 100%);
+    color:#fff;overflow:hidden;
   }
-
-  .nav-section {
-    padding: 0 12px;
-    margin-bottom: 8px;
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding:72px 0 88px}
+  @media(max-width:940px){.hero-grid{grid-template-columns:1fr;gap:44px;padding:52px 0 64px;text-align:center}}
+  .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+  @media(max-width:940px){.badge-row{justify-content:center}}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+    padding:7px 14px;border-radius:100px;color:#eef0ff;
   }
-
-  .nav-label {
-    font-size: 10px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.3);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0 8px;
-    margin-bottom: 4px;
+  .pill .g{color:var(--gold)}
+  h1{
+    font-size:clamp(34px,5.4vw,58px);font-weight:900;line-height:1.08;letter-spacing:-1px;margin-bottom:20px;
   }
+  h1 .hl{color:var(--gold);position:relative;white-space:nowrap}
+  .hero p.lead{font-size:clamp(17px,2.2vw,20px);color:#c8cdf0;max-width:560px;margin-bottom:32px;font-weight:400}
+  @media(max-width:940px){.hero p.lead{margin-inline:auto}}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:30px}
+  @media(max-width:940px){.hero-cta{justify-content:center}}
+  .hero-trust{display:flex;gap:26px;flex-wrap:wrap;font-size:14px;color:#aab0e0}
+  @media(max-width:940px){.hero-trust{justify-content:center}}
+  .hero-trust span{display:flex;align-items:center;gap:7px}
+  .hero-trust svg{width:16px;height:16px;color:var(--green)}
 
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: 13px;
-    color: rgba(255,255,255,0.55);
-    transition: all 0.15s;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
+  /* jackpot card */
+  .jackpot{
+    background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
+    border:1px solid rgba(255,255,255,.2);border-radius:26px;padding:30px 30px 26px;
+    backdrop-filter:blur(6px);box-shadow:0 30px 60px rgba(0,0,0,.35);position:relative;
   }
-
-  .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
-  .nav-item.active { background: var(--purple); color: white; }
-
-  .nav-item .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
+  .jackpot .cap{font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .jackpot .amount{font-size:clamp(40px,7vw,60px);font-weight:900;line-height:1;color:#fff;letter-spacing:-2px}
+  .jackpot .amount small{font-size:26px;font-weight:800;color:var(--gold)}
+  .jackpot .sub{font-size:14px;color:#c8cdf0;margin-top:8px}
+  .balls{display:flex;gap:10px;margin:22px 0 20px;justify-content:center}
+  .ball{
+    width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+    font-weight:900;font-size:19px;color:var(--navy);
+    background:radial-gradient(circle at 32% 28%,#fff,#f3d97e 60%,var(--gold-2));
+    box-shadow:0 6px 14px rgba(0,0,0,.3),inset 0 -3px 6px rgba(180,126,0,.4);
+    animation:bob 3s ease-in-out infinite;
   }
+  .ball:nth-child(2){animation-delay:.25s}.ball:nth-child(3){animation-delay:.5s}
+  .ball:nth-child(4){animation-delay:.75s}.ball:nth-child(5){animation-delay:1s}.ball:nth-child(6){animation-delay:1.25s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .jackpot .countdown{display:flex;justify-content:center;gap:8px;font-size:13.5px;color:#c8cdf0;font-weight:600}
+  .jackpot .countdown b{color:#fff}
 
-  .main {
-    margin-left: 220px;
-    flex: 1;
-    padding: 32px 40px;
-    max-width: calc(100vw - 220px);
+  .wave{display:block;width:100%;height:auto;margin-bottom:-6px}
+
+  /* ── stats strip ── */
+  .stats{background:var(--surface);border-bottom:1px solid var(--line)}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:34px 0}
+  @media(max-width:720px){.stats-grid{grid-template-columns:repeat(2,1fr);gap:24px 16px}}
+  .stat{text-align:center}
+  .stat .num{font-size:clamp(30px,4vw,42px);font-weight:900;color:var(--navy-3);letter-spacing:-1px;line-height:1}
+  .stat .num i{color:var(--gold-2);font-style:normal}
+  .stat .lbl{font-size:14.5px;color:var(--muted);font-weight:600;margin-top:6px}
+
+  /* ── section heading ── */
+  .sec{padding:88px 0}
+  @media(max-width:720px){.sec{padding:60px 0}}
+  .eyebrow{display:inline-block;font-size:14px;font-weight:800;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+  .sec h2{font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-1px;line-height:1.12;color:var(--ink);margin-bottom:16px}
+  .sec .sub{font-size:18px;color:var(--muted);max-width:620px;font-weight:400}
+  .center{text-align:center}
+  .center .sub{margin-inline:auto}
+
+  /* ── steps ── */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:52px}
+  @media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.steps{grid-template-columns:1fr}}
+  .step{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;
+    box-shadow:var(--shadow-sm);position:relative;transition:transform .2s,box-shadow .2s;
   }
-
-  /* ── PAGES ── */
-  .page { display: none; }
-  .page.active { display: block; }
-
-  /* ── COMPONENTS ── */
-  .page-header { margin-bottom: 28px; }
-  .page-header h1 { font-size: 22px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.4px; }
-  .page-header p { font-size: 14px; color: var(--gray-500); margin-top: 4px; }
-
-  .card {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 20px 24px;
+  .step:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .step .n{
+    width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+    background:linear-gradient(140deg,var(--navy-3),var(--navy));color:var(--gold);
+    font-weight:900;font-size:19px;margin-bottom:18px;box-shadow:inset 0 0 0 1.5px var(--gold-2);
   }
+  .step h3{font-size:19px;font-weight:800;margin-bottom:8px}
+  .step p{font-size:15px;color:var(--muted)}
+  .step .arrow{position:absolute;top:44px;left:-18px;color:var(--gold);opacity:.7}
+  @media(max-width:900px){.step .arrow{display:none}}
 
-  .card-grid { display: grid; gap: 14px; }
-  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
-  .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  /* ── benefits ── */
+  .benefits{background:linear-gradient(180deg,#fff,#f7f8fd)}
+  .bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+  @media(max-width:860px){.bgrid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.bgrid{grid-template-columns:1fr}}
+  .bcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px;transition:transform .2s,box-shadow .2s,border-color .2s}
+  .bcard:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:#dfe2f0}
+  .bicon{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;margin-bottom:18px;background:var(--green-light)}
+  .bicon svg{width:26px;height:26px;color:var(--green)}
+  .bicon.gold{background:#fff4d6}.bicon.gold svg{color:var(--gold-deep)}
+  .bicon.navy{background:#e7ebff}.bicon.navy svg{color:var(--indigo)}
+  .bcard h3{font-size:20px;font-weight:800;margin-bottom:9px}
+  .bcard p{font-size:15.5px;color:var(--muted)}
 
-  .tag {
-    display: inline-block;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-weight: 500;
+  /* ── method (dark band) ── */
+  .method{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;overflow:hidden}
+  .method .wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  @media(max-width:880px){.method .wrap{grid-template-columns:1fr;gap:40px}}
+  .method h2{color:#fff}
+  .method .eyebrow{color:var(--gold)}
+  .method .sub{color:#c8cdf0}
+  .mlist{margin-top:26px;display:flex;flex-direction:column;gap:18px}
+  .mrow{display:flex;gap:15px;align-items:flex-start}
+  .mrow .chk{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:rgba(18,183,106,.16);display:grid;place-items:center;margin-top:2px}
+  .mrow .chk svg{width:16px;height:16px;color:var(--green)}
+  .mrow h4{font-size:18px;font-weight:800;margin-bottom:2px}
+  .mrow p{font-size:15px;color:#b9bfe8}
+  .method-visual{
+    background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.16);border-radius:26px;padding:34px;text-align:center;
   }
+  .method-visual .quote{font-size:clamp(22px,3vw,30px);font-weight:900;line-height:1.3;letter-spacing:-.5px}
+  .method-visual .quote .g{color:var(--gold)}
+  .method-visual .by{margin-top:16px;font-size:14px;color:#aab0e0;font-weight:600}
+  .lucky{display:flex;gap:9px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+  .lucky .ball{width:44px;height:44px;font-size:18px;animation:none}
 
-  .tag-purple { background: var(--purple-light); color: var(--purple); }
-  .tag-teal { background: var(--teal-light); color: var(--teal); }
-  .tag-coral { background: var(--coral-light); color: var(--coral); }
-  .tag-amber { background: var(--amber-light); color: var(--amber); }
-  .tag-gray { background: var(--gray-100); color: var(--gray-500); }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    padding: 7px 14px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
-    background: var(--white);
-    color: var(--gray-700);
-    cursor: pointer;
-    font-family: var(--font);
-    transition: all 0.15s;
+  /* ── plans ── */
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:54px;align-items:stretch}
+  @media(max-width:900px){.plans{grid-template-columns:1fr;max-width:460px;margin-inline:auto}}
+  .plan{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:22px;padding:32px 28px;
+    display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s;
   }
-  .btn:hover { background: var(--gray-100); border-color: #ccc; }
-  .btn-primary { background: var(--purple); color: white; border-color: var(--purple); }
-  .btn-primary:hover { background: #4640a3; border-color: #4640a3; }
-  .btn-teal { background: var(--teal); color: white; border-color: var(--teal); }
-  .btn-teal:hover { background: #0a5a45; border-color: #0a5a45; }
+  .plan:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .plan.featured{border-color:var(--gold-2);box-shadow:0 24px 60px rgba(224,168,0,.22);transform:scale(1.015)}
+  .plan.featured:hover{transform:scale(1.015) translateY(-5px)}
+  .plan .tag{position:absolute;top:-14px;right:50%;transform:translateX(50%);background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#3a2a00;font-weight:900;font-size:13px;padding:6px 18px;border-radius:100px;box-shadow:var(--shadow-sm);white-space:nowrap}
+  .plan .pname{font-size:20px;font-weight:800;margin-bottom:4px}
+  .plan .pdesc{font-size:14.5px;color:var(--muted);min-height:44px}
+  .plan .price{font-size:44px;font-weight:900;letter-spacing:-1.5px;color:var(--navy-3);margin:14px 0 2px}
+  .plan .price span{font-size:17px;font-weight:600;color:var(--muted)}
+  .plan .pnote{font-size:13.5px;color:var(--muted-2);margin-bottom:22px}
+  .plan ul{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:26px;flex:1}
+  .plan li{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--ink)}
+  .plan li svg{width:18px;height:18px;color:var(--green);flex-shrink:0;margin-top:3px}
+  .plan .btn{width:100%}
+  .plans.plans-2{grid-template-columns:repeat(2,1fr);max-width:820px;margin-inline:auto}
+  @media(max-width:900px){.plans.plans-2{grid-template-columns:1fr;max-width:460px}}
+  .contact-btns{display:flex;gap:10px}
+  .contact-btns .btn{flex:1}
+  .btn-wa{background:#25d366;color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .btn-wa svg{width:20px;height:20px}
 
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--gray-500);
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
+  /* ── winners ── */
+  .winners{background:linear-gradient(180deg,#f7f8fd,#fff)}
+  .wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+  @media(max-width:860px){.wgrid{grid-template-columns:1fr}}
+  .wcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm)}
+  .wcard .stars{color:var(--gold-2);font-size:18px;letter-spacing:2px;margin-bottom:14px}
+  .wcard p{font-size:16px;color:var(--ink);line-height:1.7;margin-bottom:20px}
+  .wperson{display:flex;align-items:center;gap:12px}
+  .wava{width:46px;height:46px;border-radius:50%;background:linear-gradient(140deg,var(--navy-3),var(--indigo));color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px}
+  .wperson b{font-size:15.5px;display:block}
+  .wperson small{font-size:13px;color:var(--muted)}
+
+  /* ── faq ── */
+  .faq-list{max-width:820px;margin:48px auto 0;display:flex;flex-direction:column;gap:14px}
+  .faq{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden}
+  .faq summary{list-style:none;cursor:pointer;padding:22px 24px;font-size:17.5px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary .ic{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#eef0fb;display:grid;place-items:center;color:var(--navy-3);font-weight:900;transition:transform .2s}
+  .faq[open] summary .ic{transform:rotate(45deg);background:var(--gold);color:#3a2a00}
+  .faq .ans{padding:0 24px 22px;font-size:15.5px;color:var(--muted);line-height:1.75}
+
+  /* ── final cta ── */
+  .cta{
+    background:radial-gradient(700px 340px at 80% 0%,rgba(246,201,69,.22),transparent 60%),linear-gradient(160deg,var(--navy),var(--navy-2));
+    color:#fff;text-align:center;border-radius:32px;padding:66px 32px;margin:0 auto;position:relative;overflow:hidden;
   }
+  .cta h2{font-size:clamp(28px,4.5vw,46px);font-weight:900;letter-spacing:-1px;margin-bottom:16px}
+  .cta p{font-size:19px;color:#c8cdf0;max-width:560px;margin:0 auto 32px}
+  .cta .hero-cta{justify-content:center}
+  .cta .fineprint{margin-top:22px;font-size:13.5px;color:#9aa1cf}
 
-  .divider { border: none; border-top: 1px solid var(--gray-200); margin: 24px 0; }
-
-  .info-box {
-    background: var(--purple-light);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    font-size: 13px;
-    color: #3C3489;
-    line-height: 1.5;
-    margin-bottom: 20px;
+  /* ── footer ── */
+  footer{background:#0b2258;color:#aeb4d8;padding:60px 0 28px;font-size:15px}
+  .fgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.1)}
+  @media(max-width:820px){.fgrid{grid-template-columns:1fr 1fr;gap:30px}}
+  @media(max-width:480px){.fgrid{grid-template-columns:1fr}}
+  footer .logo{color:#fff;margin-bottom:14px}
+  footer .logo small{color:#8990c0}
+  .fabout{max-width:300px;color:#8f97c4;font-size:14.5px}
+  footer h5{color:#fff;font-size:15px;font-weight:800;margin-bottom:16px}
+  footer ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  footer ul a{color:#aeb4d8;transition:color .15s}
+  footer ul a:hover{color:var(--gold)}
+  .fcontact{display:flex;flex-direction:column;gap:10px}
+  .fcontact a{display:flex;align-items:center;gap:9px}
+  .fcontact svg{width:17px;height:17px;color:var(--gold)}
+  .fbottom{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:24px;font-size:13.5px;color:#7c84b4}
+  .fbottom .ver{font-size:12px;color:#aab0d8;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:5px 12px;font-variant-numeric:tabular-nums}
+  .age{display:inline-flex;align-items:center;gap:8px;background:rgba(224,79,95,.14);border:1px solid rgba(224,79,95,.35);color:#ffb3bc;font-weight:700;padding:6px 13px;border-radius:100px;font-size:13px}
+  .responsible{background:rgba(255,255,255,.04);border-radius:12px;padding:16px 18px;margin-top:20px;font-size:13px;color:#8f97c4;line-height:1.7}
+  /* RTL / Hebrew typography */
+  bdi{unicode-bidi:isolate}
+  h1,.sec h2,.cta h2,.eyebrow,.logo,.logo small,.jackpot .cap,.method-visual .quote,.stat .num,.step h3,.bcard h3,.plan .pname{letter-spacing:normal}
+  .eyebrow{text-transform:none}
+  /* QA fixes */
+  section[id]{scroll-margin-top:90px}
+  .logo span:not(.logo-mark){white-space:nowrap}
+  @media(max-width:900px){.nav-cta .btn-sm{padding:10px 15px;font-size:14px}.nav-cta{gap:10px}}
+  @media(max-width:400px){.logo{font-size:19px}.logo small{display:none}}
+  .nav-call{display:none;width:42px;height:42px;border-radius:12px;place-items:center;background:var(--navy);color:#fff;flex-shrink:0}
+  .nav-call svg{width:19px;height:19px}
+  @media(max-width:900px){.nav-call{display:grid}}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+    html.js .reveal{opacity:1!important;transform:none!important}
   }
-
-  .warn-box {
-    background: var(--amber-light);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    font-size: 13px;
-    color: var(--amber);
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-
-  /* ── PHASE NAV (overview) ── */
-  .phase-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
-
-  .phase-card {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 18px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .phase-card:hover { border-color: var(--purple-mid); }
-  .phase-card.active { border: 2px solid var(--purple); }
-  .phase-card .num { font-size: 11px; color: var(--gray-500); margin-bottom: 6px; }
-  .phase-card .title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .phase-card .sub { font-size: 12px; color: var(--gray-500); line-height: 1.4; }
-  .phase-card .status { margin-top: 10px; }
-
-  /* ── ARCHETYPE CARDS ── */
-  .arch-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 18px; }
-  .arch-card .arch-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .arch-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .arch-card .attr { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-top: 1px solid var(--gray-200); gap: 8px; }
-  .arch-card .attr-label { color: var(--gray-500); flex-shrink: 0; }
-  .arch-card .attr-val { color: var(--gray-700); text-align: right; line-height: 1.4; }
-
-  /* ── INTERVIEW GUIDE ── */
-  .phase-block { margin-bottom: 24px; }
-  .phase-header {
-    display: flex; align-items: center; gap: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--gray-200);
-    margin-bottom: 14px;
-  }
-  .phase-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .phase-header .title { font-size: 14px; font-weight: 600; }
-  .phase-header .timing { font-size: 12px; color: var(--gray-500); margin-left: auto; }
-
-  .q-item { padding: 12px 0; border-bottom: 1px solid var(--gray-200); }
-  .q-item:last-child { border-bottom: none; }
-  .q-row { display: flex; gap: 12px; }
-  .q-num { font-size: 11px; color: var(--gray-500); min-width: 22px; padding-top: 2px; }
-  .q-text { font-size: 13px; color: var(--gray-900); line-height: 1.5; margin-bottom: 4px; }
-  .q-why { font-size: 12px; color: var(--gray-500); line-height: 1.4; font-style: italic; margin-bottom: 6px; }
-  .q-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-
-  /* ── SYNTHESIS TEMPLATE ── */
-  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-  .stat-card { background: var(--gray-100); border-radius: var(--radius-sm); padding: 12px 14px; }
-  .stat-card .s-label { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; }
-  .stat-card .s-val { font-size: 26px; font-weight: 700; color: var(--gray-900); }
-  .stat-card .s-sub { font-size: 11px; color: var(--gray-500); }
-
-  .interview-dots { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
-  .iv-dot {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--gray-100); border: 1px solid var(--gray-200);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; color: var(--gray-500); cursor: pointer;
-    transition: all 0.15s; user-select: none;
-  }
-  .iv-dot.done { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); font-weight: 600; }
-
-  .tally-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 0; border-bottom: 1px solid var(--gray-200);
-  }
-  .tally-row:last-child { border-bottom: none; }
-  .tally-label { font-size: 13px; flex: 1; }
-  .tally-bar-wrap { width: 100px; height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
-  .tally-bar { height: 6px; background: var(--purple); border-radius: 3px; transition: width 0.2s; }
-  .tally-n { font-size: 12px; color: var(--gray-500); min-width: 30px; text-align: right; }
-  .tally-btn {
-    font-size: 14px; width: 26px; height: 26px; border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200); background: var(--white);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    color: var(--gray-700); transition: all 0.1s;
-  }
-  .tally-btn:hover { background: var(--gray-100); }
-
-  .quote-slot {
-    background: var(--gray-100); border-radius: var(--radius-sm);
-    padding: 12px 14px; margin-bottom: 8px;
-  }
-  .quote-meta { display: flex; justify-content: space-between; margin-bottom: 6px; }
-  .quote-text[contenteditable] {
-    font-size: 13px; color: var(--gray-900);
-    line-height: 1.5; outline: none; min-height: 20px;
-    font-style: italic;
-  }
-  .quote-text.empty { color: var(--gray-500); font-style: normal; }
-
-  .pattern-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .pattern-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 14px; }
-  .pattern-title { font-size: 12px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px; }
-  .pattern-content[contenteditable] {
-    font-size: 13px; color: var(--gray-900); outline: none; min-height: 36px;
-    line-height: 1.5;
-  }
-  .pattern-content.empty { color: var(--gray-500); }
-
-  /* ── DESIGN PARTNER ── */
-  .pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-  .pillar-card { border-radius: var(--radius); padding: 18px; }
-  .pillar-icon { font-size: 22px; margin-bottom: 8px; }
-  .pillar-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .pillar-desc { font-size: 12px; line-height: 1.5; opacity: 0.8; }
-
-  .ref-box {
-    border: 2px solid #B5D4F4;
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    background: #E6F1FB;
-  }
-  .ref-flow { display: grid; grid-template-columns: 1fr 20px 1fr 20px 1fr; gap: 6px; align-items: center; margin: 14px 0; }
-  .ref-step { background: white; border-radius: var(--radius-sm); padding: 10px 12px; }
-  .ref-step-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
-  .ref-step-desc { font-size: 11px; color: var(--gray-500); line-height: 1.4; }
-  .ref-arrow { text-align: center; color: var(--gray-500); font-size: 16px; }
-  .ref-both { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .ref-side { border-radius: var(--radius-sm); padding: 12px 14px; }
-  .ref-side-label { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
-  .ref-side-val { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
-  .ref-side-sub { font-size: 11px; line-height: 1.4; }
-
-  .code-chip {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: white; border-radius: var(--radius-sm);
-    padding: 6px 12px; margin-top: 10px;
-    border: 1px solid var(--gray-200);
-    font-size: 13px;
-  }
-  .code-chip code { font-size: 14px; font-weight: 700; color: var(--purple); font-family: monospace; }
-
-  .cadence-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .cadence-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 14px; }
-  .cadence-freq { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; }
-  .cadence-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  .cadence-desc { font-size: 12px; color: var(--gray-500); line-height: 1.4; margin-bottom: 6px; }
-  .cadence-who { font-size: 11px; color: var(--gray-500); }
-
-  /* ── OUTREACH ── */
-  .message-card {
-    background: var(--white); border: 1px solid var(--gray-200);
-    border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px;
-  }
-  .message-label { font-size: 12px; font-weight: 600; margin-bottom: 12px; color: var(--gray-700); }
-  .message-body {
-    font-size: 13px; color: var(--gray-900); line-height: 1.8;
-    white-space: pre-wrap; border-radius: var(--radius-sm);
-    background: var(--gray-100); padding: 16px; margin-bottom: 12px;
-  }
-  .message-actions { display: flex; gap: 8px; }
-
-  /* ── NEXT STEPS ── */
-  .step-row {
-    display: grid; grid-template-columns: 32px 110px 1fr 120px;
-    gap: 12px; align-items: start;
-    padding: 14px 16px; border-radius: var(--radius-sm);
-    border-bottom: 1px solid var(--gray-200);
-  }
-  .step-row:last-child { border-bottom: none; }
-  .step-row.step-zero { background: var(--coral-light); }
-  .step-row.step-active { background: var(--teal-light); }
-  .step-num { font-size: 13px; font-weight: 700; }
-  .step-when { font-size: 12px; font-weight: 600; }
-  .step-action { font-size: 13px; line-height: 1.5; }
-  .step-owner { font-size: 12px; color: var(--gray-500); }
-
-  /* ── ARCHETYPE TABLE ── */
-  table.arch-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  table.arch-table th {
-    background: var(--gray-900); color: white;
-    padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600;
-  }
-  table.arch-table td {
-    padding: 10px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: top; line-height: 1.4;
-  }
-  table.arch-table tr:last-child td { border-bottom: none; }
-  table.arch-table tr:nth-child(even) td { background: var(--gray-100); }
-
-  /* ── USER LIST TABLE ── */
-  .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--gray-200); background: var(--white); }
-  table.user-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1100px; }
-  table.user-table th {
-    background: var(--gray-900); color: white;
-    padding: 10px 10px; text-align: left; font-size: 10px; font-weight: 600;
-    letter-spacing: 0.05em; white-space: nowrap;
-  }
-  table.user-table td { padding: 5px 8px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
-  table.user-table tr:last-child td { border-bottom: none; }
-  table.user-table tr:hover td { background: #fafafa; }
-  .user-table input[type="text"] {
-    width: 100%; border: none; background: transparent; font-size: 12px;
-    color: var(--gray-900); font-family: var(--font); padding: 4px 2px; outline: none;
-  }
-  .user-table input[type="text"]:focus { background: var(--purple-light); border-radius: 3px; padding: 4px 6px; }
-  .user-table select {
-    border: none; background: transparent; font-size: 12px;
-    color: var(--gray-900); font-family: var(--font);
-    padding: 4px 2px; outline: none; cursor: pointer; width: 100%;
-  }
-  .user-table select:focus { background: var(--purple-light); border-radius: 3px; }
-  .user-table input[type="checkbox"] { accent-color: var(--purple); cursor: pointer; width: 15px; height: 15px; }
-  .user-row-num { font-size: 11px; color: var(--gray-500); font-weight: 600; text-align: center; width: 28px; }
-
-  /* ── SETTINGS ── */
-  .settings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 24px; }
-  .settings-arch-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 20px; }
-  .settings-arch-card .s-color-bar { height: 4px; border-radius: 2px; margin-bottom: 14px; }
-  .settings-field { margin-bottom: 12px; }
-  .settings-field label { font-size: 10px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px; }
-  .settings-field input[type="text"] {
-    width: 100%; border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
-    padding: 7px 10px; font-size: 13px; font-family: var(--font); color: var(--gray-900); outline: none;
-  }
-  .settings-field input[type="text"]:focus { border-color: var(--purple); }
-  .settings-actions { display: flex; gap: 8px; }
-  .page-actions { display: flex; gap: 8px; margin-bottom: 20px; }
-
-  /* ── SIDEBAR BOTTOM ── */
-  .sidebar-bottom {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-
-  /* ── INTERVIEW FILTER ── */
-  .interview-top-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
-  }
-  .arch-filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
-  .afw-btn {
-    padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
-    border: 1.5px solid var(--gray-200); background: var(--white); cursor: pointer;
-    font-family: var(--font); transition: all 0.15s; color: var(--gray-700);
-  }
-  .afw-btn:hover { border-color: #bbb; background: var(--gray-100); }
-  .afw-btn.afw-active { color: white; border-color: transparent; }
-
-  /* ── INTERVIEW MODE TOGGLE ── */
-  .iv-mode-btn {
-    padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600;
-    border: 1.5px solid var(--gray-200); background: var(--white); cursor: pointer;
-    font-family: var(--font); transition: all 0.15s; color: var(--gray-500);
-  }
-  .iv-mode-btn:hover { border-color: var(--gray-900); color: var(--gray-900); }
-  .iv-mode-btn.active { background: var(--gray-900); color: white; border-color: var(--gray-900); }
-
-  /* ── QUESTION FILTER STATES ── */
-  .q-item { transition: opacity 0.18s; }
-  .q-item.q-dimmed { opacity: 0.28; }
-  .q-item.q-emphasized { }
-
-  /* ── GO DEEPER CHIP ── */
-  .q-deeper { position: relative; display: inline-block; vertical-align: middle; margin-left: 6px; }
-  .q-deeper-chip {
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
-    background: var(--gray-100); color: var(--gray-500); cursor: help;
-    border: 1px solid var(--gray-200); transition: all 0.15s; white-space: nowrap;
-  }
-  .q-deeper-chip:hover { background: var(--gray-200); color: var(--gray-900); }
-  .q-deeper-tip {
-    display: none; position: absolute; left: 0; top: calc(100% + 7px);
-    z-index: 200; background: var(--gray-900); color: white;
-    font-size: 12px; line-height: 1.6; padding: 10px 14px;
-    border-radius: var(--radius-sm); width: 280px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.22); pointer-events: none;
-  }
-  .q-deeper:hover .q-deeper-tip { display: block; }
-
-  /* ── INTERVIEW LIVE MODE ── */
-  .interview-live .q-why { display: none !important; }
-  .interview-live .q-deeper { display: none !important; }
-  .interview-live .q-tags { display: none !important; }
-
-  /* ── DETAIL EXPAND ROW ── */
-  .detail-row { display: none; }
-  .detail-row.open { display: table-row; }
-  .detail-panel { padding: 14px 20px 16px; background: var(--purple-light); border-top: 1px solid var(--purple-mid); }
-  .detail-inner { display: flex; flex-direction: column; gap: 12px; }
-  .detail-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .detail-3col { display: grid; grid-template-columns: 1fr 1fr 150px; gap: 12px; }
-  .detail-field label { font-size: 10px; font-weight: 600; color: #3C3489; text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px; }
-  .detail-field textarea { width: 100%; border: 1px solid #C5BFF0; border-radius: var(--radius-sm); padding: 6px 8px; font-size: 12px; font-family: var(--font); color: var(--gray-900); resize: vertical; min-height: 56px; background: white; outline: none; line-height: 1.5; }
-  .detail-field textarea:focus { border-color: var(--purple); }
-  .detail-field select { width: 100%; border: 1px solid #C5BFF0; border-radius: var(--radius-sm); padding: 6px 8px; font-size: 12px; font-family: var(--font); background: white; outline: none; }
-  .check-list { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px; }
-  .check-item { display: flex; align-items: flex-start; gap: 7px; font-size: 12px; color: var(--gray-700); cursor: pointer; line-height: 1.4; padding: 3px 0; }
-  .check-item input[type="checkbox"] { accent-color: var(--purple); cursor: pointer; flex-shrink: 0; margin-top: 2px; width: 14px; height: 14px; }
-  .check-item.is-checked { color: var(--purple); font-weight: 600; }
-  .check-item:hover span { color: var(--gray-900); }
-  .detail-expand-btn { font-size: 10px; color: var(--gray-500); cursor: pointer; padding: 2px 0; user-select: none; transition: color 0.15s; }
-  .detail-expand-btn:hover { color: var(--purple); }
-
-  /* ── IV MODE BOTTOM BANNER ── */
-  .iv-banner {
-    display: none; position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--gray-900); color: white;
-    padding: 14px 20px; font-size: 14px; font-weight: 600;
-    text-align: center; z-index: 100; cursor: pointer;
-    letter-spacing: 0.02em; transition: opacity 0.2s;
-  }
-  .iv-banner.active { display: block; }
-  .iv-banner:hover { opacity: 0.85; }
-
-  /* ── DOT TOOLTIP ── */
-  .iv-dot { position: relative; }
-  .iv-dot-tip {
-    display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
-    transform: translateX(-50%); z-index: 200;
-    background: var(--gray-900); color: white;
-    font-size: 11px; padding: 5px 9px; border-radius: 4px;
-    white-space: nowrap; pointer-events: none;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-  }
-  .iv-dot:hover .iv-dot-tip { display: block; }
-
-  /* ── USER TABLE ── */
-  table.user-table { min-width: 1600px; }
-  table.user-table th {
-    background: #1e1e1e; font-size: 10px; font-weight: 700;
-    letter-spacing: 0.07em; color: rgba(255,255,255,0.65);
-    padding: 11px 10px; border-right: 1px solid rgba(255,255,255,0.06);
-  }
-  table.user-table th:last-child { border-right: none; }
-  table.user-table td { padding: 6px 8px; }
-  .user-row-alt td { background: #f9f9fc; }
-  .user-row-alt:hover td { background: #f4f4fa !important; }
-
-  /* ── STATUS-COLORED SELECTS ── */
-  .user-table select {
-    border-radius: 5px; padding: 3px 6px; font-size: 11px; font-weight: 500;
-    border: 1.5px solid transparent; transition: background 0.15s;
-  }
-  select.istat-not-booked { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
-  select.istat-booked     { background: var(--amber-light); color: var(--amber); border-color: #f0d090; }
-  select.istat-done       { background: var(--teal-light); color: var(--teal); border-color: #9ed8c8; font-weight: 700; }
-  select.dpi-not-yet      { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
-  select.dpi-invited      { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
-  select.dpi-confirmed    { background: var(--teal-light); color: var(--teal); border-color: #9ed8c8; font-weight: 700; }
-  select.ptier-tbd        { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
-  select.ptier-tier1      { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); font-weight: 700; }
-  select.ptier-tier2      { background: var(--amber-light); color: var(--amber); border-color: #f0d090; }
-  select.ptier-hold       { background: var(--coral-light); color: var(--coral); border-color: #f0b090; }
-  select.arch-op          { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
-  select.arch-or          { background: var(--teal-light);   color: var(--teal);   border-color: #9ed8c8; }
-  select.arch-dm          { background: var(--coral-light);  color: var(--coral);  border-color: #f0b090; }
-  select.arch-in          { background: var(--amber-light);  color: var(--amber);  border-color: #f0d090; }
-  select.arch-unknown     { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
-  select.op-unknown       { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-200); }
-  select.op-guided        { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
-  select.op-self-driven   { background: var(--teal-light); color: var(--teal); border-color: #9ed8c8; }
-
-  /* ── NEXT ACTION DATE STATES ── */
-  .date-overdue { background: var(--coral-light) !important; color: var(--coral) !important; border-radius: 3px; font-weight: 600; }
-  .date-today   { background: var(--amber-light) !important; color: var(--amber) !important; border-radius: 3px; font-weight: 600; }
-  .next-action-cell { min-width: 130px; }
-  .user-table input[type="date"] {
-    border: none; background: transparent; font-size: 11px; color: var(--gray-700);
-    font-family: var(--font); padding: 2px 2px; outline: none; width: 100%;
-  }
-  .user-table input[type="date"]:focus { background: var(--purple-light); border-radius: 3px; }
-
-  /* ── EXPAND BTN ── */
-  .user-row-num { width: 40px; }
-  .detail-expand-btn {
-    width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center;
-    justify-content: center; margin: 0 auto 2px; font-size: 11px;
-    background: var(--gray-100); color: var(--gray-500); border: 1px solid var(--gray-200);
-    transition: all 0.15s;
-  }
-  .detail-expand-btn:hover, tr:hover .detail-expand-btn { background: var(--purple-light); color: var(--purple); border-color: var(--purple-mid); }
-
-  /* ── LINKEDIN LINK ── */
-  .li-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--purple); text-decoration: none; padding: 2px 6px; border-radius: 4px; background: var(--purple-light); }
-  .li-link:hover { background: var(--purple-mid); color: white; }
-
-  /* ── INTERVIEW CONTEXT BANNER ── */
-  .interview-user-banner {
-    display: none; background: var(--teal-light); border-radius: var(--radius-sm);
-    padding: 10px 16px; margin-bottom: 14px; font-size: 13px; color: var(--teal);
-    align-items: center; justify-content: space-between;
-  }
-  .interview-user-banner.on { display: flex; }
-  .interview-user-banner strong { font-weight: 700; color: var(--teal); }
-
-  /* ── REFERRAL TABLE ── */
-  table.ref-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; }
-  table.ref-table th { background: var(--gray-900); color: white; padding: 10px 10px; text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap; }
-  table.ref-table td { padding: 8px 10px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
-  table.ref-table tr:last-child td { border-bottom: none; }
-  table.ref-table tr.ref-summary td { background: var(--gray-100); font-weight: 600; border-top: 2px solid var(--gray-200); font-size: 12px; }
-  .ref-table input[type="text"] { border: none; background: transparent; font-size: 12px; color: var(--gray-900); font-family: var(--font); padding: 4px 2px; outline: none; width: 100%; }
-  .ref-table input[type="text"]:focus { background: var(--purple-light); border-radius: 3px; padding: 4px 6px; }
-  .ref-table select { border: none; background: transparent; font-size: 12px; color: var(--gray-900); font-family: var(--font); padding: 4px 2px; outline: none; cursor: pointer; width: 100%; }
-  .ref-table select:focus { background: var(--purple-light); border-radius: 3px; }
-  .ref-table input[type="number"] { border: none; background: transparent; font-size: 12px; color: var(--gray-900); font-family: var(--font); padding: 4px 2px; outline: none; width: 60px; }
-  .ref-table input[type="number"]:focus { background: var(--purple-light); border-radius: 3px; padding: 4px 6px; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .sidebar { width: 180px; }
-    .main { margin-left: 180px; padding: 20px; }
-    .phase-cards { grid-template-columns: 1fr 1fr; }
-    .card-grid.cols-4 { grid-template-columns: 1fr 1fr; }
-    .pillar-grid { grid-template-columns: 1fr; }
-    .cadence-grid { grid-template-columns: 1fr 1fr; }
-    .ref-flow { grid-template-columns: 1fr; }
-    .ref-arrow { display: none; }
-  }
+  /* live lotto results widget (hidden until real מפעל הפיס data loads) */
+  .results-sec{display:none;padding:46px 0;background:linear-gradient(180deg,#fff,#f7f8fd);border-bottom:1px solid var(--line)}
+  .results-sec.live{display:block}
+  .results-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:stretch}
+  @media(max-width:720px){.results-grid{grid-template-columns:1fr}}
+  .rcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow-sm)}
+  .rcard.next{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;border-color:transparent;text-align:center;display:flex;flex-direction:column;justify-content:center}
+  .rcap{font-size:13px;font-weight:800;letter-spacing:.4px;color:var(--gold-2);margin-bottom:8px}
+  .rcard.next .rcap{color:var(--gold)}
+  .rmeta{font-size:14px;color:var(--muted);margin-bottom:16px}
+  .rballs{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .rballs .ball{width:44px;height:44px;font-size:18px;animation:none}
+  .rballs .ball.strong{color:#fff;background:radial-gradient(circle at 32% 28%,#fff,#aab6ff 55%,var(--indigo));box-shadow:0 6px 14px rgba(0,0,0,.2)}
+  .rplus{color:var(--muted-2);font-weight:800}
+  .rnext-date{font-size:22px;font-weight:900;margin:2px 0 8px}
+  .rcountdown{font-size:15px;color:#c8cdf0;font-weight:700;font-variant-numeric:tabular-nums}
+  .rsrc{text-align:center;font-size:12.5px;color:var(--muted-2);margin-top:16px}
+  /* why-us comparison table */
+  .compare-sec{background:linear-gradient(180deg,#fff,#f7f8fd)}
+  .ctable-wrap{margin-top:44px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+  .ctable{width:100%;min-width:300px;border-collapse:collapse;background:var(--surface);font-size:15.5px}
+  .ctable th,.ctable td{padding:15px 16px;text-align:right;border-bottom:1px solid var(--line);vertical-align:middle}
+  .ctable tbody tr:last-child td{border-bottom:0}
+  .ctable .cfeat{font-weight:700;color:var(--ink)}
+  .ctable .cus{background:#fff8e6;text-align:center;width:27%;font-weight:600}
+  .ctable .cdiy{color:var(--muted);text-align:center;width:24%}
+  .ctable thead th{font-weight:800;font-size:15px}
+  thead .cfeat{color:var(--muted)}
+  thead .cus{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#3a2a00}
+  thead .cdiy{background:#eef0f6;color:var(--muted)}
+  .ctable .cus b{font-weight:800;color:var(--navy-3)}
+  .ctable .ck{display:inline-flex;vertical-align:-3px;margin-left:5px}
+  .ctable .ck svg{width:16px;height:16px;color:var(--green)}
+  @media(max-width:560px){.ctable{font-size:13px}.ctable th,.ctable td{padding:11px 9px}.ctable .ck{margin-left:3px}.ctable .ck svg{width:14px;height:14px}}
+  .logo-badge{width:46px;height:46px;flex-shrink:0;display:block;border-radius:50%;object-fit:cover;background:#fff}
 </style>
 </head>
 <body>
 
-<div class="app">
-
-  <!-- ── SIDEBAR ── -->
-  <nav class="sidebar">
-    <div class="sidebar-logo">
-      <span>Anyx</span>
-      <small>GTM Workspace</small>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Overview</div>
-      <button class="nav-item active" onclick="showPage('overview')">
-        <span class="dot" style="background:#534AB7"></span> Plan overview
-      </button>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Phase 01</div>
-      <button class="nav-item" onclick="showPage('userlist')">
-        <span class="dot" style="background:#888"></span> User list
-      </button>
-      <button class="nav-item" onclick="showPage('archetypes')">
-        <span class="dot" style="background:#888"></span> User archetypes
-      </button>
-      <button class="nav-item" onclick="showPage('interview')">
-        <span class="dot" style="background:#888"></span> Interview guide
-      </button>
-      <button class="nav-item" onclick="showPage('synthesis')">
-        <span class="dot" style="background:#888"></span> Synthesis tracker
-      </button>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Phase 02</div>
-      <button class="nav-item" onclick="showPage('program')">
-        <span class="dot" style="background:#888"></span> Partner program
-      </button>
-      <button class="nav-item" onclick="showPage('outreach')">
-        <span class="dot" style="background:#888"></span> Outreach messages
-      </button>
-      <button class="nav-item" onclick="showPage('referralcodes')">
-        <span class="dot" style="background:#888"></span> Referral codes
-      </button>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Action</div>
-      <button class="nav-item" onclick="showPage('nextsteps')">
-        <span class="dot" style="background:#0F6E56"></span> Next steps
-      </button>
-    </div>
-
-    <div class="nav-section sidebar-bottom">
-      <button class="nav-item" onclick="showPage('settings')" style="color:rgba(255,255,255,0.35);">
-        <span style="font-size:13px;">⚙</span> Archetype settings
-      </button>
-    </div>
-  </nav>
-
-  <!-- ── MAIN ── -->
-  <main class="main">
-
-    <!-- OVERVIEW -->
-    <div id="page-overview" class="page active">
-      <div class="page-header">
-        <h1>Anyx — Product & GTM Plan</h1>
-        <p>Early adopter program · Confidential</p>
-      </div>
-
-      <div class="section-label">The four phases</div>
-      <div class="phase-cards">
-        <div class="phase-card" onclick="showPage('archetypes')">
-          <div class="num">Phase 01</div>
-          <div class="title">Extract the wow</div>
-          <div class="sub">Map the aha moment through structured interviews</div>
-          <div class="status"><span class="tag tag-teal">In progress</span></div>
-        </div>
-        <div class="phase-card" onclick="showPage('program')">
-          <div class="num">Phase 02</div>
-          <div class="title">Design partners</div>
-          <div class="sub">Staged outreach after 5 interviews. Run on Groopy.</div>
-          <div class="status"><span class="tag tag-purple">Defined</span></div>
-        </div>
-        <div class="phase-card">
-          <div class="num">Phase 03</div>
-          <div class="title">Champions & referral</div>
-          <div class="sub">Turn love into systematic growth</div>
-          <div class="status"><span class="tag tag-gray">Up next</span></div>
-        </div>
-        <div class="phase-card">
-          <div class="num">Phase 04</div>
-          <div class="title">Scale-ready onboarding</div>
-          <div class="sub">Systematize the integrator role</div>
-          <div class="status"><span class="tag tag-gray">Planned</span></div>
-        </div>
-      </div>
-
-      <div class="section-label">Core insight</div>
-      <div class="card">
-        <p style="font-size:14px;line-height:1.7;color:var(--gray-700);">10 high-profile early users all independently say Anyx changed how they work. The wow moment takes time to reach — it requires either a curious self-starter or the founders manually guiding the user. <strong style="color:var(--gray-900)">Currently, the founders are the onboarding layer. This doesn't scale.</strong> Everything in this plan flows from solving that one problem.</p>
-      </div>
-    </div>
-
-    <!-- USER LIST -->
-    <div id="page-userlist" class="page">
-      <div class="page-header">
-        <h1>User list</h1>
-        <p>Click ▸ on any row to expand interview details. Changes sync automatically with the Synthesis tracker.</p>
-      </div>
-      <div class="page-actions">
-        <button class="btn btn-primary" onclick="addUserRow()">+ Add row</button>
-        <button class="btn" onclick="exportUserCSV()">↓ Export CSV</button>
-      </div>
-      <div class="table-wrap">
-        <table class="user-table">
-          <thead>
-            <tr>
-              <th style="width:36px;">#</th>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Industry</th>
-              <th>Co. size</th>
-              <th>How found</th>
-              <th>Contact</th>
-              <th>LinkedIn</th>
-              <th>Archetype</th>
-              <th>Onboard path</th>
-              <th>Interview status</th>
-              <th>Next action</th>
-              <th>By when</th>
-              <th>Design partner</th>
-              <th>Priority</th>
-              <th>Notes</th>
-              <th style="width:44px;" title="Open interview guide for this user">Guide</th>
-              <th style="width:28px;"></th>
-            </tr>
-          </thead>
-          <tbody id="user-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ARCHETYPES -->
-    <div id="page-archetypes" class="page">
-      <div class="page-header">
-        <h1>User archetypes</h1>
-        <p>All 10 users share one trait: personal productivity first. Role varies — mindset doesn't.</p>
-      </div>
-
-      <div class="info-box">Unifying trait across all 10: they adopted Anyx for themselves before thinking about their team.</div>
-
-      <div class="card-grid cols-2" style="margin-bottom:24px;" id="archetype-cards"></div>
-
-      <div class="section-label">Onboarding paths</div>
-      <div class="card-grid cols-2">
-        <div class="card">
-          <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--teal);">Self-driven path</div>
-          <div id="self-driven-archs" style="font-size:12px;color:var(--gray-500);margin-bottom:10px;"></div>
-          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2;">
-            <li>Explores alone until the wow moment hits</li>
-            <li>Higher friction, higher ownership once they get it</li>
-            <li>Needs clear capability signals early</li>
-            <li>Needs one killer first use case to latch onto</li>
-          </ul>
-        </div>
-        <div class="card">
-          <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--purple);">Guided path</div>
-          <div id="guided-archs" style="font-size:12px;color:var(--gray-500);margin-bottom:10px;"></div>
-          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2;">
-            <li>Needs founders in the chat to unlock the wow</li>
-            <li>Fastest path to activation, doesn't scale yet</li>
-            <li>Needs a concrete "try this now" moment</li>
-            <li>Needs a real result within the first session</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- INTERVIEW GUIDE -->
-    <div id="page-interview" class="page">
-      <div class="page-header">
-        <h1>Interview guide</h1>
-        <p>18 questions · 5 phases · 30–40 min · Don't read verbatim — use as anchors</p>
-      </div>
-
-      <div class="info-box">
-        <strong>Before booking formal interviews:</strong> Send an informal text to all 10 today: "Hey, I'd love 30 minutes to hear more about how you're using Anyx. When works this week?" No pitch. No program mention. Just book the calls.
-      </div>
-
-      <div id="interview-user-banner" class="interview-user-banner"></div>
-      <div id="interview-controls"></div>
-      <div class="card" id="interview-guide-content"></div>
-    </div>
-
-    <!-- SYNTHESIS TRACKER -->
-    <div id="page-synthesis" class="page">
-      <div class="page-header">
-        <h1>Synthesis tracker</h1>
-        <p>Fill in as you run interviews. Patterns emerge from volume — don't analyse before 5.</p>
-      </div>
-
-      <div class="page-actions">
-        <button class="btn btn-teal" onclick="exportData()">↓ Export JSON snapshot</button>
-      </div>
-
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="s-label">Interviews run</div>
-          <div class="s-val" id="done-count">0</div>
-          <div class="s-sub">of 10</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-label">Guided onboard</div>
-          <div class="s-val" id="guided-count">0</div>
-          <div class="s-sub">needed human help</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-label">Self-driven</div>
-          <div class="s-val" id="self-count">0</div>
-          <div class="s-sub">figured it out alone</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-label">Referred someone</div>
-          <div class="s-val" id="ref-count">0</div>
-          <div class="s-sub">organic advocates</div>
-        </div>
-      </div>
-
-      <div class="section-label">Mark interviews complete</div>
-      <div class="interview-dots" id="interview-dots"></div>
-
-      <div class="card-grid cols-2" style="margin-bottom:24px;">
-        <div class="card">
-          <div class="section-label" style="margin-bottom:14px;">Friction points — tally as you hear them</div>
-          <div id="friction-tallies"></div>
-        </div>
-        <div class="card">
-          <div class="section-label" style="margin-bottom:14px;">Breakthrough triggers — tally as you hear them</div>
-          <div id="trigger-tallies"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <div class="section-label" style="margin-bottom:14px;">Their words — Q11 & Q18 verbatim (don't clean up the language)</div>
-        <div id="quote-slots"></div>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <div class="section-label" style="margin-bottom:14px;">Archetype breakdown — fill after all 10</div>
-        <table class="arch-table">
-          <thead><tr><th>Archetype</th><th>Main friction</th><th>Wow trigger</th><th>Top feature</th></tr></thead>
-          <tbody id="arch-rows"></tbody>
-        </table>
-      </div>
-
-      <div class="section-label" style="margin-bottom:14px;">Key patterns — fill after all 10</div>
-      <div class="pattern-grid" id="pattern-grid"></div>
-    </div>
-
-    <!-- PARTNER PROGRAM -->
-    <div id="page-program" class="page">
-      <div class="page-header">
-        <h1>Design partner program</h1>
-        <p>Staged launch · Run on Groopy · Lead with status not title</p>
-      </div>
-
-      <div class="section-label">Three pillars</div>
-      <div class="pillar-grid" style="margin-bottom:24px;">
-        <div class="pillar-card" style="background:var(--purple-light);">
-          <div class="pillar-icon">👑</div>
-          <div class="pillar-title" style="color:var(--purple);">Status</div>
-          <div class="pillar-desc" style="color:#3C3489;">One of 10 people credited for shaping this. Named. Part of the origin story.</div>
-        </div>
-        <div class="pillar-card" style="background:var(--teal-light);">
-          <div class="pillar-icon">🚪</div>
-          <div class="pillar-title" style="color:var(--teal);">Access</div>
-          <div class="pillar-desc" style="color:#085041;">Direct line to the founders. Features first. Real say in what gets built.</div>
-        </div>
-        <div class="pillar-card" style="background:var(--amber-light);">
-          <div class="pillar-icon">🔄</div>
-          <div class="pillar-title" style="color:var(--amber);">Reward</div>
-          <div class="pillar-desc" style="color:#633806;">Personal code. Every conversion earns a free month. No cap.</div>
-        </div>
-      </div>
-
-      <div class="card-grid cols-2" style="margin-bottom:24px;">
-        <div class="card">
-          <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--purple);">What they give</div>
-          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2.2;">
-            <li>30 min/month on the Groopy group call</li>
-            <li>Async reactions to 1-2 questions/month</li>
-            <li>Honest usage reports — what's working and what's not</li>
-            <li>Warm intros via their personal referral code</li>
-          </ul>
-        </div>
-        <div class="card">
-          <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--teal);">What they get</div>
-          <ul style="font-size:13px;color:var(--gray-700);padding-left:16px;line-height:2.2;">
-            <li>Named as one of 10 who shaped the product</li>
-            <li>Private Groopy group with both founders</li>
-            <li>Every new feature before anyone else</li>
-            <li>Free plan for life</li>
-            <li>Personal referral code (ANYX-[NAME])</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="section-label">The referral mechanic</div>
-      <div class="ref-box">
-        <div style="font-size:14px;font-weight:600;color:#185FA5;margin-bottom:4px;">Two-way code system</div>
-        <div style="font-size:13px;color:#185FA5;margin-bottom:14px;">Name-based codes feel like personal recommendations, not marketing links.</div>
-        <div class="ref-flow">
-          <div class="ref-step">
-            <div class="ref-step-title">Partner shares code</div>
-            <div class="ref-step-desc">Personal intro — feels like a recommendation</div>
-          </div>
-          <div class="ref-arrow">→</div>
-          <div class="ref-step">
-            <div class="ref-step-title">New user signs up</div>
-            <div class="ref-step-desc">Enters code at signup, gets discount on first month</div>
-          </div>
-          <div class="ref-arrow">→</div>
-          <div class="ref-step">
-            <div class="ref-step-title">Both sides win</div>
-            <div class="ref-step-desc">Partner earns free month. Code tracks everything.</div>
-          </div>
-        </div>
-        <div class="ref-both">
-          <div class="ref-side" style="background:var(--purple-light);">
-            <div class="ref-side-label" style="color:var(--purple);">Partner earns</div>
-            <div class="ref-side-val" style="color:var(--purple);">+1 free month</div>
-            <div class="ref-side-sub" style="color:#534AB7;">Per converted referral. Stacks, no cap. 5 referrals = 5 free months.</div>
-          </div>
-          <div class="ref-side" style="background:var(--teal-light);">
-            <div class="ref-side-label" style="color:var(--teal);">Referred user gets</div>
-            <div class="ref-side-val" style="color:var(--teal);">Discount on first month</div>
-            <div class="ref-side-sub" style="color:var(--teal);">Applied automatically at checkout when they enter the code.</div>
-          </div>
-        </div>
-        <div class="code-chip">
-          <code>ANYX-SARAH</code>
-          <span style="font-size:12px;color:var(--gray-500);">Personal code per partner — name-based, memorable, trackable</span>
-        </div>
-      </div>
-
-      <div class="warn-box">
-        <strong>Technical prerequisite:</strong> Do not send any outreach until the referral codes exist and work. Nothing kills early momentum like promising a personal code and following up to say it's not ready.
-      </div>
-
-      <div class="section-label">Engagement cadence — run on Groopy</div>
-      <div class="cadence-grid">
-        <div class="cadence-card">
-          <div class="cadence-freq">Monthly</div>
-          <div class="cadence-title">Group call</div>
-          <div class="cadence-desc">30 min, all 10. One real decision on the table. They react, we listen.</div>
-          <div class="cadence-who">Both founders</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-freq">Bi-weekly</div>
-          <div class="cadence-title">Groopy pulse</div>
-          <div class="cadence-desc">One question dropped in the group. Async, low friction. Groopy AI surfaces patterns.</div>
-          <div class="cadence-who">Product lead</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-freq">As needed</div>
-          <div class="cadence-title">1-on-1 setup</div>
-          <div class="cadence-desc">The integrator role we already play — now a named exclusive benefit.</div>
-          <div class="cadence-who">Either founder</div>
-        </div>
-        <div class="cadence-card">
-          <div class="cadence-freq">Quarterly</div>
-          <div class="cadence-title">Roadmap preview</div>
-          <div class="cadence-desc">What's coming before the world sees it. Their input shapes it.</div>
-          <div class="cadence-who">Co-founder</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- OUTREACH -->
-    <div id="page-outreach" class="page">
-      <div class="page-header">
-        <h1>Outreach messages</h1>
-        <p>Send after their interview — not before. Personalise [Name] with one specific detail about how they use Anyx.</p>
-      </div>
-
-      <div class="message-card">
-        <div class="message-label">Version 1 — Warm & personal <span class="tag tag-purple" style="margin-left:8px;">Operators · Independents</span></div>
-        <div class="message-body">Hey [Name] — been thinking about you.
-
-You're one of a handful of people who really got Anyx early. The way you use it, the feedback you've given — it's shaped how we're building this thing.
-
-We're formalizing that. We're inviting 10 people to be part of the group that builds this with us from the inside. Not test subjects — the people who get credited for shaping where this goes.
-
-Here's what it means practically:
-— A private group (running on Groopy — you'll see why) with me and Michael. Real decisions, not announcements.
-— Every new feature before anyone else, with your input on how it's built.
-— Free plan for life.
-— Your own personal code (ANYX-[NAME]). Every person you bring in who converts earns you a free month. No cap.
-
-From you, we ask for 30 minutes a month and honest reactions when we ask.
-
-That's it.
-
-Want in?</div>
-        <div class="message-actions">
-          <button class="btn" onclick="copyMessage(0)">Copy message</button>
-        </div>
-      </div>
-
-      <div class="message-card">
-        <div class="message-label">Version 2 — Direct & brief <span class="tag tag-coral" style="margin-left:8px;">Dealmakers · senior execs</span></div>
-        <div class="message-body">Hey [Name] — quick but important.
-
-We're building the inside group that shapes where Anyx goes. 10 people. You're on the list.
-
-What you get: direct access to me and Michael, every feature first, free plan for life, and a personal code (ANYX-[NAME]) — every person you bring in who converts earns you a free month.
-
-What we ask: 30 min/month. Honest feedback when we need it.
-
-You've already been doing this informally. We just want to make it real.
-
-Are you in?</div>
-        <div class="message-actions">
-          <button class="btn" onclick="copyMessage(1)">Copy message</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- REFERRAL CODES -->
-    <div id="page-referralcodes" class="page">
-      <div class="page-header">
-        <h1>Referral codes</h1>
-        <p>Auto-populated when a user's Design partner invite is set to Confirmed. One row per partner.</p>
-      </div>
-      <div class="page-actions">
-        <button class="btn" onclick="exportReferralCSV()">↓ Export CSV</button>
-      </div>
-      <div class="table-wrap">
-        <table class="ref-table">
-          <thead>
-            <tr>
-              <th>Partner name</th>
-              <th>Personal code</th>
-              <th>Code status</th>
-              <th>Referrals sent</th>
-              <th>Conversions</th>
-              <th>Free months earned</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody id="ref-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- NEXT STEPS -->
-    <div id="page-nextsteps" class="page">
-      <div class="page-header">
-        <h1>Next steps</h1>
-        <p>Step 0 unblocks everything else.</p>
-      </div>
-
-      <div class="card">
-        <div class="step-row step-zero">
-          <div class="step-num" style="color:var(--coral);">0</div>
-          <div class="step-when" style="color:var(--coral);">Before anything</div>
-          <div class="step-action">
-            <strong>Co-founder shares the list of 10 users with product lead.</strong> Required before any outreach can begin. Use the User Tracker spreadsheet — fill in: name, role, company, contact, and how they found Anyx.
-          </div>
-          <div><span class="tag tag-coral">Co-founder</span></div>
-        </div>
-
-        <div class="step-row step-active">
-          <div class="step-num" style="color:var(--teal);">1</div>
-          <div class="step-when" style="color:var(--teal);">Today (after list)</div>
-          <div class="step-action">Text all 10 users informally to book 30-min calls. No pitch, no program. Just: <em>"I'd love to hear more about how you're using Anyx. When works?"</em></div>
-          <div><span class="tag tag-teal">Product lead</span></div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num">2</div>
-          <div class="step-when">This week</div>
-          <div class="step-action">Run first 5 interviews using the guide. Fill in the synthesis tracker as you go. Look for patterns in friction, triggers, and verbatim language.</div>
-          <div><span class="tag tag-gray">Product lead</span></div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num">3</div>
-          <div class="step-when">After 5 interviews</div>
-          <div class="step-action">Generate personal referral codes (ANYX-[NAME]) for all 10. Verify they work technically before any outreach goes out.</div>
-          <div><span class="tag tag-gray">Co-founder</span></div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num">4</div>
-          <div class="step-when">After 5 interviews</div>
-          <div class="step-action">Send design partner outreach to the 3-4 clearest fits. Choose based on archetype clarity, wow moment alignment, and referral network strength.</div>
-          <div><span class="tag tag-gray">Product lead</span></div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num">5</div>
-          <div class="step-when">After 5 interviews</div>
-          <div class="step-action">Set up the partner group on Groopy — not plain WhatsApp. Configure it to show the product doing what it does in a real-use context.</div>
-          <div><span class="tag tag-gray">Co-founder</span></div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num">6</div>
-          <div class="step-when">After all 10</div>
-          <div class="step-action">Run remaining 5 interviews. Refine synthesis. Send outreach to remaining partners, updated based on patterns from the first batch.</div>
-          <div><span class="tag tag-gray">Product lead</span></div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num">7</div>
-          <div class="step-when">After all 10</div>
-          <div class="step-action">Run first group call on Groopy. One real decision on the table. Listen and synthesize.</div>
-          <div><span class="tag tag-gray">Both founders</span></div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num">8</div>
-          <div class="step-when">After all 10</div>
-          <div class="step-action">Design champion program and scalable onboarding flow based on interview synthesis. Replace the manual integrator role.</div>
-          <div><span class="tag tag-gray">Both founders</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div id="page-settings" class="page">
-      <div class="page-header">
-        <h1>Archetype settings</h1>
-        <p>Rename archetypes after interviews reveal real patterns. Changes propagate to the synthesis tracker, user list, and interview guide.</p>
-      </div>
-      <div class="settings-grid" id="settings-arch-grid"></div>
-      <div class="settings-actions">
-        <button class="btn btn-primary" onclick="saveArchetypes()">Save changes</button>
-        <button class="btn" onclick="resetArchetypes()">Reset to defaults</button>
-      </div>
-    </div>
-
-  </main>
+<!-- announcement -->
+<div class="topbar">
+  <span class="dot"></span>
+  מועדון המנויים ביג סייב · שירות מילוי ושליחת טפסי לוטו · מאז 2009 · שקיפות מלאה 24/7
 </div>
 
-<!-- DATALISTS for user table dropdowns -->
-<datalist id="dl-industry">
-  <option value="SaaS / Software">
-  <option value="E-commerce / Retail">
-  <option value="Real estate">
-  <option value="Finance / Accounting">
-  <option value="Marketing / Advertising">
-  <option value="Consulting">
-  <option value="Healthcare">
-  <option value="Legal">
-  <option value="Education">
-  <option value="Media / Content">
-  <option value="Manufacturing">
-  <option value="Logistics / Supply chain">
-  <option value="HR / Recruitment">
-  <option value="Architecture / Design">
-  <option value="Construction">
-  <option value="Non-profit">
-</datalist>
-<datalist id="dl-companysize">
-  <option value="Solo / Freelancer">
-  <option value="2–10">
-  <option value="11–50">
-  <option value="51–200">
-  <option value="201–500">
-  <option value="500+">
-</datalist>
-<datalist id="dl-howfound">
-  <option value="Founder referral">
-  <option value="Word of mouth">
-  <option value="LinkedIn">
-  <option value="Twitter / X">
-  <option value="WhatsApp group">
-  <option value="Event / Conference">
-  <option value="Product Hunt">
-  <option value="Cold outreach">
-  <option value="Organic search">
-  <option value="Friend / colleague">
-</datalist>
-<datalist id="dl-role">
-  <option value="Founder / CEO">
-  <option value="Co-founder">
-  <option value="Head of Sales">
-  <option value="Head of Marketing">
-  <option value="Head of Operations">
-  <option value="Product Manager">
-  <option value="Business Development">
-  <option value="Account Executive">
-  <option value="Consultant">
-  <option value="Freelancer / Solopreneur">
-  <option value="Operations Manager">
-  <option value="Executive Assistant">
-  <option value="CMO">
-  <option value="COO">
-</datalist>
+<!-- header -->
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#">
+      <img class="logo-badge" src="bigsave-logo.png" alt="Big Save" width="46" height="46">
+      <span>Big Save<small>מועדון הלוטו השיטתי</small></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#how">איך זה עובד</a>
+      <a href="#benefits">למה אנחנו</a>
+      <a href="#compare">השוואה</a>
+      <a href="#plans">מסלולים</a>
+      <a href="#winners">המלצות</a>
+      <a href="#faq">שאלות נפוצות</a>
+      <a href="https://www.bigsave.co.il/login" target="_blank" rel="noopener">כניסת מנויים</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="nav-phone" href="tel:074-7033647">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <bdi>074-7033647</bdi>
+      </a>
+      <a class="nav-call" href="tel:074-7033647" aria-label="חייגו 074-7033647"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+      <a class="btn btn-gold btn-sm" href="#plans">הצטרפו למועדון</a>
+    </div>
+  </div>
+</header>
 
-<!-- IV MODE BOTTOM BANNER -->
-<div class="iv-banner" id="iv-banner" onclick="toggleInterviewMode()">● Interview mode — tap to exit</div>
+<!-- hero -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge-row reveal">
+        <span class="pill"><span class="g">★</span> מאז 2009 · אלפי לקוחות</span>
+        <span class="pill">תוכנה מתמטית־סטטיסטית</span>
+      </div>
+      <h1 class="reveal d1">התמדה ושיטתיות<br><span class="hl">עוזרות למזל לנצח</span></h1>
+      <p class="lead reveal d2"><bdi>Big Save</bdi> הוא מועדון מנויים למילוי ושליחת טפסי לוטו של מפעל הפיס, מאז 2009. תוכנה מתמטית־סטטיסטית בוחרת עבורכם מספרים ומשלבת טורים אישיים עם שיטות קבוצתיות — כך משתתפים בכמות מרובה של טבלאות בכל הגרלה. הכמות וההתמדה מנסות להעלות את הסיכויים — אך הזכייה תלויה במזל, ואיננו מבטיחים זכייה. הכול בשקיפות מלאה וזכיות ישירות לבנק.</p>
+      <div class="hero-cta reveal d3">
+        <a class="btn btn-gold" href="#plans">בחרו מסלול והצטרפו</a>
+        <a class="btn btn-ghost" href="#how">איך זה עובד?</a>
+      </div>
+      <div class="hero-trust reveal d4">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ניהול מלא של המנוי</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> זכיות ישירות לבנק</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> שקיפות מלאה</span>
+      </div>
+    </div>
+
+    <div class="jackpot reveal d2">
+      <div class="cap"><span class="dot" style="background:var(--gold)"></span> השיטה של ביג סייב</div>
+      <div class="amount" style="font-size:clamp(28px,4vw,40px);letter-spacing:normal;line-height:1.15">כמות מרובה<br>של טבלאות</div>
+      <div class="sub">שילוב טורים אישיים ושיטות קבוצתיות</div>
+      <div class="balls">
+        <span class="ball">7</span><span class="ball">13</span><span class="ball">21</span>
+        <span class="ball">28</span><span class="ball">34</span><span class="ball">4</span>
+      </div>
+      <div class="countdown">תוכנה מתמטית־סטטיסטית · <b>שקיפות מלאה 24/7</b></div>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none"><path fill="#f5f6fb" d="M0,32L60,29.3C120,27,240,21,360,24C480,27,600,37,720,40C840,43,960,37,1080,32C1200,27,1320,21,1380,18.7L1440,16L1440,60L0,60Z"/></svg>
+</section>
+
+<!-- live lotto results (revealed by JS only when real מפעל הפיס data loads) -->
+<section class="sec results-sec" id="results" aria-live="polite">
+  <div class="wrap results-grid">
+    <div class="rcard">
+      <div class="rcap">תוצאות ההגרלה האחרונה</div>
+      <div class="rmeta" id="rMeta"></div>
+      <div class="rballs" id="rBalls"></div>
+    </div>
+    <div class="rcard next">
+      <div class="rcap">ההגרלה הקרובה</div>
+      <div class="rnext-date" id="rNextDate"></div>
+      <div class="rcountdown" id="rCountdown"></div>
+    </div>
+  </div>
+  <p class="rsrc">הנתונים מתעדכנים אוטומטית · המקור: מפעל הפיס</p>
+</section>
+
+<!-- stats -->
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat reveal"><div class="num">2009</div><div class="lbl">פועלים מאז</div></div>
+    <div class="stat reveal d1"><div class="num">אלפי</div><div class="lbl">לקוחות פעילים</div></div>
+    <div class="stat reveal d2"><div class="num">24/7</div><div class="lbl">שקיפות ומעקב באתר</div></div>
+    <div class="stat reveal d3"><div class="num">מיליוני <i>₪</i></div><div class="lbl">חולקו למנויים במצטבר</div></div>
+  </div>
+</section>
+
+<!-- how it works -->
+<section class="sec" id="how">
+  <div class="wrap center">
+    <span class="eyebrow reveal">פשוט כמו <bdi>1-2-3-4</bdi></span>
+    <h2 class="reveal d1">איך מועדון הלוטו עובד</h2>
+    <p class="sub reveal d2">אתם בוחרים את המספרים — ואנחנו דואגים לכל השאר. אין דוכנים, אין תורים, ואין טפסים שנשכחים בבית.</p>
+  </div>
+  <div class="wrap steps">
+    <div class="step reveal">
+      <div class="n">1</div>
+      <h3>מצטרפים ובוחרים מספרים</h3>
+      <p>בחרו מספרים משלכם — תאריכי לידה, מספרים אהובים — או שהתוכנה תבחר עבורכם. הבחירה נשמרת קבועה בכל הגרלה.</p>
+      <svg class="arrow" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </div>
+    <div class="step reveal d1">
+      <div class="n">2</div>
+      <h3>התוכנה מאגדת טורים</h3>
+      <p>מערכת סטטיסטית ייעודית מרכיבה ומאגדת צירופי טורים ומגישה אותם בכל הגרלה — בצורה ממוחשבת ומדויקת, במקומכם.</p>
+      <svg class="arrow" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </div>
+    <div class="step reveal d2">
+      <div class="n">3</div>
+      <h3>כמות מרובה של טבלאות</h3>
+      <p>התוכנה משלבת טורים אישיים עם שיטות קבוצתיות ושולחת כמות מרובה של טבלאות בכל הגרלה — מה שמנסה להעלות את הסיכוי לזכות.</p>
+      <svg class="arrow" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </div>
+    <div class="step reveal d3">
+      <div class="n">4</div>
+      <h3>זכיות ישירות לבנק</h3>
+      <p>אם יש זכייה — היא מועברת ישירות לחשבון הבנק שלכם, בשקיפות מלאה. אין מה לבדוק ואין מה לפספס.</p>
+    </div>
+  </div>
+</section>
+
+<!-- benefits -->
+<section class="sec benefits" id="benefits">
+  <div class="wrap center">
+    <span class="eyebrow reveal">היתרון של מועדון</span>
+    <h2 class="reveal d1">למה לקוחות בוחרים ב־<bdi>Big Save</bdi></h2>
+    <p class="sub reveal d2">חבילת השירות של ביג סייב בנויה משמונה שירותים — כדי שתשתתפו ברוגע, בנוחות ובשקיפות מלאה.</p>
+  </div>
+  <div class="wrap bgrid">
+    <div class="bcard reveal">
+      <div class="bicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></div>
+      <h3>שיטתיות שמעלה סיכויים</h3>
+      <p>התמדה עקבית לאורך זמן היא שמעלה את הסיכויים בהדרגה. המנוי דואג שתשתתפו ברצף בכל הגרלה — בלי לזכור ובלי לפספס.</p>
+    </div>
+    <div class="bcard reveal d1">
+      <div class="bicon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 7.8 8 10 4.6-2.2 8-5 8-10V5z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <h3>תוכנה סטטיסטית לצירופי טורים</h3>
+      <p>המספרים נבחרים ממאגר שחושב באופן סטטיסטי על ידי סטטיסטיקאי ומתמטיקאי — לא אקראי כמו בלוטומט. עבודה מדויקת וממוחשבת בכל הגרלה.</p>
+    </div>
+    <div class="bcard reveal d2">
+      <div class="bicon navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h3>כמות מרובה של טבלאות</h3>
+      <p>כמות גבוהה של טורים המשלבת בין טורים אישיים לטורים קבוצתיים. בזכות השיטה הקבוצתית מתאפשרת שליחה של כמות מרובה של טבלאות — כמות שלבד הייתה עולה הרבה יותר, מתחלקת בין חברי המועדון.</p>
+    </div>
+    <div class="bcard reveal">
+      <div class="bicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></div>
+      <h3>זכיות ישירות לבנק</h3>
+      <p>כל זכייה מועברת ישירות לחשבון הבנק שלכם — בלי בירוקרטיה, בלי דוכנים ובלי טפסים לאסוף. פשוט ומסודר.</p>
+    </div>
+    <div class="bcard reveal d1">
+      <div class="bicon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <h3>שקיפות מלאה</h3>
+      <p>רואים בדיוק במה משתתפים ומה מתקבל. דיווח ברור ומסודר בכל שלב — בלי אותיות קטנות ובלי הפתעות.</p>
+    </div>
+    <div class="bcard reveal d2">
+      <div class="bicon navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <h3>שירות אנושי ומקצועי</h3>
+      <p>צוות אנושי, סבלני ומקצועי שמלווה אתכם בטלפון — ורוב המנויים איתנו כבר מעל עשור. תמיד יש עם מי לדבר, בלי מענה אוטומטי ובלי כאב ראש.</p>
+    </div>
+  </div>
+</section>
+
+<!-- method -->
+<section class="sec method">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">השיטה שלנו</span>
+      <h2>הכוח שבהתמדה</h2>
+      <p class="sub">הזכייה תלויה במזל, ואיננו מבטיחים זכייה. מה שאנחנו כן נותנים: שיטה מתמטית־סטטיסטית, כמות מרובה של טבלאות והתמדה — שמנסות להעלות את הסיכויים לטובת חברי המועדון.</p>
+      <div class="mlist">
+        <div class="mrow">
+          <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div><h4>בוחרים מספרים — ונשארים איתם</h4><p>אם יש לכם מספרי מזל שאתם מאמינים בהם, לכו איתם עד הסוף. תאריכי לידה, למשל, לעולם לא משתנים.</p></div>
+        </div>
+        <div class="mrow">
+          <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div><h4>משתתפים בכל הגרלה, ברצף</h4><p>המנוי דואג שלא תפספסו אף הגרלה. הרצף הוא מה שהופך את השיטה לאפקטיבית.</p></div>
+        </div>
+        <div class="mrow">
+          <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div><h4>כמות מרובה של טבלאות</h4><p>התוכנה משלבת טורים אישיים ושיטות קבוצתיות ושולחת כמות אדירה של טורים — הכמות וההתמדה מנסות להעלות את הסיכויים, בעלות שמתחלקת בין החברים.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="method-visual">
+      <div class="quote">"בלוטו לא צריך לזכות עשרות פעמים — מספיק <span class="g">פעם אחת</span>, והכול משתנה מקצה לקצה."</div>
+      <div class="by">— ביג סייב</div>
+      <div class="lucky">
+        <span class="ball">3</span><span class="ball">11</span><span class="ball">19</span>
+        <span class="ball">26</span><span class="ball">37</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- why us vs DIY -->
+<section class="sec compare-sec" id="compare">
+  <div class="wrap center">
+    <span class="eyebrow reveal">מועדון מול קנייה עצמית</span>
+    <h2 class="reveal d1">למה במועדון — ולא לבד?</h2>
+    <p class="sub reveal d2">לשחק לבד זה לגיטימי לגמרי — פשוט צריך לזכור, למלא, לבדוק ולפדות הכול בעצמכם. הנה מה שאנחנו עושים בשבילכם, בכמות ובעלות שקשה להגיע אליהן לבד.</p>
+  </div>
+  <div class="wrap reveal d2">
+    <div class="ctable-wrap">
+      <table class="ctable">
+        <thead>
+          <tr><th class="cfeat">מה מקבלים</th><th class="cus">עם <bdi>Big Save</bdi></th><th class="cdiy">לבד בדוכן</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cfeat">כמות טורים בכל הגרלה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>המון טורים</td><td class="cdiy">טור בודד</td></tr>
+          <tr><td class="cfeat">עלות לכמות טורים גדולה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>מחולקת בין החברים</td><td class="cdiy">על כל טור בנפרד</td></tr>
+          <tr><td class="cfeat">בחירת מספרים סטטיסטית</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>מאגר סטטיסטי מקצועי</td><td class="cdiy">אקראי (לוטומט) או ניחוש</td></tr>
+          <tr><td class="cfeat">מילוי ושליחה בכל הגרלה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>אוטומטי וממוחשב</td><td class="cdiy">ידני, בדוכן</td></tr>
+          <tr><td class="cfeat">חיסכון בזמן — בלי לצאת מהבית</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>הכול נעשה בשבילכם</td><td class="cdiy">הליכה לדוכן בכל פעם</td></tr>
+          <tr><td class="cfeat">טופס לא הולך לאיבוד</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>דיגיטלי ומתועד</td><td class="cdiy">עלול לאבד</td></tr>
+          <tr><td class="cfeat">אף פעם לא מפספסים הגרלה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td><td class="cdiy">תלוי בכם</td></tr>
+          <tr><td class="cfeat">בדיקת תוצאות ועדכון זכייה</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>אנחנו בשבילכם</td><td class="cdiy">בודקים לבד</td></tr>
+          <tr><td class="cfeat">קבלת זכיות</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>ישירות לבנק</td><td class="cdiy">פדיון עצמאי</td></tr>
+          <tr><td class="cfeat">שירות אנושי ומקצועי</td><td class="cus"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td><td class="cdiy">אין</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="center" style="margin-top:16px;font-size:13px;color:var(--muted-2)">* השוואה כללית להמחשה. ההשתתפות בהגרלות מפעל הפיס בכפוף לתקנון המועדון ולתקנון מפעל הפיס.</p>
+  </div>
+</section>
+
+<!-- plans -->
+<section class="sec" id="plans">
+  <div class="wrap center">
+    <span class="eyebrow reveal">הצטרפות למועדון</span>
+    <h2 class="reveal d1">מתחילים בקלות — מסלול טור אישי</h2>
+    <p class="sub reveal d2">הדרך הפשוטה להתחיל: טור אישי בכל הגרלה, מילוי ושליחה ממוחשבים, כרטיס לקוח אישי באתר וזכיות ישירות לבנק. רוצים גם את השיטות הקבוצתיות של המומחים? דברו איתנו.</p>
+  </div>
+  <div class="wrap plans plans-2">
+    <div class="plan featured reveal">
+      <div class="tag">★ מסלול הכניסה</div>
+      <div class="pname">מסלול טור אישי</div>
+      <div class="pdesc">טור אישי אחד בכל הגרלה — לפי המספרים שלכם או מתוך התוכנה הסטטיסטית.</div>
+      <div class="price"><bdi>₪49</bdi></div>
+      <div class="pnote">ל־8 הגרלות מתחדשות · בהוראת קבע</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> טור אישי אחד בכל הגרלה</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> אתם בוחרים מספרים — או שהתוכנה בוחרת עבורכם</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> מילוי ושליחה ממוחשבים — בלי לצאת מהבית</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> כרטיס לקוח אישי באתר · זכיות ישירות לבנק</li>
+      </ul>
+      <a class="btn btn-gold" href="tel:074-7033647">להצטרפות · <bdi>074-7033647</bdi></a>
+    </div>
+
+    <div class="plan reveal d1">
+      <div class="pname">רוצים שיטות מומחים?</div>
+      <div class="pdesc">מעבר לטור האישי, יש לנו שיטות קבוצתיות מתקדמות עם התוכנה הסטטיסטית — שמעלות משמעותית את כמות הטבלאות בכל הגרלה. נתאים לכם את הדרך הנכונה בשיחה קצרה.</div>
+      <div class="price" style="font-size:30px;letter-spacing:normal">בשיחה אישית</div>
+      <div class="pnote">ליווי אנושי, סבלני ומקצועי</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> שילוב שיטות קבוצתיות מתקדמות</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> מספרים מתוך התוכנה הסטטיסטית</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> התאמה אישית של הדרך והתקציב</li>
+      </ul>
+      <div class="contact-btns">
+        <a class="btn btn-navy" href="tel:074-7033647">חייגו אלינו</a>
+        <a class="btn btn-wa" href="https://wa.me/972747033647" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 1.83c2.16 0 4.19.84 5.72 2.37a8.04 8.04 0 0 1 2.37 5.72c0 4.46-3.63 8.08-8.09 8.08-1.48 0-2.93-.4-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.02 8.02 0 0 1-1.26-4.31c0-4.46 3.63-8.08 8.09-8.08Zm4.68 10.24c-.06-.11-.24-.18-.51-.31-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.34-.8-.72-1.34-1.6-1.5-1.87-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.46.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.44-.46-.61-.46-.16-.01-.34-.01-.52-.01s-.48.07-.73.34c-.25.27-.96.94-.96 2.29s.98 2.66 1.12 2.84c.14.18 1.93 2.95 4.68 4.14.65.28 1.16.45 1.56.58.65.21 1.25.18 1.72.11.52-.08 1.6-.65 1.83-1.28.23-.63.23-1.17.16-1.28Z"/></svg>
+          וואטסאפ
+        </a>
+      </div>
+    </div>
+  </div>
+  <p class="center" style="margin-top:26px;font-size:14px;color:var(--muted-2)">* Big Save היא שירות פרטי עצמאי למילוי ושליחת טפסים ואינה מפעל הפיס. ההשתתפות בהגרלות מפעל הפיס בכפוף לתקנון המועדון ולתקנון מפעל הפיס. מותר מגיל 18. פרטי המסלולים המלאים נמסרים בשיחה אישית עם נציג המועדון.</p>
+</section>
+
+<!-- winners -->
+<section class="sec winners" id="winners">
+  <div class="wrap center">
+    <span class="eyebrow reveal">מהמנויים שלנו</span>
+    <h2 class="reveal d1">מה אומרים חברי המועדון</h2>
+    <p class="sub reveal d2">קיבלנו עשרות רבות של מכתבי תודה ממנויים ותיקים וחדשים. הנה כמה מהם.</p>
+  </div>
+  <div class="wrap wgrid">
+    <div class="wcard reveal">
+      <div class="stars">★★★★★</div>
+      <p>"נציגה בשם מור התקשרה אליי. לא הכרתי את החברה והגבתי בחשש — אבל קיבלתי יחס מקצועי, סבלני ואדיב, וחוויית שירות שלא הייתי מקבלת בשום דוכן. תודה רבה."</p>
+      <div class="wperson"><span class="wava">ת</span><div><b>תהילה כהן</b><small>מנויה חדשה</small></div></div>
+    </div>
+    <div class="wcard reveal d1">
+      <div class="stars">★★★★★</div>
+      <p>"תודה על השירות המדויק והמדהים ועל הסבלנות לכל שאלה ושאלה. ובנוסף — תודה על שובר החופשה!"</p>
+      <div class="wperson"><span class="wava">י</span><div><b>ישראל</b><small>מנוי במועדון</small></div></div>
+    </div>
+    <div class="wcard reveal d2">
+      <div class="stars">★★★★★</div>
+      <p>"נהניתי מליווי מקיף לאורך כל התהליך, בסבלנות אין־סופית, באדיבות ובהסבר — יחס מיוחד שאין כמותו."</p>
+      <div class="wperson"><span class="wava">א</span><div><b>אורי</b><small>מנוי במועדון</small></div></div>
+    </div>
+  </div>
+  <p class="center" style="margin-top:22px;font-size:13px;color:var(--muted-2)">מכתבי תודה אמיתיים ממנויי המועדון. השתתפות בהגרלות אינה מבטיחה זכייה.</p>
+</section>
+
+<!-- faq -->
+<section class="sec" id="faq">
+  <div class="wrap center">
+    <span class="eyebrow reveal">שאלות נפוצות</span>
+    <h2 class="reveal d1">כל מה שרציתם לדעת</h2>
+  </div>
+  <div class="wrap faq-list">
+    <details class="faq" open>
+      <summary>מהו מנוי לוטו של <bdi>Big Save</bdi>?<span class="ic">+</span></summary>
+      <div class="ans"><bdi>Big Save</bdi> הוא מועדון מנויים שמטרתו לאגד חברים למילוי משותף של טפסים המשתתפים בהגרלות הלוטו של מפעל הפיס, בשיטה מתמטית־סטטיסטית ממוחשבת. הזכיות מתחלקות בין חברי המועדון והחברה. החברה אינה פועלת מטעם מפעל הפיס.</div>
+    </details>
+    <details class="faq">
+      <summary>האם אתם מבטיחים שאזכה?<span class="ic">+</span></summary>
+      <div class="ans">אנו מנסים להעלות את סיכויי הזכייה לטובת כלל חברי המועדון — בעזרת שיטה מתמטית־סטטיסטית, כמות מרובה של טבלאות והתמדה. אך מטבע הדברים איננו יכולים להבטיח זכייה, ובכל מקרה הזכייה תלויה במזל.</div>
+    </details>
+    <details class="faq">
+      <summary>איך מקבלים את הזכיות?<span class="ic">+</span></summary>
+      <div class="ans">כל זכייה מועברת ישירות לחשבון הבנק שלכם, בשקיפות מלאה ובמעקב מסודר — אין צורך לבדוק או לאסוף דבר.</div>
+    </details>
+    <details class="faq">
+      <summary>אני צריך להגיע לדוכן או למלא טפסים בעצמי?<span class="ic">+</span></summary>
+      <div class="ans">לא. כל התהליך מנוהל עבורכם. אנחנו ממלאים ושולחים את הטפסים בכל הגרלה בצורה ממוחשבת — בלי תורים, בלי דוכנים ובלי טפסים שהולכים לאיבוד.</div>
+    </details>
+    <details class="faq">
+      <summary>מה ההבדל בין מסלול בסיס למסלול מלא?<span class="ic">+</span></summary>
+      <div class="ans">במסלול הבסיס — טור אישי אחד. במסלולים המלאים יש שילוב של מספר מסלולים המכניסים שיטות קבוצתיות שמעלות משמעותית את כמות הטבלאות, והמספרים מגיעים מתוך התוכנה הסטטיסטית. לפרטים והתאמה אישית — דברו איתנו בטלפון.</div>
+    </details>
+    <details class="faq">
+      <summary>אני יכול לבחור את המספרים שלי?<span class="ic">+</span></summary>
+      <div class="ans">בהחלט. אתם יכולים לבחור את מספרי המזל שלכם — תאריכי לידה, מספרים אהובים או כל צירוף אחר — ואנחנו נשמור עליהם קבועים בכל הגרלה. אפשר גם לתת לנו לבחור עבורכם שיטתית.</div>
+    </details>
+    <details class="faq">
+      <summary>איך אדע אם זכיתי?<span class="ic">+</span></summary>
+      <div class="ans">אין צורך לבדוק לבד. אנחנו בודקים את התוצאות עבורכם אחרי כל הגרלה ומעדכנים אתכם מיד על כל זכייה, כך שלא תפספסו אף שקל.</div>
+    </details>
+    <details class="faq">
+      <summary>כמה זה עולה לעומת לשחק לבד?<span class="ic">+</span></summary>
+      <div class="ans">בזכות השיטה הקבוצתית משתתפים בכמות מרובה של טבלאות בעלות מחולקת — הרבה יותר ממה שאפשר היה להשיג לבד באותו תקציב.</div>
+    </details>
+    <details class="faq">
+      <summary>יש הטבות נוספות מעבר להגרלות?<span class="ic">+</span></summary>
+      <div class="ans">כן. לקוחות ביג סייב נהנים, בנוסף להשתתפות בהגרלות, גם מהטבות בלעדיות בתחומי הנופש והפנאי לכל המשפחה. ההטבות משתנות בין המסלולים — דברו איתנו לפרטים.</div>
+    </details>
+    <details class="faq">
+      <summary>מה ההבדל בין מסלול הבסיס למסלולים המלאים?<span class="ic">+</span></summary>
+      <div class="ans">במסלול הבסיס יש רק טור אישי אחד. במסלולים המלאים יש שילוב של מספר מסלולים המכניסים שיטות קבוצתיות שמעלות משמעותית את כמות הטבלאות. בנוסף, במסלולים המלאים המספרים מגיעים מתוך התוכנה הסטטיסטית. את פרטי המסלולים המלאים נמסור לכם בשיחה אישית.</div>
+    </details>
+  </div>
+</section>
+
+<!-- final cta -->
+<section class="sec" style="padding-top:20px">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>הצטרפו למועדון הלוטו השיטתי</h2>
+      <p>מ־2009, אלפי לקוחות מרוצים ומיליוני שקלים שחולקו. הצטרפו היום ותנו לנו לדאוג לכל השאר — מילוי, שליחה, בדיקה וזכיות ישירות לבנק. בלי הבטחות — הזכייה תלויה במזל.</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="tel:074-7033647">הצטרפו עכשיו · <bdi>074-7033647</bdi></a>
+        <a class="btn btn-ghost" href="#plans">השוו מסלולים</a>
+      </div>
+      <div class="fineprint">ההשתתפות מותרת מגיל 18 ומעלה · שחקו באחריות</div>
+    </div>
+  </div>
+</section>
+
+<!-- footer -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a class="logo" href="#"><img class="logo-badge" src="bigsave-logo.png" alt="Big Save" width="46" height="46"><span>Big Save<small>מועדון הלוטו השיטתי</small></span></a>
+        <p class="fabout">Big Save — שירות עצמאי למילוי ושליחת טפסי לוטו של מפעל הפיס, מאז 2009 ועם אלפי לקוחות. תוכנה סטטיסטית לצירופי טורים, שירות אנושי, שקיפות מלאה וזכיות ישירות לבנק.</p>
+      </div>
+      <div>
+        <h5>ניווט</h5>
+        <ul>
+          <li><a href="#how">איך זה עובד</a></li>
+          <li><a href="#benefits">למה אנחנו</a></li>
+          <li><a href="#plans">מסלולים</a></li>
+          <li><a href="#winners">המלצות</a></li>
+          <li><a href="#faq">שאלות נפוצות</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>מידע</h5>
+        <ul>
+          <li><a href="takanon.html">תקנון המועדון</a></li>
+          <li><a href="https://www.bigsave.co.il/login" target="_blank" rel="noopener">כניסת מנויים</a></li>
+          <li><a href="takanon.html">תנאי שימוש</a></li>
+          <li><a href="takanon.html">שחק באחריות</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>יצירת קשר</h5>
+        <div class="fcontact">
+          <a href="tel:074-7033647"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> <bdi>074-7033647</bdi></a>
+          <a href="mailto:service.bigsave@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg> <bdi>service.bigsave@gmail.com</bdi></a>
+          <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ישראל</a>
+        </div>
+      </div>
+    </div>
+    <div class="responsible">
+      <strong style="color:#c3c9ef">Big Save היא חברה פרטית עצמאית המספקת שירות מילוי ושליחת טפסים — איננו מפעל הפיס ואיננו קשורים אליו.</strong> <strong style="color:#c3c9ef">שחק באחריות.</strong> ההשתתפות בהגרלות מיועדת לבני 18 ומעלה בלבד. הימורים עלולים להיות ממכרים. ההשתתפות בהגרלות מפעל הפיס כרוכה בסיכון ואינה מבטיחה זכייה. אם ההימורים משבשים לך את החיים — פנייה לעזרה היא צעד של אחריות.
+    </div>
+    <div class="fbottom">
+      <span><bdi>© 2026</bdi> <bdi>Big Save</bdi> · כל הזכויות שמורות</span>
+      <span class="ver">גרסה <bdi>1.1</bdi> · עודכן <bdi>29.07.2026 · 17:18</bdi></span>
+      <span class="age">🔞 מותר מגיל 18</span>
+    </div>
+  </div>
+</footer>
 
 <script>
-// ── STORAGE HELPERS ──
-function lsLoad(key, def) {
-  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch { return def; }
-}
-function lsSave(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
-}
-
-// ── ARCHETYPE DEFAULTS ──
-const DEFAULT_ARCHETYPES = [
-  {
-    id: 'op', label: 'Operator', emoji: '💼', colorVar: 'purple', tagCls: 'tag-purple',
-    subLabel: 'CEO · founder · self-made',
-    attrs: [
-      { label: 'Drive', val: 'Control & speed. Decisions off their plate.' },
-      { label: 'First use', val: 'Inbox triage, scheduling, task clearing' },
-      { label: 'Onboard', val: 'Guided — needs to see ROI fast' },
-    ],
-    wowTag: 'Wow: first autonomous action', selfDriven: false,
-  },
-  {
-    id: 'or', label: 'Orchestrator', emoji: '⚙️', colorVar: 'teal', tagCls: 'tag-teal',
-    subLabel: 'COO · Chief of Staff · Ops lead',
-    attrs: [
-      { label: 'Drive', val: 'Alignment & visibility across moving parts.' },
-      { label: 'First use', val: 'Summaries, team updates, meeting prep' },
-      { label: 'Onboard', val: 'Self-driven — naturally curious, digs in' },
-    ],
-    wowTag: 'Wow: Groopy triage in a group', selfDriven: true,
-  },
-  {
-    id: 'dm', label: 'Dealmaker', emoji: '🤝', colorVar: 'coral', tagCls: 'tag-coral',
-    subLabel: 'Sales lead · BD · lawyer',
-    attrs: [
-      { label: 'Drive', val: 'Never miss a follow-up. Pipeline clarity.' },
-      { label: 'First use', val: 'CRM nudges, follow-up sequences, reminders' },
-      { label: 'Onboard', val: 'Guided — needs a concrete use case first' },
-    ],
-    wowTag: 'Wow: first automated follow-up sent', selfDriven: false,
-  },
-  {
-    id: 'in', label: 'Independent', emoji: '🌍', colorVar: 'amber', tagCls: 'tag-amber',
-    subLabel: 'Travel agent · solo pro · consultant',
-    attrs: [
-      { label: 'Drive', val: "Do more alone. Replace what they can't hire." },
-      { label: 'First use', val: 'Client comms, scheduling, task tracking' },
-      { label: 'Onboard', val: 'Self-driven — high curiosity, time-poor' },
-    ],
-    wowTag: 'Wow: first client task handled end-to-end', selfDriven: true,
-  },
-];
-
-// ── INTERVIEW GUIDE DATA ──
-const INTERVIEW_PHASES = [
-  { title: 'Phase 1 — Warm up & context', dotColor: '#888', timing: '5 min · 3 questions', questions: [
-    { num:'01', text:'Walk me through a typical day at work before Anyx — what did your morning look like?', why:'Sets the before-state baseline. Get them feeling the pain before discussing the solution.', archs:['all'] },
-    { num:'02', text:'What were you using before Anyx to manage your work — tools, habits, workarounds?', why:'Surfaces competitive landscape and reveals how sophisticated they are.', archs:['all'] },
-    { num:'03', text:'What was the specific frustration that made you willing to try something new?', why:'The "job to be done" question. This becomes your GTM pain point language.', archs:['op','dm','in'], deeperNote: "This is your GTM pain point language. Write down their exact phrasing." },
-  ]},
-  { title: 'Phase 2 — The friction zone', dotColor: 'var(--coral)', timing: '8 min · 4 questions', questions: [
-    { num:'04', text:'When you first started using Anyx, what confused you or felt unclear?', why:'Opens the door to honest friction without making it feel like a complaint.', archs:['all'] },
-    { num:'05', text:'Was there a moment where you almost gave up or lost confidence it would work for you?', why:'The dropout risk question. This is where you find the exact moment your onboarding needs to intervene.', archs:['op','in'], deeperNote: "Slow down here. This is where onboarding needs to catch people. Ask: what almost made you stop?" },
-    { num:'06', text:'How long did it take before you felt like you actually understood what Anyx could do?', why:"Quantifies the time-to-competence gap. If it's days or weeks, that's your onboarding problem statement.", archs:['all'] },
-    { num:'07', text:'Did someone help you figure it out, or did you work through it alone?', why:'Directly maps to guided vs self-driven paths. If guided — who, what did they do, what unlocked it?', archs:['or','dm'], deeperNote: "If they say someone helped — ask who, what did they do, what specifically unlocked it." },
-  ]},
-  { title: 'Phase 3 — The wow moment', dotColor: 'var(--purple)', timing: '10 min · 5 questions', questions: [
-    { num:'08', text:'Tell me about the moment it clicked. What were you doing, what happened, and how did it feel?', why:"The core question. Let them tell it as a story. Don't interrupt. Write down their exact words.", archs:['all'] },
-    { num:'09', text:'What specific feature or action triggered that feeling?', why:'Forces specificity. Was it inbox triage? A Groopy summary? First automated action? This becomes the activation target.', archs:['all'] },
-    { num:'10', text:'What did you do right after that moment — did you tell anyone, try something else, or just keep going?', why:"The organic virality signal. If they told someone immediately, that's your referral trigger.", archs:['op','or'], deeperNote: "If they told someone — ask who, what words they used, whether that person signed up. This is your referral trigger." },
-    { num:'11', text:'If you had to describe that moment to a skeptic in one sentence, what would you say?', why:"⭐ This is your marketing copy. Write it verbatim. The best product descriptions come from users, not founders.", archs:['all'], highlight: true, highlightColor: 'var(--purple)' },
-    { num:'12', text:'Looking back, was there anything that could have gotten you to that moment faster?', why:"Retrospective onboarding design input. They'll often name exactly the thing you need to build.", archs:['dm','in'], deeperNote: "They'll often name exactly what you need to build. Listen for: a demo, a use case template, a guided first step." },
-  ]},
-  { title: 'Phase 4 — Current usage & value', dotColor: 'var(--teal)', timing: '8 min · 3 questions', questions: [
-    { num:'13', text:'Walk me through how you use Anyx in a typical day now. What does it actually do for you?', why:"Maps current usage patterns by archetype. Tells you where the product is sticky.", archs:['all'] },
-    { num:'14', text:'What would break in your work if Anyx disappeared tomorrow?', why:"The dependency test. Your retention and value proof point — use in sales and case studies.", archs:['op','or','in'] },
-    { num:'15', text:"Is there something you keep wishing Anyx could do that it can't yet?", why:"Product roadmap input. Patterns across archetypes = feature priority.", archs:['all'] },
-  ]},
-  { title: 'Phase 5 — Advocacy & referral', dotColor: 'var(--amber)', timing: '7 min · 3 questions', questions: [
-    { num:'16', text:'Have you told anyone about Anyx? What did you say, and what was their reaction?', why:"Maps organic referral behavior. Who did they tell? What words did they use? Did the other person sign up?", archs:['all'] },
-    { num:'17', text:'Who in your network would get the most value from this — and what would make you comfortable introducing them?', why:"The warm intro unlock question. You're not asking them to refer — you're asking what would make it easy.", archs:['op','dm'], deeperNote: "These are your most networked archetypes. Don't move on quickly — ask: what would make you comfortable making that intro?" },
-    { num:'18', text:'If I gave you a card that said "Anyx changed how I work" — what would you write on the other side to convince a peer to try it?', why:"⭐ Your testimonial, champion quote, and referral message all in one. Write it verbatim.", archs:['all'], highlight: true, highlightColor: 'var(--amber)' },
-  ]},
-];
-
-// ── APP STATE (loaded from localStorage) ──
-let archetypes = lsLoad('anyx_archetypes', JSON.parse(JSON.stringify(DEFAULT_ARCHETYPES)));
-
-let interviews = lsLoad('anyx_interviews', Array.from({length:10}, (_, i) => ({id: i+1, done: false})));
-
-let frictions = lsLoad('anyx_frictions', [
-  {label:"Capabilities weren't obvious upfront", n:0},
-  {label:"Didn't know where to start", n:0},
-  {label:"Needed a concrete use case first", n:0},
-  {label:"Took too long to see a real result", n:0},
-  {label:"Integration setup felt unclear", n:0},
-  {label:"Felt like a chatbot, not a co-worker", n:0},
-  {label:"Wasn't sure what to delegate", n:0},
-]);
-
-let triggers = lsLoad('anyx_triggers', [
-  {label:"First autonomous action completed", n:0},
-  {label:"Inbox triage worked perfectly", n:0},
-  {label:"Groopy summarised a long thread", n:0},
-  {label:"First automated follow-up sent", n:0},
-  {label:"End-to-end client task handled alone", n:0},
-  {label:"Scheduling done without back-and-forth", n:0},
-  {label:"Woke up to work already done", n:0},
-]);
-
-function defaultQuotes() { const q = {}; DEFAULT_ARCHETYPES.forEach(a => { q[a.id] = ''; }); return q; }
-let quotes = lsLoad('anyx_quotes', defaultQuotes());
-
-function defaultArchRows() { const r = {}; DEFAULT_ARCHETYPES.forEach(a => { r[a.id] = {friction:'',trigger:'',topFeature:''}; }); return r; }
-let archRows = lsLoad('anyx_arch_rows', defaultArchRows());
-
-let patterns = lsLoad('anyx_patterns', [
-  {title:"Most common friction", content:''},
-  {title:"Most common trigger", content:''},
-  {title:"Archetype most likely to refer", content:''},
-  {title:"Archetype needing most guidance", content:''},
-  {title:"Top product gap mentioned", content:''},
-  {title:"Best verbatim quote for GTM", content:''},
-]);
-
-function defaultUser() {
-  return {
-    name:'', role:'', industry:'', companySize:'', howFound:'', contact:'', linkedin:'',
-    archetype:'unknown', onboardPath:'unknown',
-    interviewStatus:'not-booked', designPartnerInvite:'not-yet', priorityTier:'tbd',
-    notes:'', frictionPoint:'', wowTrigger:'', q11Quote:'', q18Quote:'',
-    referredAnyone:'unknown', interviewNotes:'', nextAction:'', nextActionDate:'',
-    frictionLabels:[], triggerLabels:[]
-  };
-}
-
-let users = lsLoad('anyx_users', Array.from({length:10}, defaultUser));
-// Migrate old schema
-users = users.map(u => {
-  if (!u.interviewStatus) u.interviewStatus = u.interviewDone ? 'done' : 'not-booked';
-  if (!u.designPartnerInvite) u.designPartnerInvite = 'not-yet';
-  if (!u.priorityTier) u.priorityTier = 'tbd';
-  if (u.frictionPoint === undefined) u.frictionPoint = '';
-  if (u.wowTrigger === undefined) u.wowTrigger = '';
-  if (u.q11Quote === undefined) u.q11Quote = '';
-  if (u.q18Quote === undefined) u.q18Quote = '';
-  if (!u.referredAnyone) u.referredAnyone = 'unknown';
-  if (u.interviewNotes === undefined) u.interviewNotes = '';
-  if (u.linkedin === undefined) u.linkedin = '';
-  if (u.nextAction === undefined) u.nextAction = '';
-  if (u.nextActionDate === undefined) u.nextActionDate = '';
-  if (!u.frictionLabels) u.frictionLabels = [];
-  if (!u.triggerLabels) u.triggerLabels = [];
-  return u;
-});
-
-let referralCodes = lsLoad('anyx_referral_codes', []);
-const expandedRows = new Set();
-
-// ── NAVIGATION ──
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
-      n.classList.add('active');
+  // enhance-only: mark JS enabled so reveals get their initial hidden state,
+  // then reveal on scroll. If JS fails, content stays fully visible.
+  (function(){
+    document.documentElement.classList.add('js');
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){
+      els.forEach(function(el){el.classList.add('in')});
+      return;
     }
-  });
-  if (id === 'referralcodes') renderReferralCodes();
-  if (id === 'synthesis') renderDots();
-}
-
-// ── ARCHETYPE CARDS PAGE ──
-function renderArchetypeCards() {
-  const colorMap = {purple:'var(--purple)',teal:'var(--teal)',coral:'var(--coral)',amber:'var(--amber)'};
-  const bgMap = {purple:'var(--purple-light)',teal:'var(--teal-light)',coral:'var(--coral-light)',amber:'var(--amber-light)'};
-
-  document.getElementById('archetype-cards').innerHTML = archetypes.map(a => `
-    <div class="arch-card" style="border-top:3px solid ${colorMap[a.colorVar]};">
-      <div class="arch-head">
-        <div class="arch-avatar" style="background:${bgMap[a.colorVar]};color:${colorMap[a.colorVar]};">${a.emoji}</div>
-        <div>
-          <div style="font-size:15px;font-weight:700;color:var(--gray-900);">${esc(a.label)}</div>
-          <div style="font-size:12px;color:var(--gray-500);">${esc(a.subLabel)}</div>
-        </div>
-      </div>
-      ${a.attrs.map(attr => `
-        <div class="attr">
-          <span class="attr-label" style="color:${colorMap[a.colorVar]};opacity:0.75;font-size:11px;font-weight:600;">${attr.label}</span>
-          <span class="attr-val">${attr.val}</span>
-        </div>
-      `).join('')}
-      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--gray-200);">
-        <span class="tag ${a.tagCls}" style="font-size:11px;padding:4px 10px;">${esc(a.wowTag)}</span>
-      </div>
-    </div>
-  `).join('');
-
-  const selfDriven = archetypes.filter(a => a.selfDriven).map(a => a.label).join(' & ');
-  const guided = archetypes.filter(a => !a.selfDriven).map(a => a.label).join(' & ');
-  document.getElementById('self-driven-archs').textContent = selfDriven;
-  document.getElementById('guided-archs').textContent = guided;
-}
-
-// ── INTERVIEW GUIDE ──
-function getArchTag(archId) {
-  if (archId === 'all') return `<span class="tag tag-gray">All archetypes</span>`;
-  const a = archetypes.find(x => x.id === archId);
-  return a ? `<span class="tag ${a.tagCls}">${esc(a.label)}</span>` : '';
-}
-
-function renderInterviewGuide() {
-  document.getElementById('interview-guide-content').innerHTML = INTERVIEW_PHASES.map(phase => `
-    <div class="phase-block">
-      <div class="phase-header">
-        <div class="phase-dot" style="background:${phase.dotColor};"></div>
-        <span class="title">${phase.title}</span>
-        <span class="timing">${phase.timing}</span>
-      </div>
-      ${phase.questions.map(q => `
-        <div class="q-item" data-archs="${q.archs.join(' ')}">
-          <div class="q-row"><span class="q-num">${q.num}</span><div>
-            <div class="q-text"${q.highlight ? ` style="font-weight:600;color:${q.highlightColor};"` : ''}>${q.text}</div>
-            <div class="q-why">${q.why}</div>
-            <div class="q-tags">
-              ${q.archs.map(id => getArchTag(id)).join('')}${q.deeperNote ? `<span class="q-deeper"><span class="q-deeper-chip">↓ Go deeper</span><span class="q-deeper-tip">${q.deeperNote}</span></span>` : ''}
-            </div>
-          </div></div>
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
-  renderInterviewControls();
-  applyFilter();
-}
-
-// ── INTERVIEW FILTER & MODE ──
-let activeArchFilter = 'all';
-let interviewModeActive = false;
-
-function renderInterviewControls() {
-  const el = document.getElementById('interview-controls');
-  if (!el) return;
-  const allActive = activeArchFilter === 'all';
-  const archBtns = archetypes.map(a => {
-    const isActive = activeArchFilter === a.id;
-    return `<button class="afw-btn${isActive ? ' afw-active' : ''}"
-      style="${isActive ? `background:${COLOR_HEX[a.colorVar]};border-color:${COLOR_HEX[a.colorVar]};` : ''}"
-      onclick="setArchFilter('${a.id}')">${esc(a.label)}</button>`;
-  }).join('');
-  el.innerHTML = `
-    <div class="interview-top-bar">
-      <div class="arch-filter-row">
-        <button class="afw-btn${allActive ? ' afw-active' : ''}"
-          style="${allActive ? 'background:var(--gray-900);border-color:var(--gray-900);' : ''}"
-          onclick="setArchFilter('all')">All</button>
-        ${archBtns}
-      </div>
-      <button class="iv-mode-btn${interviewModeActive ? ' active' : ''}" onclick="toggleInterviewMode()">
-        ${interviewModeActive ? '● Live mode on' : 'Interview mode'}
-      </button>
-    </div>
-  `;
-}
-
-function setArchFilter(archId) {
-  activeArchFilter = archId;
-  renderInterviewControls();
-  applyFilter();
-}
-
-function applyFilter() {
-  document.querySelectorAll('#interview-guide-content .q-item').forEach(item => {
-    const itemArchs = (item.dataset.archs || '').split(' ').filter(Boolean);
-    item.classList.remove('q-dimmed', 'q-emphasized');
-    item.style.removeProperty('box-shadow');
-    item.style.removeProperty('padding-left');
-    if (activeArchFilter === 'all') {
-      if (!itemArchs.includes('all')) {
-        const firstArch = archetypes.find(a => itemArchs.includes(a.id));
-        if (firstArch) {
-          item.style.boxShadow = `inset 3px 0 0 ${COLOR_HEX[firstArch.colorVar]}55`;
-          item.style.paddingLeft = '10px';
-        }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+      });
+    },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){io.observe(el)});
+  })();
+</script>
+<script>
+  // Live מפעל הפיס results. Reveals the widget ONLY when the /api/lotto proxy
+  // returns real, parseable data — so nothing broken or fake shows before the
+  // feed is validated on the live domain.
+  (function(){
+    var sec=document.getElementById('results'); if(!sec) return;
+    function fmtDate(iso){ if(!iso) return ''; try{return new Date(iso).toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'});}catch(e){return '';} }
+    function ball(n,strong){ var s=document.createElement('span'); s.className='ball'+(strong?' strong':''); s.textContent=n; return s; }
+    var timer;
+    function countdown(target){
+      var el=document.getElementById('rCountdown');
+      function tick(){
+        var diff=target-Date.now();
+        if(diff<=0){ el.textContent='ההגרלה מתקיימת בקרוב'; clearInterval(timer); return; }
+        var d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000), m=Math.floor(diff%3600000/60000);
+        var parts=[];
+        if(d>0) parts.push(d===1?'יום':d+' ימים');
+        parts.push(h===1?'שעה':h+' שעות');
+        parts.push(m===1?'דקה':m+' דקות');
+        el.textContent='עוד '+parts.join(' · ');
       }
-    } else {
-      if (itemArchs.includes(activeArchFilter) || itemArchs.includes('all')) {
-        const a = archetypes.find(x => x.id === activeArchFilter);
-        item.classList.add('q-emphasized');
-        if (a) { item.style.boxShadow = `inset 4px 0 0 ${COLOR_HEX[a.colorVar]}`; item.style.paddingLeft = '12px'; }
-      } else {
-        item.classList.add('q-dimmed');
-      }
+      tick(); timer=setInterval(tick,60000);
     }
-  });
-}
-
-function toggleInterviewMode() {
-  interviewModeActive = !interviewModeActive;
-  document.getElementById('interview-guide-content').classList.toggle('interview-live', interviewModeActive);
-  document.getElementById('iv-banner').classList.toggle('active', interviewModeActive);
-  renderInterviewControls();
-  if (!interviewModeActive && activeIntervieweeIdx !== null) {
-    const idx = activeIntervieweeIdx;
-    clearInterviewContext();
-    expandedRows.add(idx);
-    showPage('userlist');
-    renderUserList();
-    setTimeout(() => {
-      const detailRows = document.getElementById('user-tbody').querySelectorAll('.detail-row.open');
-      if (detailRows.length > 0) detailRows[0].previousElementSibling.scrollIntoView({behavior:'smooth', block:'center'});
-    }, 120);
-  }
-}
-
-// ── SYNTHESIS TRACKER ──
-function updateStats() {
-  const doneCount = users.filter(u => u.interviewStatus === 'done').length;
-  document.getElementById('done-count').textContent = doneCount;
-  document.getElementById('guided-count').textContent = users.filter(u => u.interviewStatus === 'done' && u.onboardPath === 'guided').length;
-  document.getElementById('self-count').textContent = users.filter(u => u.interviewStatus === 'done' && u.onboardPath === 'self-driven').length;
-  document.getElementById('ref-count').textContent = users.filter(u => u.referredAnyone === 'yes').length;
-}
-
-function userInitials(u) {
-  if (!u.name.trim()) return '?';
-  return u.name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
-}
-
-function renderDots() {
-  document.getElementById('interview-dots').innerHTML = users.map((u, i) => {
-    const done = u.interviewStatus === 'done';
-    const name = u.name.trim() || `User ${i+1}`;
-    const arch = archetypes.find(a => a.id === u.archetype);
-    const archLabel = arch ? arch.label : '';
-    const tooltip = archLabel ? `${name} · ${archLabel}` : name;
-    return `<div class="iv-dot${done ? ' done' : ''}" onclick="toggleInterview(${i})">${userInitials(u)}<span class="iv-dot-tip">${esc(tooltip)}</span></div>`;
-  }).join('');
-  updateStats();
-}
-
-function toggleInterview(idx) {
-  const u = users[idx];
-  u.interviewStatus = u.interviewStatus === 'done' ? 'not-booked' : 'done';
-  // Keep interviews array in sync for legacy export
-  if (interviews[idx]) interviews[idx].done = (u.interviewStatus === 'done');
-  lsSave('anyx_users', users);
-  lsSave('anyx_interviews', interviews);
-  renderDots();
-  if (document.getElementById('page-userlist').classList.contains('active')) renderUserList();
-}
-
-function renderTallies(items, containerId, color) {
-  const isF = containerId === 'friction-tallies';
-  const counts = items.map((item, idx) => ({
-    label: item.label,
-    n: users.filter(u => (isF ? (u.frictionLabels||[]) : (u.triggerLabels||[])).includes(idx)).length
-  }));
-  const total = users.filter(u => u.interviewStatus === 'done').length || users.length;
-  const max = Math.max(...counts.map(c => c.n), 1);
-  document.getElementById(containerId).innerHTML = counts.map(item => `
-    <div class="tally-row">
-      <span class="tally-label">${item.label}</span>
-      <div class="tally-bar-wrap"><div class="tally-bar" style="width:${Math.round(item.n/max*100)}%;background:${color};"></div></div>
-      <span class="tally-n">${item.n}/${total}</span>
-    </div>
-  `).join('');
-}
-
-function toggleUserLabel(userIdx, field, labelIdx, checked) {
-  const u = users[userIdx];
-  if (!u[field]) u[field] = [];
-  if (checked) { if (!u[field].includes(labelIdx)) u[field].push(labelIdx); }
-  else { u[field] = u[field].filter(x => x !== labelIdx); }
-  lsSave('anyx_users', users);
-  if (document.getElementById('page-synthesis').classList.contains('active')) {
-    renderTallies(frictions, 'friction-tallies', '#534AB7');
-    renderTallies(triggers, 'trigger-tallies', '#0F6E56');
-  }
-}
-
-function tally(group, idx, delta) {
-  const arr = group === 'friction-tallies' ? frictions : triggers;
-  arr[idx].n = Math.max(0, Math.min(10, arr[idx].n + delta));
-  if (group === 'friction-tallies') {
-    lsSave('anyx_frictions', frictions);
-    renderTallies(frictions, 'friction-tallies', '#534AB7');
-  } else {
-    lsSave('anyx_triggers', triggers);
-    renderTallies(triggers, 'trigger-tallies', '#0F6E56');
-  }
-}
-
-function renderQuotes() {
-  document.getElementById('quote-slots').innerHTML = archetypes.map(a => {
-    const archUsers = users.filter(u => u.archetype === a.id && (u.q11Quote || u.q18Quote));
-    const verbatims = archUsers.flatMap(u => {
-      const items = [];
-      if (u.q11Quote) items.push({who: u.name||'?', label:'Q11', text: u.q11Quote});
-      if (u.q18Quote) items.push({who: u.name||'?', label:'Q18', text: u.q18Quote});
-      return items;
-    });
-    const text = quotes[a.id] || '';
-    return `
-      <div class="quote-slot">
-        <div class="quote-meta">
-          <span class="tag ${a.tagCls}">${esc(a.label)}</span>
-          <span style="font-size:11px;color:var(--gray-500);">Q11 / Q18 verbatim</span>
-        </div>
-        ${verbatims.length > 0
-          ? verbatims.map(q => `<div style="font-size:12px;color:var(--gray-700);line-height:1.6;margin-bottom:7px;font-style:italic;padding:6px 10px;background:white;border-radius:4px;border-left:3px solid ${COLOR_HEX[a.colorVar]};">"${esc(q.text)}"<div style="font-size:10px;font-style:normal;color:var(--gray-500);margin-top:2px;">${esc(q.who)} · ${q.label}</div></div>`).join('')
-          : `<div style="font-size:12px;color:var(--gray-400);font-style:italic;padding:4px 0 8px;">No quotes yet — fill Q11/Q18 in the user detail panel after interviews.</div>`
-        }
-        <div style="font-size:10px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Key quote for GTM (your pick)</div>
-        <div class="quote-text${!text ? ' empty' : ''}" contenteditable="true"
-          data-arch-id="${a.id}" data-ph="Your pick for GTM copy…"
-          onfocus="clearPlaceholder(this)" onblur="saveQuote(this)">${text || 'Your pick for GTM copy…'}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-function saveQuote(el) {
-  const archId = el.dataset.archId;
-  const text = el.textContent.trim();
-  if (!text || text === el.dataset.ph) {
-    quotes[archId] = '';
-    el.textContent = el.dataset.ph;
-    el.classList.add('empty');
-  } else {
-    quotes[archId] = text;
-    el.classList.remove('empty');
-  }
-  lsSave('anyx_quotes', quotes);
-}
-
-function renderArchRows() {
-  document.getElementById('arch-rows').innerHTML = archetypes.map(a => {
-    const row = archRows[a.id] || {friction:'', trigger:'', topFeature:''};
-    const ph = 'Add after interviews...';
-    return `
-      <tr>
-        <td><strong>${esc(a.label)}</strong></td>
-        ${['friction','trigger','topFeature'].map(field => `
-          <td contenteditable="true" style="outline:none;min-height:20px;${!row[field] ? 'color:var(--gray-500);' : ''}"
-            data-arch-id="${a.id}" data-field="${field}"
-            onfocus="clearCellPH(this)" onblur="saveArchRow(this)">${row[field] || ph}</td>
-        `).join('')}
-      </tr>
-    `;
-  }).join('');
-}
-
-function clearCellPH(el) {
-  if (el.textContent.trim() === 'Add after interviews...') { el.textContent = ''; el.style.color = ''; }
-}
-
-function saveArchRow(el) {
-  const archId = el.dataset.archId;
-  const field = el.dataset.field;
-  const text = el.textContent.trim();
-  if (!archRows[archId]) archRows[archId] = {friction:'', trigger:'', topFeature:''};
-  if (!text) {
-    archRows[archId][field] = '';
-    el.textContent = 'Add after interviews...';
-    el.style.color = 'var(--gray-500)';
-  } else {
-    archRows[archId][field] = text;
-    el.style.color = '';
-  }
-  lsSave('anyx_arch_rows', archRows);
-}
-
-function renderPatterns() {
-  document.getElementById('pattern-grid').innerHTML = patterns.map((p, idx) => `
-    <div class="pattern-card">
-      <div class="pattern-title">${p.title}</div>
-      <div class="pattern-content${!p.content ? ' empty' : ''}" contenteditable="true"
-        data-idx="${idx}" data-ph="Fill after 5+ interviews..."
-        onfocus="clearPlaceholder(this)" onblur="savePattern(this)">${p.content || 'Fill after 5+ interviews...'}</div>
-    </div>
-  `).join('');
-}
-
-function savePattern(el) {
-  const idx = parseInt(el.dataset.idx);
-  const text = el.textContent.trim();
-  if (!text || text === el.dataset.ph) {
-    patterns[idx].content = '';
-    el.textContent = el.dataset.ph;
-    el.classList.add('empty');
-  } else {
-    patterns[idx].content = text;
-    el.classList.remove('empty');
-  }
-  lsSave('anyx_patterns', patterns);
-}
-
-function clearPlaceholder(el) {
-  if (el.classList.contains('empty')) { el.textContent = ''; el.classList.remove('empty'); }
-}
-
-// ── USER LIST ──
-function esc(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function archSelectOptions(selectedId) {
-  let html = `<option value="unknown"${selectedId === 'unknown' ? ' selected' : ''}>— Unknown —</option>`;
-  archetypes.forEach(a => {
-    html += `<option value="${a.id}"${selectedId === a.id ? ' selected' : ''}>${esc(a.label)}</option>`;
-  });
-  return html;
-}
-
-function onboardSelectOptions(selected) {
-  return [['unknown','— Unknown —'],['guided','Guided'],['self-driven','Self-driven']]
-    .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
-}
-
-function renderDateCell(i, dateVal) {
-  const today = new Date().toISOString().slice(0, 10);
-  let cls = '';
-  if (dateVal) {
-    if (dateVal < today) cls = 'date-overdue';
-    else if (dateVal === today) cls = 'date-today';
-  }
-  return `<input type="date" class="${cls}" value="${esc(dateVal)}" onchange="updateUser(${i},'nextActionDate',this.value);this.className=getDateClass(this.value);">`;
-}
-
-function getDateClass(val) {
-  if (!val) return '';
-  const today = new Date().toISOString().slice(0, 10);
-  if (val < today) return 'date-overdue';
-  if (val === today) return 'date-today';
-  return '';
-}
-
-function interviewStatusOptions(selected) {
-  return [['not-booked','Not booked'],['booked','Booked'],['done','Done']]
-    .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
-}
-
-function designPartnerOptions(selected) {
-  return [['not-yet','Not yet'],['invited','Invited'],['confirmed','Confirmed']]
-    .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
-}
-
-function priorityTierOptions(selected) {
-  return [['tbd','TBD'],['tier1','Tier 1'],['tier2','Tier 2'],['hold','Hold']]
-    .map(([v, l]) => `<option value="${v}"${selected === v ? ' selected' : ''}>${l}</option>`).join('');
-}
-
-function toggleDetailRow(i) {
-  if (expandedRows.has(i)) expandedRows.delete(i); else expandedRows.add(i);
-  renderUserList();
-}
-
-function renderUserList() {
-  const tbody = document.getElementById('user-tbody');
-  tbody.innerHTML = '';
-  users.forEach((u, i) => {
-    const isOpen = expandedRows.has(i);
-    const liCell = `<td><div style="display:flex;align-items:center;gap:3px;"><input type="text" value="${esc(u.linkedin)}" placeholder="linkedin.com/in/…" style="flex:1;min-width:0;" oninput="updateUser(${i},'linkedin',this.value);var a=this.nextElementSibling;a.href=this.value;a.style.display=this.value?'inline-flex':'none';"><a href="${esc(u.linkedin)}" target="_blank" rel="noopener" class="li-link" style="flex-shrink:0;display:${u.linkedin?'inline-flex':'none'};">↗</a></div></td>`;
-    const tr = document.createElement('tr');
-    if (i % 2 === 1) tr.classList.add('user-row-alt');
-    tr.innerHTML = `
-      <td class="user-row-num" style="cursor:pointer;text-align:center;" onclick="toggleDetailRow(${i})">
-        <div class="detail-expand-btn">${isOpen ? '▾' : '▸'}</div>
-        <div style="font-size:11px;color:var(--gray-500);font-weight:600;">${i+1}</div>
-      </td>
-      <td><input type="text" value="${esc(u.name)}" placeholder="Name" oninput="updateUser(${i},'name',this.value)"></td>
-      <td><input type="text" value="${esc(u.role)}" placeholder="Role" list="dl-role" oninput="updateUser(${i},'role',this.value)"></td>
-      <td><input type="text" value="${esc(u.industry)}" placeholder="Industry" list="dl-industry" oninput="updateUser(${i},'industry',this.value)"></td>
-      <td><input type="text" value="${esc(u.companySize)}" placeholder="Size…" list="dl-companysize" oninput="updateUser(${i},'companySize',this.value)"></td>
-      <td><input type="text" value="${esc(u.howFound)}" placeholder="How found…" list="dl-howfound" oninput="updateUser(${i},'howFound',this.value)"></td>
-      <td><input type="text" value="${esc(u.contact)}" placeholder="+972…" oninput="updateUser(${i},'contact',this.value)"></td>
-      ${liCell}
-      <td><select class="arch-${u.archetype||'unknown'}" onchange="this.className='arch-'+this.value;updateUser(${i},'archetype',this.value)">${archSelectOptions(u.archetype)}</select></td>
-      <td><select class="op-${u.onboardPath||'unknown'}" onchange="this.className='op-'+this.value;updateUser(${i},'onboardPath',this.value)">${onboardSelectOptions(u.onboardPath)}</select></td>
-      <td><select class="istat-${u.interviewStatus||'not-booked'}" onchange="this.className='istat-'+this.value;updateUser(${i},'interviewStatus',this.value)">${interviewStatusOptions(u.interviewStatus||'not-booked')}</select></td>
-      <td class="next-action-cell"><input type="text" value="${esc(u.nextAction)}" placeholder="e.g. Send outreach…" oninput="updateUser(${i},'nextAction',this.value)"></td>
-      <td>${renderDateCell(i, u.nextActionDate)}</td>
-      <td><select class="dpi-${u.designPartnerInvite||'not-yet'}" onchange="this.className='dpi-'+this.value;updateUserDesignPartner(${i},this.value)">${designPartnerOptions(u.designPartnerInvite||'not-yet')}</select></td>
-      <td><select class="ptier-${u.priorityTier||'tbd'}" onchange="this.className='ptier-'+this.value;updateUser(${i},'priorityTier',this.value)">${priorityTierOptions(u.priorityTier||'tbd')}</select></td>
-      <td><input type="text" value="${esc(u.notes)}" placeholder="Notes…" oninput="updateUser(${i},'notes',this.value)"></td>
-      <td style="text-align:center;"><button class="tally-btn" title="Open interview guide for ${esc(u.name||'this user')}" onclick="startInterview(${i})" style="font-size:13px;">▶</button></td>
-      <td style="text-align:center;"><button class="tally-btn" style="color:var(--coral);font-size:12px;" onclick="deleteUserRow(${i})" title="Delete row">✕</button></td>
-    `;
-    tbody.appendChild(tr);
-    const dtr = document.createElement('tr');
-    dtr.className = 'detail-row' + (isOpen ? ' open' : '');
-    dtr.innerHTML = `<td colspan="18" style="padding:0;"><div class="detail-panel"><div class="detail-inner">
-      <div class="detail-2col">
-        <div class="detail-field">
-          <label>Friction points — check all they mentioned</label>
-          <div class="check-list">
-            ${frictions.map((f, fi) => {
-              const chk = (u.frictionLabels||[]).includes(fi);
-              return `<label class="check-item${chk?' is-checked':''}">
-                <input type="checkbox" ${chk?'checked':''} onchange="toggleUserLabel(${i},'frictionLabels',${fi},this.checked)">
-                <span>${esc(f.label)}</span>
-              </label>`;
-            }).join('')}
-          </div>
-        </div>
-        <div class="detail-field">
-          <label>Wow trigger — what made it click</label>
-          <div class="check-list">
-            ${triggers.map((t, ti) => {
-              const chk = (u.triggerLabels||[]).includes(ti);
-              return `<label class="check-item${chk?' is-checked':''}">
-                <input type="checkbox" ${chk?'checked':''} onchange="toggleUserLabel(${i},'triggerLabels',${ti},this.checked)">
-                <span>${esc(t.label)}</span>
-              </label>`;
-            }).join('')}
-          </div>
-        </div>
-      </div>
-      <div class="detail-3col">
-        <div class="detail-field"><label>Q11 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q11Quote',this.value)">${esc(u.q11Quote||'')}</textarea></div>
-        <div class="detail-field"><label>Q18 verbatim</label><textarea placeholder="Exact words, don't clean up…" oninput="updateUser(${i},'q18Quote',this.value)">${esc(u.q18Quote||'')}</textarea></div>
-        <div class="detail-field"><label>Referred anyone?</label><select onchange="updateUser(${i},'referredAnyone',this.value)">
-          <option value="unknown"${(u.referredAnyone||'unknown')==='unknown'?' selected':''}>Unknown</option>
-          <option value="yes"${(u.referredAnyone||'unknown')==='yes'?' selected':''}>Yes</option>
-          <option value="no"${(u.referredAnyone||'unknown')==='no'?' selected':''}>No</option>
-        </select></div>
-      </div>
-      <div class="detail-field"><label>Interview notes</label><textarea placeholder="Key takeaways, observations…" style="min-height:44px;" oninput="updateUser(${i},'interviewNotes',this.value)">${esc(u.interviewNotes||'')}</textarea></div>
-    </div></div></td>`;
-    tbody.appendChild(dtr);
-  });
-}
-
-function updateUser(idx, field, value) {
-  users[idx][field] = value;
-  lsSave('anyx_users', users);
-  if (field === 'onboardPath' || field === 'interviewStatus' || field === 'referredAnyone') {
-    updateStats();
-    if (field === 'interviewStatus') {
-      if (interviews[idx]) interviews[idx].done = (value === 'done');
-      lsSave('anyx_interviews', interviews);
-      renderDots();
+    function render(d){
+      if(!d || d.ok===false || !(d.numbers && d.numbers.length===6)) return; // stay hidden
+      var meta=[]; if(d.draw) meta.push('הגרלה '+d.draw); if(d.date) meta.push(d.date);
+      document.getElementById('rMeta').textContent=meta.join(' · ');
+      var wrap=document.getElementById('rBalls'); wrap.innerHTML='';
+      d.numbers.forEach(function(n){ wrap.appendChild(ball(n,false)); });
+      if(d.strong!=null){ var p=document.createElement('span'); p.className='rplus'; p.textContent='+'; wrap.appendChild(p); wrap.appendChild(ball(d.strong,true)); }
+      var nd=d.next && d.next.date;
+      document.getElementById('rNextDate').textContent = nd ? fmtDate(nd) : '';
+      sec.classList.add('live');
+      if(nd) countdown(new Date(nd).getTime());
     }
-  }
-}
-
-function updateUserDesignPartner(idx, value) {
-  users[idx].designPartnerInvite = value;
-  lsSave('anyx_users', users);
-  syncReferralCodes();
-  if (document.getElementById('page-referralcodes').classList.contains('active')) renderReferralCodes();
-}
-
-function addUserRow() {
-  users.push(defaultUser());
-  lsSave('anyx_users', users);
-  renderUserList();
-  renderDots();
-}
-
-function deleteUserRow(idx) {
-  if (users.length <= 1) return;
-  if (!confirm('Delete this row?')) return;
-  users.splice(idx, 1);
-  interviews.splice(idx, 1);
-  expandedRows.clear();
-  lsSave('anyx_users', users);
-  lsSave('anyx_interviews', interviews);
-  syncReferralCodes();
-  renderUserList();
-  renderDots();
-  if (document.getElementById('page-referralcodes').classList.contains('active')) renderReferralCodes();
-}
-
-function exportUserCSV() {
-  const headers = ['#','Name','Role','Industry','Company size','How found','Contact','LinkedIn','Archetype','Onboard path','Interview status','Next action','By when','Design partner','Priority','Notes','Friction point','Wow trigger','Q11 verbatim','Q18 verbatim','Referred anyone','Interview notes'];
-  const rows = users.map((u, i) => [
-    i+1, u.name, u.role, u.industry, u.companySize, u.howFound, u.contact, u.linkedin||'',
-    archetypes.find(a=>a.id===u.archetype)?.label||u.archetype,
-    u.onboardPath, u.interviewStatus, u.nextAction||'', u.nextActionDate||'',
-    u.designPartnerInvite, u.priorityTier,
-    u.notes, u.frictionPoint, u.wowTrigger, u.q11Quote, u.q18Quote, u.referredAnyone, u.interviewNotes
-  ].map(v => `"${String(v||'').replace(/"/g,'""')}"`));
-  const csv = [headers.map(h=>`"${h}"`).join(','), ...rows.map(r=>r.join(','))].join('\n');
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = 'anyx-users.csv'; a.click();
-}
-
-// ── INTERVIEW CONTEXT ──
-let activeIntervieweeIdx = null;
-
-function startInterview(idx) {
-  activeIntervieweeIdx = idx;
-  const u = users[idx];
-  const arch = archetypes.find(a => a.id === u.archetype);
-  const name = u.name.trim() || `User ${idx + 1}`;
-  const archLabel = arch ? ` · ${arch.emoji} ${arch.label}` : '';
-  const banner = document.getElementById('interview-user-banner');
-  banner.innerHTML = `<span>Now interviewing: <strong>${esc(name)}${esc(archLabel)}</strong></span><button class="btn" style="font-size:11px;padding:4px 10px;" onclick="clearInterviewContext()">Clear</button>`;
-  banner.classList.add('on');
-  if (arch) setArchFilter(arch.id);
-  showPage('interview');
-}
-
-function clearInterviewContext() {
-  activeIntervieweeIdx = null;
-  const banner = document.getElementById('interview-user-banner');
-  banner.classList.remove('on');
-  banner.innerHTML = '';
-}
-
-// ── SETTINGS ──
-const COLOR_HEX = {purple:'#534AB7', teal:'#0F6E56', coral:'#993C1D', amber:'#854F0B'};
-
-function renderSettings() {
-  document.getElementById('settings-arch-grid').innerHTML = archetypes.map(a => `
-    <div class="settings-arch-card">
-      <div class="s-color-bar" style="background:${COLOR_HEX[a.colorVar] || '#888'};"></div>
-      <div class="settings-field">
-        <label>Display name</label>
-        <input type="text" id="arch-label-${a.id}" value="${esc(a.label)}" placeholder="Archetype name">
-      </div>
-      <div class="settings-field">
-        <label>Emoji</label>
-        <input type="text" id="arch-emoji-${a.id}" value="${a.emoji}" style="max-width:70px;text-align:center;font-size:18px;">
-      </div>
-      <div class="settings-field">
-        <label>Subtitle / roles</label>
-        <input type="text" id="arch-sub-${a.id}" value="${esc(a.subLabel)}" placeholder="Roles & titles">
-      </div>
-    </div>
-  `).join('');
-}
-
-function saveArchetypes() {
-  archetypes.forEach(a => {
-    const labelEl = document.getElementById('arch-label-' + a.id);
-    const emojiEl = document.getElementById('arch-emoji-' + a.id);
-    const subEl = document.getElementById('arch-sub-' + a.id);
-    if (labelEl && labelEl.value.trim()) a.label = labelEl.value.trim();
-    if (emojiEl && emojiEl.value.trim()) a.emoji = emojiEl.value.trim();
-    if (subEl) a.subLabel = subEl.value.trim();
-  });
-  lsSave('anyx_archetypes', archetypes);
-  renderAll();
-}
-
-function resetArchetypes() {
-  if (!confirm('Reset archetypes to defaults? Original names will be restored.')) return;
-  archetypes = JSON.parse(JSON.stringify(DEFAULT_ARCHETYPES));
-  lsSave('anyx_archetypes', archetypes);
-  renderAll();
-}
-
-// ── EXPORT ──
-function exportData() {
-  const snapshot = {
-    exportedAt: new Date().toISOString(),
-    archetypes,
-    interviews,
-    frictions,
-    triggers,
-    quotes,
-    archRows,
-    patterns,
-    users,
-  };
-  const blob = new Blob([JSON.stringify(snapshot, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'anyx-gtm-snapshot-' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-// ── COPY MESSAGE ──
-function copyMessage(idx) {
-  const msgs = document.querySelectorAll('.message-body');
-  navigator.clipboard.writeText(msgs[idx].textContent.trim()).then(() => alert('Copied to clipboard'));
-}
-
-// ── REFERRAL CODES ──
-function syncReferralCodes() {
-  const confirmed = users.map((u, i) => ({u, i})).filter(({u}) => u.designPartnerInvite === 'confirmed');
-  // Add missing entries
-  confirmed.forEach(({u, i}) => {
-    const exists = referralCodes.find(r => r.userIdx === i);
-    if (!exists) {
-      const namePart = u.name.trim().split(/\s+/)[0].toUpperCase() || `USER${i+1}`;
-      referralCodes.push({ userIdx: i, partnerName: u.name, code: `ANYX-${namePart}`, codeStatus: 'not-created', referralsSent: 0, conversions: 0, notes: '' });
-    } else {
-      // Keep name in sync
-      exists.partnerName = u.name;
+    function load(url,next){
+      fetch(url,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(d){ if(d&&d.ok&&d.numbers&&d.numbers.length===6){render(d);} else if(next){next();} })
+        .catch(function(){ if(next) next(); });
     }
-  });
-  // Remove entries for users no longer confirmed
-  const confirmedIdxs = confirmed.map(({i}) => i);
-  referralCodes = referralCodes.filter(r => confirmedIdxs.includes(r.userIdx));
-  lsSave('anyx_referral_codes', referralCodes);
-}
-
-function codeStatusOptions(selected) {
-  return [['not-created','Not created'],['created','Created'],['active','Active']]
-    .map(([v,l]) => `<option value="${v}"${selected===v?' selected':''}>${l}</option>`).join('');
-}
-
-function renderReferralCodes() {
-  syncReferralCodes();
-  const tbody = document.getElementById('ref-tbody');
-  if (!tbody) return;
-  if (referralCodes.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:24px;font-size:13px;">No confirmed design partners yet. Set a user's Design partner status to Confirmed in the User list.</td></tr>`;
-    return;
-  }
-  const totalSent = referralCodes.reduce((s,r) => s + (r.referralsSent||0), 0);
-  const totalConv = referralCodes.reduce((s,r) => s + (r.conversions||0), 0);
-  const rows = referralCodes.map((r, ri) => `
-    <tr>
-      <td>${esc(r.partnerName||'—')}</td>
-      <td><input type="text" class="ref-table" value="${esc(r.code)}" oninput="updateRC(${ri},'code',this.value)"></td>
-      <td><select class="ref-table" onchange="updateRC(${ri},'codeStatus',this.value)">${codeStatusOptions(r.codeStatus||'not-created')}</select></td>
-      <td><input type="number" class="ref-table" min="0" value="${r.referralsSent||0}" oninput="updateRC(${ri},'referralsSent',+this.value)"></td>
-      <td><input type="number" class="ref-table" min="0" value="${r.conversions||0}" oninput="updateRC(${ri},'conversions',+this.value)"></td>
-      <td style="font-weight:600;color:var(--teal);">${r.conversions||0}</td>
-      <td><input type="text" class="ref-table" value="${esc(r.notes||'')}" placeholder="Notes…" oninput="updateRC(${ri},'notes',this.value)"></td>
-    </tr>
-  `).join('');
-  const summary = `<tr class="ref-summary"><td>Total (${referralCodes.length} partners)</td><td></td><td></td><td>${totalSent}</td><td>${totalConv}</td><td style="color:var(--teal);">${totalConv}</td><td></td></tr>`;
-  tbody.innerHTML = rows + summary;
-}
-
-function updateRC(ri, field, value) {
-  referralCodes[ri][field] = value;
-  lsSave('anyx_referral_codes', referralCodes);
-  // Re-render to update free months
-  if (field === 'conversions') renderReferralCodes();
-}
-
-function exportReferralCSV() {
-  const headers = ['Partner name','Personal code','Code status','Referrals sent','Conversions','Free months earned','Notes'];
-  const rows = referralCodes.map(r => [r.partnerName, r.code, r.codeStatus, r.referralsSent||0, r.conversions||0, r.conversions||0, r.notes||'']
-    .map(v => `"${String(v).replace(/"/g,'""')}"`));
-  const csv = [headers.map(h=>`"${h}"`).join(','), ...rows.map(r=>r.join(','))].join('\n');
-  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = 'anyx-referral-codes.csv'; a.click();
-}
-
-// ── INIT ──
-function renderAll() {
-  renderArchetypeCards();
-  renderInterviewGuide();
-  renderDots();
-  renderTallies(frictions, 'friction-tallies', '#534AB7');
-  renderTallies(triggers, 'trigger-tallies', '#0F6E56');
-  renderQuotes();
-  renderArchRows();
-  renderPatterns();
-  renderUserList();
-  renderSettings();
-  renderReferralCodes();
-}
-
-renderAll();
+    // committed static file first (fast, always reachable), live proxy as fallback
+    load('/lotto.json', function(){ load('/api/lotto'); });
+  })();
 </script>
 </body>
 </html>
